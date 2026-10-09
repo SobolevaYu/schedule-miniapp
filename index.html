@@ -14,15 +14,8 @@
       padding: 20px;
       min-height: 100vh;
     }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-    .subtitle {
-      font-size: 14px;
-      color: var(--tg-theme-hint-color, #999999);
-      margin-bottom: 24px;
-    }
+    h1 { font-size: 22px; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: var(--tg-theme-hint-color, #999999); margin-bottom: 24px; }
     .card {
       background: var(--tg-theme-secondary-bg-color, #f5f5f5);
       border-radius: 12px;
@@ -30,42 +23,78 @@
       margin-bottom: 12px;
     }
     .card-title {
-      font-size: 13px;
-      color: var(--tg-theme-hint-color, #999999);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 13px; color: var(--tg-theme-hint-color, #999999);
+      margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .card-value {
-      font-size: 18px;
-      font-weight: 600;
+    .card-value { font-size: 18px; font-weight: 600; }
+    .shift {
+      display: flex; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
     }
+    .shift:last-child { border-bottom: none; }
+    .shift-date { font-weight: 600; }
+    .shift-time { color: var(--tg-theme-hint-color, #999999); }
+    .error { color: #d9534f; font-size: 14px; }
+    .loading { color: var(--tg-theme-hint-color, #999999); font-size: 14px; }
   </style>
 </head>
 <body>
   <h1 id="greeting">Привет!</h1>
-  <p class="subtitle">Это твоё приложение для расписания смен</p>
+  <p class="subtitle">Твоё расписание смен</p>
 
   <div class="card">
-    <div class="card-title">Следующая смена</div>
-    <div class="card-value">— пока нет данных —</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Смен в этом месяце</div>
-    <div class="card-value">0</div>
+    <div class="card-title">Мои смены</div>
+    <div id="shifts">
+      <div class="loading">Загружаем данные…</div>
+    </div>
   </div>
 
   <script>
+    // ID твоей Google-таблицы
+    const SHEET_ID = '1CpWhm4KHW3pKi5BbMRo7nzAqpCkkUtYe-qmHVIVX648';
+
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
-
       const user = tg.initDataUnsafe?.user;
       if (user) {
         document.getElementById('greeting').textContent =
           'Привет, ' + (user.first_name || 'друг') + '!';
+      }
+    }
+
+    // Читаем лист "Смены" через gviz (простой JSON-подобный формат от Google)
+    async function loadShifts() {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Смены`;
+      const el = document.getElementById('shifts');
+      try {
+        const res = await fetch(url);
+        const text = await res.text();
+        // Google оборачивает ответ в "/*O_o*/\ngoogle.visualization.Query.setResponse({...});"
+        const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+        const rows = json.table.rows || [];
+        if (rows.length === 0) {
+          el.innerHTML = '<div class="loading">Смен пока нет</div>';
+          return;
+        }
+        let html = '';
+        rows.slice(0, 10).forEach(row => {
+          const date = row.c[1]?.f || row.c[1]?.v || '—';
+          const start = row.c[2]?.f || row.c[2]?.v || '—';
+          const end = row.c[3]?.f || row.c[3]?.v || '—';
+          html += `<div class="shift"><span class="shift-date">${date}</span><span class="shift-time">${start} – ${end}</span></div>`;
+        });
+        el.innerHTML = html;
+      } catch (e) {
+        el.innerHTML = '<div class="error">Ошибка загрузки: ' + e.message + '</div>';
+      }
+    }
+
+    loadShifts();
+  </script>
+</body>
+</html>
       }
     }
   </script>

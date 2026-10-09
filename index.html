@@ -12,6 +12,7 @@
       background: var(--tg-theme-bg-color, #ffffff);
       color: var(--tg-theme-text-color, #000000);
       padding: 16px;
+      padding-bottom: 90px;
       min-height: 100vh;
     }
     h1 { font-size: 22px; margin-bottom: 4px; }
@@ -66,6 +67,7 @@
     .day-status { font-size: 14px; font-weight: 700; text-align: center; margin-top: 2px; }
     .day.other-month { opacity: 0.25; }
     .day.today { outline: 2px solid #32CD32; outline-offset: -2px; }
+    .day.available { background: #FFD700 !important; color: #333 !important; }
 
     .legend {
       margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px;
@@ -107,12 +109,58 @@
     }
     .popup-btn.google { background: #4285F4; }
     .popup-btn.apple { background: #000000; }
+    .popup-btn.danger { background: #d9534f; }
     .popup-btn.secondary { background: transparent; color: var(--tg-theme-link-color, #2481cc); font-weight: 500; margin-bottom: 0; }
+
+    .time-fields { display: flex; gap: 12px; margin-bottom: 16px; }
+    .time-fields > div { flex: 1; }
+    .time-fields label { font-size: 13px; color: var(--tg-theme-hint-color, #999999); display: block; margin-bottom: 6px; }
+    .time-fields select, .time-fields input {
+      width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+      font-size: 15px; text-align: center; background: white;
+    }
+
+    .tabs {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--tg-theme-bg-color, #ffffff);
+      border-top: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      z-index: 500;
+      padding: 6px 0;
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 4px;
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--tg-theme-hint-color, #999999);
+      user-select: none;
+    }
+    .tab-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+    .tab.active { color: #32CD32; font-weight: 600; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .info-block {
+      background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--tg-theme-hint-color, #999999);
+    }
   </style>
 </head>
 <body>
   <h1 id="greeting">Привет!</h1>
-  <p class="subtitle">Твоё расписание смен</p>
+  <p class="subtitle" id="pageSubtitle">Твоё расписание смен</p>
 
   <div class="phone-form" id="phoneForm" style="display:none">
     <p class="hint">Чтобы видеть свои смены, поделись номером телефона, который записан в системе.</p>
@@ -122,12 +170,44 @@
     <button id="saveManual" style="display:none">Сохранить</button>
   </div>
 
-  <div id="calendarWrap" style="display:none">
-    <div id="banner" style="display:none"></div>
+  <!-- Вкладка: Расписание -->
+  <div class="tab-content active" id="tabSchedule">
+    <div id="calendarWrap" style="display:none">
+      <div id="banner" style="display:none"></div>
+      <div class="month-header">
+        <button class="month-nav" id="prevMonth">←</button>
+        <div class="month-title" id="monthTitle">Октябрь 2026</div>
+        <button class="month-nav" id="nextMonth">→</button>
+      </div>
+
+      <div class="calendar">
+        <div class="weekdays">
+          <div class="weekday">Пн</div><div class="weekday">Вт</div><div class="weekday">Ср</div>
+          <div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div>
+          <div class="weekday">Вс</div>
+        </div>
+        <div class="days" id="days"></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="background:#32CD32"></div>Смена</div>
+        <div class="legend-item"><div class="legend-color" style="background:#C0C0C0"></div>Больничный</div>
+        <div class="legend-item"><div class="legend-color" style="background:#B0E0E6"></div>Отпуск</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" style="display:none">Загружаем данные…</div>
+  </div>
+
+  <!-- Вкладка: Доступность -->
+  <div class="tab-content" id="tabAvailability">
+    <div class="info-block">
+      Отметь дни, когда ты <b>можешь выйти на подработку</b>. Нажми на день в календаре — укажи часы. Руководитель увидит твою доступность.
+    </div>
+
     <div class="month-header">
-      <button class="month-nav" id="prevMonth">←</button>
-      <div class="month-title" id="monthTitle">Октябрь 2026</div>
-      <button class="month-nav" id="nextMonth">→</button>
+      <button class="month-nav" id="prevMonthAvail">←</button>
+      <div class="month-title" id="monthTitleAvail">Октябрь 2026</div>
+      <button class="month-nav" id="nextMonthAvail">→</button>
     </div>
 
     <div class="calendar">
@@ -136,27 +216,39 @@
         <div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div>
         <div class="weekday">Вс</div>
       </div>
-      <div class="days" id="days"></div>
+      <div class="days" id="daysAvail"></div>
     </div>
 
     <div class="legend">
-      <div class="legend-item"><div class="legend-color" style="background:#32CD32"></div>Смена</div>
-      <div class="legend-item"><div class="legend-color" style="background:#C0C0C0"></div>Больничный</div>
-      <div class="legend-item"><div class="legend-color" style="background:#B0E0E6"></div>Отпуск</div>
+      <div class="legend-item"><div class="legend-color" style="background:#FFD700"></div>Могу выйти</div>
     </div>
   </div>
 
-  <div class="loading" id="loading" style="display:none">Загружаем данные…</div>
+  <!-- Табы внизу -->
+  <div class="tabs" id="tabsBar" style="display:none">
+    <div class="tab active" data-tab="schedule">
+      <span class="tab-icon">📅</span>
+      Расписание
+    </div>
+    <div class="tab" data-tab="availability">
+      <span class="tab-icon">🟡</span>
+      Доступность
+    </div>
+  </div>
 
   <script>
     const SHEET_ID = '1CpWhm4KHW3pKi5BbMRo7nzAqpCkkUtYe-qmHVIVX648';
     const SHEET_NAME = 'Смены';
+    const SHEET_AVAILABILITY = 'Доступность';
     const STORAGE_KEY = 'user_phone';
+    const WEB_APP_URL = 'ВСТАВЬ_СЮДА_URL_ВЕБ_ПРИЛОЖЕНИЯ';
 
     const tg = window.Telegram?.WebApp;
     let userPhone = null;
     let currentMonth = new Date();
+    let currentMonthAvail = new Date();
     let allShifts = [];
+    let allAvailability = [];
     let employeesIcsMap = {};
 
     if (tg) {
@@ -182,8 +274,9 @@
 
     function showPhoneForm() {
       document.getElementById('phoneForm').style.display = 'block';
-      document.getElementById('calendarWrap').style.display = 'none';
-      document.getElementById('loading').style.display = 'none';
+      document.getElementById('tabsBar').style.display = 'none';
+      document.getElementById('tabSchedule').style.display = 'none';
+      document.getElementById('tabAvailability').style.display = 'none';
 
       const shareBtn = document.getElementById('sharePhone');
       if (tg && tg.requestContact) {
@@ -242,6 +335,29 @@
           status: (row.c[4]?.v || '').toString().trim().toUpperCase(),
         }))
         .filter(s => s.phone);
+    }
+
+    async function loadAvailability() {
+      try {
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_AVAILABILITY)}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        const start = text.indexOf('{');
+        const end = text.lastIndexOf('}');
+        if (start === -1 || end === -1) return;
+        const json = JSON.parse(text.substring(start, end + 1));
+        const rows = json.table && json.table.rows ? json.table.rows : [];
+        allAvailability = rows
+          .map(row => ({
+            phone: normalizePhone(row.c[0]?.v || ''),
+            date: row.c[1]?.f || '',
+            start: row.c[2]?.f || '',
+            end: row.c[3]?.f || '',
+          }))
+          .filter(a => a.phone && a.date);
+      } catch (e) {
+        console.error('Ошибка загрузки доступности:', e);
+      }
     }
 
     async function loadEmployeeIcsLinks() {
@@ -363,6 +479,62 @@
       });
     }
 
+    function renderAvailabilityCalendar() {
+      const year = currentMonthAvail.getFullYear();
+      const month = currentMonthAvail.getMonth();
+      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      document.getElementById('monthTitleAvail').textContent = monthNames[month] + ' ' + year;
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      let startWeekday = firstDay.getDay() - 1;
+      if (startWeekday < 0) startWeekday = 6;
+
+      const daysInMonth = lastDay.getDate();
+      const prevMonthLastDay = new Date(year, month, 0).getDate();
+      const cells = [];
+      const today = new Date();
+      const todayStr = today.getFullYear() + '-' +
+        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+        String(today.getDate()).padStart(2, '0');
+
+      for (let i = startWeekday - 1; i >= 0; i--) {
+        cells.push({ num: prevMonthLastDay - i, other: true, date: null });
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        cells.push({ num: d, other: false, date: dateStr, isToday: dateStr === todayStr });
+      }
+      const remaining = (7 - (cells.length % 7)) % 7;
+      for (let i = 1; i <= remaining; i++) {
+        cells.push({ num: i, other: true, date: null });
+      }
+
+      const container = document.getElementById('daysAvail');
+      container.innerHTML = '';
+
+      cells.forEach(cell => {
+        const div = document.createElement('div');
+        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+
+        if (cell.date) {
+          const avail = allAvailability.find(a => a.phone === userPhone && a.date === cell.date);
+          if (avail) {
+            div.classList.add('available');
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + avail.start + '<br>' + avail.end + '</div>';
+          } else {
+            div.style.background = '#FFFFFF';
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+          }
+          div.addEventListener('click', () => showAvailabilityPopup(cell.date, avail));
+        } else {
+          div.style.background = 'transparent';
+          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+        }
+        container.appendChild(div);
+      });
+    }
+
     function showShiftPopup(shift) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
@@ -412,19 +584,121 @@
           appleBtn.addEventListener('click', () => {
             const icsUrl = getIcsUrlForPhone(userPhone);
             if (!icsUrl) {
-              alert('Ссылка на календарь не найдена. Обратись к руководителю.');
+              alert('Ссылка на календарь не найдена.');
               return;
             }
-            // Пробуем открыть ОБЫЧНУЮ https-ссылку через openLink
-            // Это должно принудительно открыть Safari на iPhone
-            if (tg && tg.openLink) {
-              tg.openLink(icsUrl);
-            } else {
-              window.open(icsUrl, '_blank');
-            }
+            if (tg && tg.openLink) tg.openLink(icsUrl);
+            else window.open(icsUrl, '_blank');
             overlay.remove();
           });
         }
+      }
+    }
+
+    function buildTimeOptions(selected) {
+      let html = '';
+      for (let h = 0; h < 24; h++) {
+        const val = String(h).padStart(2, '0') + ':00';
+        const sel = (selected && selected.startsWith(String(h).padStart(2, '0'))) ? ' selected' : '';
+        html += '<option value="' + val + '"' + sel + '>' + val + '</option>';
+      }
+      return html;
+    }
+
+    function showAvailabilityPopup(dateStr, existing) {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      const defaultStart = existing ? existing.start : '10:00';
+      const defaultEnd = existing ? existing.end : '18:00';
+
+      let buttonsHtml = '';
+      buttonsHtml += '<button class="popup-btn" id="saveAvail">Сохранить</button>';
+      if (existing) {
+        buttonsHtml += '<button class="popup-btn danger" id="deleteAvail">Удалить отметку</button>';
+      }
+      buttonsHtml += '<button class="popup-btn secondary" id="closeAvailPopup">Отмена</button>';
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">Могу выйти</div>' +
+        '<div class="popup-info">' + formatDateRu(dateStr) + '</div>' +
+        '<div class="time-fields">' +
+          '<div><label>С</label><select id="availStart">' + buildTimeOptions(defaultStart) + '</select></div>' +
+          '<div><label>До</label><select id="availEnd">' + buildTimeOptions(defaultEnd) + '</select></div>' +
+        '</div>' +
+        buttonsHtml +
+        '</div>';
+
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeAvailPopup').addEventListener('click', () => overlay.remove());
+
+      document.getElementById('saveAvail').addEventListener('click', async () => {
+        const start = document.getElementById('availStart').value;
+        const end = document.getElementById('availEnd').value;
+
+        if (start >= end) {
+          alert('Время окончания должно быть позже времени начала');
+          return;
+        }
+
+        try {
+          await fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              phone: userPhone,
+              date: dateStr,
+              start_time: start,
+              end_time: end
+            })
+          });
+
+          // Оптимистично обновляем локально
+          const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
+          if (idx >= 0) {
+            allAvailability[idx].start = start;
+            allAvailability[idx].end = end;
+          } else {
+            allAvailability.push({ phone: userPhone, date: dateStr, start, end });
+          }
+
+          overlay.remove();
+          renderAvailabilityCalendar();
+                  } catch (e) {
+          alert('Ошибка сохранения: ' + e.message);
+        }
+      });
+
+      if (existing) {
+        document.getElementById('deleteAvail').addEventListener('click', async () => {
+          try {
+            await fetch(WEB_APP_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                phone: userPhone,
+                date: dateStr,
+                start_time: '',
+                end_time: ''
+              })
+            });
+
+            const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
+            if (idx >= 0) allAvailability.splice(idx, 1);
+
+            overlay.remove();
+            renderAvailabilityCalendar();
+          } catch (e) {
+            alert('Ошибка удаления: ' + e.message);
+          }
+        });
       }
     }
 
@@ -463,18 +737,15 @@
 
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
-      document.getElementById('calendarWrap').style.display = 'none';
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('loading').innerHTML = 'Загружаем данные…';
+      document.getElementById('tabsBar').style.display = 'flex';
+      document.getElementById('tabSchedule').style.display = 'block';
 
       try {
-        await Promise.all([loadShifts(), loadEmployeeIcsLinks()]);
+        await Promise.all([loadShifts(), loadAvailability(), loadEmployeeIcsLinks()]);
         const myShifts = allShifts.filter(s => s.phone === userPhone);
-        document.getElementById('loading').style.display = 'none';
 
         if (myShifts.length === 0) {
-          const wrap = document.getElementById('calendarWrap');
-          wrap.style.display = 'block';
+          const wrap = document.getElementById('tabSchedule');
           wrap.innerHTML = '<div class="not-found">По номеру <b>' + userPhone + '</b> смены не найдены.<br>Обратись к руководителю, чтобы проверить номер в системе.</div>' +
             '<div style="text-align:center;margin-top:16px;"><a href="#" id="resetPhone" style="color:#2481cc;font-size:13px;">Ввести другой номер</a></div>';
           document.getElementById('resetPhone').addEventListener('click', e => {
@@ -488,11 +759,31 @@
         document.getElementById('calendarWrap').style.display = 'block';
         renderBanner();
         renderCalendar();
+        renderAvailabilityCalendar();
       } catch (e) {
-        document.getElementById('loading').innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
+        document.getElementById('tabSchedule').innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
       }
     }
 
+    // ---- Переключение вкладок ----
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        if (target === 'schedule') {
+          document.getElementById('tabSchedule').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Твоё расписание смен';
+        } else if (target === 'availability') {
+          document.getElementById('tabAvailability').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Когда ты можешь выйти';
+        }
+      });
+    });
+
+    // ---- Кнопки переключения месяца в расписании ----
     document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
       renderCalendar();
@@ -502,6 +793,17 @@
       renderCalendar();
     });
 
+    // ---- Кнопки переключения месяца в доступности ----
+    document.getElementById('prevMonthAvail').addEventListener('click', () => {
+      currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1);
+      renderAvailabilityCalendar();
+    });
+    document.getElementById('nextMonthAvail').addEventListener('click', () => {
+      currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1);
+      renderAvailabilityCalendar();
+    });
+
+    // ---- Старт ----
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

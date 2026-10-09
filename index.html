@@ -141,7 +141,20 @@
       text-align: center;
       font-size: 14px;
       line-height: 1.5;
-    }
+    }.banner {
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.banner-icon { font-size: 20px; }
+.banner.shift { background: #32CD32; color: white; }
+.banner.sick { background: #C0C0C0; color: #333; }
+.banner.vacation { background: #B0E0E6; color: #333; }
   </style>
 </head>
 <body>
@@ -159,6 +172,7 @@
 
   <!-- Календарь -->
   <div id="calendarWrap" style="display:none">
+    <div id="banner" style="display:none"></div>
     <div class="month-header">
       <button class="month-nav" id="prevMonth">←</button>
       <div class="month-title" id="monthTitle">Октябрь 2026</div>
@@ -289,6 +303,36 @@
     }
 
     // ---- Рендер календаря ----
+    function renderBanner() {
+  const banner = document.getElementById('banner');
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tStr = tomorrow.getFullYear() + '-' +
+    String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
+    String(tomorrow.getDate()).padStart(2, '0');
+
+  const shift = allShifts.find(s => s.phone === userPhone && s.date === tStr);
+  if (!shift) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  if (shift.status === 'Б') {
+    banner.className = 'banner sick';
+    banner.innerHTML = `<span class="banner-icon">🤒</span> Завтра: Больничный`;
+    banner.style.display = 'flex';
+  } else if (shift.status === 'О') {
+    banner.className = 'banner vacation';
+    banner.innerHTML = `<span class="banner-icon">🌴</span> Завтра: Отпуск`;
+    banner.style.display = 'flex';
+  } else if (shift.start && shift.end) {
+    banner.className = 'banner shift';
+    banner.innerHTML = `<span class="banner-icon">🔔</span> Завтра смена: ${shift.start} – ${shift.end}`;
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+}
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();

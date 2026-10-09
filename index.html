@@ -508,11 +508,10 @@
             } else if (shift.status === 'О') {
               div.style.background = '#B0E0E6';
               div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">О</div>';
-                        } else if (shift.start && shift.end) {
+                         } else if (shift.start && shift.end) {
               div.style.background = '#32CD32';
               div.style.color = 'white';
-              const isNight = shift.end < shift.start;
-              const moon = isNight ? ' 🌙' : '';
+              const moon = isNightShift(shift.start, shift.end) ? ' 🌙' : '';
               div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + shift.start + '<br>' + shift.end + moon + '</div>';
             } else {
               div.style.background = '#FFFFFF';
@@ -827,7 +826,22 @@
       const details = encodeURIComponent('Рабочая смена');
       return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text + '&dates=' + dates + '&details=' + details;
     }
+    function isNightShift(startStr, endStr) {
+      const [sh, sm] = startStr.split(':').map(Number);
+      const [eh, em] = endStr.split(':').map(Number);
+      const S = sh * 60 + sm;
+      let E = eh * 60 + em;
 
+      // Если конец меньше начала — смена переходит через полночь
+      if (E <= S) E += 24 * 60;
+
+      const NS = 22 * 60;      // 22:00
+      const NE = 6 * 60 + 24 * 60; // 06:00 следующего дня (в минутах от начала смены)
+
+      // Смена пересекается с [22:00, 06:00], если
+      // E > NS (захватывает время после 22:00) ИЛИ S < NE (захватывает время до 06:00)
+      return E > NS || S < (6 * 60);
+    }
     function formatDateRu(isoDate) {
       if (!isoDate || typeof isoDate !== 'string') return '—';
       const parts = isoDate.split('-');

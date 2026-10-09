@@ -141,20 +141,21 @@
       text-align: center;
       font-size: 14px;
       line-height: 1.5;
-    }.banner {
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  line-height: 1.4;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.banner-icon { font-size: 20px; }
-.banner.shift { background: #32CD32; color: white; }
-.banner.sick { background: #C0C0C0; color: #333; }
-.banner.vacation { background: #B0E0E6; color: #333; }
+    }
+    .banner {
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .banner-icon { font-size: 20px; }
+    .banner.shift { background: #32CD32; color: white; }
+    .banner.sick { background: #C0C0C0; color: #333; }
+    .banner.vacation { background: #B0E0E6; color: #333; }
   </style>
 </head>
 <body>
@@ -221,9 +222,7 @@
     function normalizePhone(p) {
       if (!p) return '';
       let s = String(p).trim();
-      // убираем всё кроме цифр и +
       s = s.replace(/[^0-9+]/g, '');
-      // если нет + в начале, добавляем
       if (s && s[0] !== '+') s = '+' + s;
       return s;
     }
@@ -241,13 +240,11 @@
       document.getElementById('calendarWrap').style.display = 'none';
       document.getElementById('loading').style.display = 'none';
 
-      // Кнопка «Поделиться номером» — только если Telegram умеет
       const shareBtn = document.getElementById('sharePhone');
       if (tg && tg.requestContact) {
         shareBtn.addEventListener('click', () => {
           tg.requestContact((ok, event) => {
             if (!ok) return;
-            // В новых версиях Telegram WebApp contact приходит здесь
             const phone = event?.responseUnsafe?.contact?.phone_number
               || tg.initDataUnsafe?.contact?.phone_number;
             if (phone) {
@@ -262,7 +259,6 @@
         shareBtn.style.display = 'none';
       }
 
-      // Ручной ввод
       const manualLink = document.getElementById('manualLink');
       const phoneInput = document.getElementById('phoneInput');
       const saveManual = document.getElementById('saveManual');
@@ -302,37 +298,39 @@
         .filter(s => s.phone);
     }
 
-    // ---- Рендер календаря ----
+    // ---- Баннер «Завтра смена» ----
     function renderBanner() {
-  const banner = document.getElementById('banner');
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tStr = tomorrow.getFullYear() + '-' +
-    String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
-    String(tomorrow.getDate()).padStart(2, '0');
+      const banner = document.getElementById('banner');
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tStr = tomorrow.getFullYear() + '-' +
+        String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
+        String(tomorrow.getDate()).padStart(2, '0');
 
-  const shift = allShifts.find(s => s.phone === userPhone && s.date === tStr);
-  if (!shift) {
-    banner.style.display = 'none';
-    return;
-  }
+      const shift = allShifts.find(s => s.phone === userPhone && s.date === tStr);
+      if (!shift) {
+        banner.style.display = 'none';
+        return;
+      }
 
-  if (shift.status === 'Б') {
-    banner.className = 'banner sick';
-    banner.innerHTML = `<span class="banner-icon">🤒</span> Завтра: Больничный`;
-    banner.style.display = 'flex';
-  } else if (shift.status === 'О') {
-    banner.className = 'banner vacation';
-    banner.innerHTML = `<span class="banner-icon">🌴</span> Завтра: Отпуск`;
-    banner.style.display = 'flex';
-  } else if (shift.start && shift.end) {
-    banner.className = 'banner shift';
-    banner.innerHTML = `<span class="banner-icon">🔔</span> Завтра смена: ${shift.start} – ${shift.end}`;
-    banner.style.display = 'flex';
-  } else {
-    banner.style.display = 'none';
-  }
-}
+      if (shift.status === 'Б') {
+        banner.className = 'banner sick';
+        banner.innerHTML = `<span class="banner-icon">🤒</span> Завтра: Больничный`;
+        banner.style.display = 'flex';
+      } else if (shift.status === 'О') {
+        banner.className = 'banner vacation';
+        banner.innerHTML = `<span class="banner-icon">🌴</span> Завтра: Отпуск`;
+        banner.style.display = 'flex';
+      } else if (shift.start && shift.end) {
+        banner.className = 'banner shift';
+        banner.innerHTML = `<span class="banner-icon">🔔</span> Завтра смена: ${shift.start} – ${shift.end}`;
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    // ---- Рендер календаря ----
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
@@ -435,6 +433,7 @@
         }
 
         document.getElementById('calendarWrap').style.display = 'block';
+        renderBanner();
         renderCalendar();
       } catch (e) {
         document.getElementById('loading').innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
@@ -457,10 +456,6 @@
       initApp();
     } else {
       showPhoneForm();
-    }
-  </script>
-</body>
-</html>
     }
   </script>
 </body>

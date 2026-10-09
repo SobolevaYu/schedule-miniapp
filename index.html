@@ -162,7 +162,6 @@
   <h1 id="greeting">Привет!</h1>
   <p class="subtitle">Твоё расписание смен</p>
 
-  <!-- Форма запроса телефона -->
   <div class="phone-form" id="phoneForm" style="display:none">
     <p class="hint">Чтобы видеть свои смены, поделись номером телефона, который записан в системе.</p>
     <button id="sharePhone">📱 Поделиться номером</button>
@@ -171,7 +170,6 @@
     <button id="saveManual" style="display:none">Сохранить</button>
   </div>
 
-  <!-- Календарь -->
   <div id="calendarWrap" style="display:none">
     <div id="banner" style="display:none"></div>
     <div class="month-header">
@@ -218,7 +216,6 @@
       }
     }
 
-    // ---- Нормализация телефона: оставляем только "+" и цифры ----
     function normalizePhone(p) {
       if (!p) return '';
       let s = String(p).trim();
@@ -227,7 +224,6 @@
       return s;
     }
 
-    // ---- Работа с сохранённым номером ----
     function getSavedPhone() {
       return localStorage.getItem(STORAGE_KEY);
     }
@@ -279,13 +275,26 @@
       });
     }
 
-    // ---- Загрузка смен ----
     async function loadShifts() {
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
       const res = await fetch(url);
       const text = await res.text();
-      const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-      const rows = json.table.rows || [];
+
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}');
+      if (start === -1 || end === -1 || end <= start) {
+        throw new Error('Неверный ответ от Google Sheets');
+      }
+      const cleanJson = text.substring(start, end + 1);
+
+      let json;
+      try {
+        json = JSON.parse(cleanJson);
+      } catch (e) {
+        throw new Error('Не удалось распарсить JSON: ' + e.message);
+      }
+
+      const rows = json.table && json.table.rows ? json.table.rows : [];
 
       allShifts = rows
         .map(row => ({
@@ -298,7 +307,6 @@
         .filter(s => s.phone);
     }
 
-    // ---- Баннер «Завтра смена» ----
     function renderBanner() {
       const banner = document.getElementById('banner');
       const tomorrow = new Date();
@@ -330,7 +338,6 @@
       }
     }
 
-    // ---- Рендер календаря ----
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
@@ -402,7 +409,6 @@
       });
     }
 
-    // ---- Инициализация ----
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('calendarWrap').style.display = 'none';
@@ -449,7 +455,6 @@
       renderCalendar();
     });
 
-    // ---- Старт ----
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);
@@ -457,6 +462,17 @@
     } else {
       showPhoneForm();
     }
+  </script>
+
+  <script>
+    // Убираем текстовые ноды "}" от Google Sheets, если они попали в body
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.childNodes.forEach(node => {
+        if (node.nodeType === 3 && node.textContent.trim() === '}') {
+          node.remove();
+        }
+      });
+    });
   </script>
 </body>
 </html>

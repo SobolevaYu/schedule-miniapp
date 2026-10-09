@@ -204,6 +204,9 @@
       cursor: pointer;
       margin-bottom: 8px;
     }
+    .popup-btn.google { background: #4285F4; }
+    .popup-btn.apple { background: #000000; }
+    .popup-btn.ics { background: #6c757d; }
     .popup-btn.secondary {
       background: transparent;
       color: var(--tg-theme-link-color, #2481cc);
@@ -490,7 +493,9 @@
 
       let buttonsHtml = '';
       if (showCalendar) {
-        buttonsHtml += '<button class="popup-btn" id="addCalendar">📅 Добавить в календарь</button>';
+        buttonsHtml += '<button class="popup-btn google" id="addGoogle">📅 Добавить в Google Calendar</button>';
+        buttonsHtml += '<button class="popup-btn apple" id="addApple">📅 Добавить в Apple Calendar</button>';
+        buttonsHtml += '<button class="popup-btn ics" id="addIcs">📄 Скачать .ics файл</button>';
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
 
@@ -513,13 +518,32 @@
       });
 
       if (showCalendar) {
-        document.getElementById('addCalendar').addEventListener('click', () => {
+        document.getElementById('addGoogle').addEventListener('click', () => {
           const url = buildGoogleCalendarUrl(shift);
-          if (tg && tg.openLink) {
-            tg.openLink(url);
-          } else {
-            window.open(url, '_blank');
-          }
+          if (tg && tg.openLink) tg.openLink(url);
+          else window.open(url, '_blank');
+          overlay.remove();
+        });
+
+        document.getElementById('addApple').addEventListener('click', () => {
+          const ics = buildIcsString(shift);
+          const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+          if (tg && tg.openLink) tg.openLink(dataUri);
+          else window.open(dataUri, '_blank');
+          overlay.remove();
+        });
+
+        document.getElementById('addIcs').addEventListener('click', () => {
+          const ics = buildIcsString(shift);
+          const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'shift-' + shift.date + '.ics';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
           overlay.remove();
         });
       }
@@ -549,6 +573,57 @@
       const details = encodeURIComponent('Рабочая смена');
 
       return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text + '&dates=' + dates + '&details=' + details;
+    }
+
+    function buildIcsString(shift) {
+      const [y, m, d] = shift.date.split('-');
+      const [sh, sm] = shift.start.split(':');
+      const [eh, em] = shift.end.split(':');
+
+      const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
+
+      const dtStart = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+
+      let endY = y, endM = m, endD = d;
+      if (isOvernight) {
+        const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+        next.setDate(next.getDate() + 1);
+        endY = String(next.getFullYear());
+        endM = String(next.getMonth() + 1).padStart(2, '0');
+        endD = String(next.getDate()).padStart(2, '0');
+      }
+      const dtEnd = endY + endM + endD + 'T' + eh.padStart(2, '0') + em.padStart(2, '0') + '00';
+
+      const uid = 'shift-' + shift.date + '-' + shift.start.replace(':','') + '@schedule-miniapp';
+      const now = new Date();
+      const dtStamp = now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, '0') +
+        String(now.getDate()).padStart(2, '0') + 'T' +
+        String(now.getHours()).padStart(2, '0') +
+        String(now.getMinutes()).padStart(2, '0') + '00';
+
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Schedule MiniApp//RU',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        'UID:' + uid,
+        'DTSTAMP:' + dtStamp,
+        'DTSTART:' + dtStart,
+        'DTEND:' + dtEnd,
+        'SUMMARY:Смена ' + shift.start + '–' + shift.end,
+        'DESCRIPTION:Рабочая смена ' + shift.start + ' – ' + shift.end,
+        'BEGIN:VALARM',
+        'TRIGGER:-PT2H',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Напоминание о смене',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ];
+
+      return lines.join('\r\n');
     }
 
     function formatDateRu(isoDate) {

@@ -181,8 +181,17 @@
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
-    .popup-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-    .popup-info { font-size: 15px; color: var(--tg-theme-hint-color, #999999); margin-bottom: 20px; line-height: 1.5; }
+    .popup-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .popup-info {
+      font-size: 15px;
+      color: var(--tg-theme-hint-color, #999999);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
     .popup-btn {
       width: 100%;
       padding: 14px;
@@ -197,7 +206,13 @@
     }
     .popup-btn.google { background: #4285F4; }
     .popup-btn.apple { background: #000000; }
-    .popup-btn.secondary { background: transparent; color: var(--tg-theme-link-color, #2481cc); font-weight: 500; margin-bottom: 0; }
+    .popup-btn.ics { background: #6c757d; }
+    .popup-btn.secondary {
+      background: transparent;
+      color: var(--tg-theme-link-color, #2481cc);
+      font-weight: 500;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -247,7 +262,6 @@
     let userPhone = null;
     let currentMonth = new Date();
     let allShifts = [];
-    let employeesIcsMap = {};
 
     if (tg) {
       tg.ready();
@@ -267,8 +281,12 @@
       return s;
     }
 
-    function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
-    function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
+    function getSavedPhone() {
+      return localStorage.getItem(STORAGE_KEY);
+    }
+    function savePhone(p) {
+      localStorage.setItem(STORAGE_KEY, p);
+    }
 
     function showPhoneForm() {
       document.getElementById('phoneForm').style.display = 'block';
@@ -318,11 +336,23 @@
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
       const res = await fetch(url);
       const text = await res.text();
+
       const start = text.indexOf('{');
       const end = text.lastIndexOf('}');
-      if (start === -1 || end === -1 || end <= start) throw new Error('Неверный ответ от Google Sheets');
-      const json = JSON.parse(text.substring(start, end + 1));
+      if (start === -1 || end === -1 || end <= start) {
+        throw new Error('Неверный ответ от Google Sheets');
+      }
+      const cleanJson = text.substring(start, end + 1);
+
+      let json;
+      try {
+        json = JSON.parse(cleanJson);
+      } catch (e) {
+        throw new Error('Не удалось распарсить JSON: ' + e.message);
+      }
+
       const rows = json.table && json.table.rows ? json.table.rows : [];
+
       allShifts = rows
         .map(row => ({
           phone: normalizePhone(row.c[0]?.v || ''),
@@ -334,27 +364,6 @@
         .filter(s => s.phone);
     }
 
-    async function loadEmployeeIcsLinks() {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Сотрудники')}`;
-      try {
-        const res = await fetch(url);
-        const text = await res.text();
-        const start = text.indexOf('{');
-        const end = text.lastIndexOf('}');
-        if (start === -1 || end === -1) return;
-        const json = JSON.parse(text.substring(start, end + 1));
-        const rows = json.table && json.table.rows ? json.table.rows : [];
-        employeesIcsMap = {};
-        rows.forEach(row => {
-          const phone = normalizePhone(row.c[0]?.v || '');
-          const icsUrl = String(row.c[2]?.v || '').trim();
-          if (phone && icsUrl) employeesIcsMap[phone] = icsUrl;
-        });
-      } catch (e) { console.error('Не удалось загрузить ссылки ICS:', e); }
-    }
-
-    function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
-
     function renderBanner() {
       const banner = document.getElementById('banner');
       const tomorrow = new Date();
@@ -364,7 +373,10 @@
         String(tomorrow.getDate()).padStart(2, '0');
 
       const shift = allShifts.find(s => s.phone === userPhone && s.date === tStr);
-      if (!shift) { banner.style.display = 'none'; return; }
+      if (!shift) {
+        banner.style.display = 'none';
+        return;
+      }
 
       if (shift.status === 'Б') {
         banner.className = 'banner sick';
@@ -386,6 +398,7 @@
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
+
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitle').textContent = monthNames[month] + ' ' + year;
 
@@ -402,13 +415,19 @@
         String(today.getMonth() + 1).padStart(2, '0') + '-' +
         String(today.getDate()).padStart(2, '0');
 
-      for (let i = startWeekday - 1; i >= 0; i--) cells.push({ num: prevMonthLastDay - i, other: true, date: null });
+      for (let i = startWeekday - 1; i >= 0; i--) {
+        cells.push({ num: prevMonthLastDay - i, other: true, date: null });
+      }
       for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        const dateStr = year + '-' +
+          String(month + 1).padStart(2, '0') + '-' +
+          String(d).padStart(2, '0');
         cells.push({ num: d, other: false, date: dateStr, isToday: dateStr === todayStr });
       }
       const remaining = (7 - (cells.length % 7)) % 7;
-      for (let i = 1; i <= remaining; i++) cells.push({ num: i, other: true, date: null });
+      for (let i = 1; i <= remaining; i++) {
+        cells.push({ num: i, other: true, date: null });
+      }
 
       const container = document.getElementById('days');
       container.innerHTML = '';
@@ -434,6 +453,7 @@
               div.style.background = '#FFFFFF';
               div.innerHTML = `<div class="day-num">${cell.num}</div>`;
             }
+
             div.addEventListener('click', () => showShiftPopup(shift));
           } else {
             div.style.background = '#FFFFFF';
@@ -443,6 +463,7 @@
           div.style.background = 'transparent';
           div.innerHTML = `<div class="day-num">${cell.num}</div>`;
         }
+
         container.appendChild(div);
       });
     }
@@ -454,7 +475,10 @@
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
 
-      let title = '', info = '', showCalendar = false;
+      let title = '';
+      let info = '';
+      let showCalendar = false;
+
       if (shift.status === 'Б') {
         title = '🤒 Больничный';
         info = 'Дата: ' + formatDateRu(shift.date);
@@ -471,6 +495,7 @@
       if (showCalendar) {
         buttonsHtml += '<button class="popup-btn google" id="addGoogle">📅 Добавить в Google Calendar</button>';
         buttonsHtml += '<button class="popup-btn apple" id="addApple">📅 Добавить в Apple Calendar</button>';
+        buttonsHtml += '<button class="popup-btn ics" id="addIcs">📄 Скачать .ics файл</button>';
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
 
@@ -481,10 +506,16 @@
           ${buttonsHtml}
         </div>
       `;
+
       document.body.appendChild(overlay);
 
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closePopup').addEventListener('click', () => overlay.remove());
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+
+      document.getElementById('closePopup').addEventListener('click', () => {
+        overlay.remove();
+      });
 
       if (showCalendar) {
         document.getElementById('addGoogle').addEventListener('click', () => {
@@ -495,15 +526,24 @@
         });
 
         document.getElementById('addApple').addEventListener('click', () => {
-          const icsUrl = getIcsUrlForPhone(userPhone);
-          if (!icsUrl) {
-            alert('Ссылка на календарь не найдена. Обратись к руководителю.');
-            return;
-          }
-          // Меняем протокол на webcal, чтобы iPhone сразу предложил подписку
-          const webcalUrl = icsUrl.replace('https://', 'webcal://').replace('http://', 'webcal://');
-          if (tg && tg.openLink) tg.openLink(webcalUrl);
-          else window.location.href = webcalUrl;
+          const ics = buildIcsString(shift);
+          const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+          if (tg && tg.openLink) tg.openLink(dataUri);
+          else window.open(dataUri, '_blank');
+          overlay.remove();
+        });
+
+        document.getElementById('addIcs').addEventListener('click', () => {
+          const ics = buildIcsString(shift);
+          const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'shift-' + shift.date + '.ics';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
           overlay.remove();
         });
       }
@@ -513,8 +553,11 @@
       const [y, m, d] = shift.date.split('-');
       const [sh, sm] = shift.start.split(':');
       const [eh, em] = shift.end.split(':');
+
       const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
+
       const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+
       let endY = y, endM = m, endD = d;
       if (isOvernight) {
         const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
@@ -524,12 +567,134 @@
         endD = String(next.getDate()).padStart(2, '0');
       }
       const endStr = endY + endM + endD + 'T' + eh.padStart(2, '0') + em.padStart(2, '0') + '00';
+
       const text = encodeURIComponent('Смена ' + shift.start + '–' + shift.end);
       const dates = startStr + '/' + endStr;
       const details = encodeURIComponent('Рабочая смена');
+
       return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text + '&dates=' + dates + '&details=' + details;
+    }
+
+    function buildIcsString(shift) {
+      const [y, m, d] = shift.date.split('-');
+      const [sh, sm] = shift.start.split(':');
+      const [eh, em] = shift.end.split(':');
+
+      const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
+
+      const dtStart = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+
+      let endY = y, endM = m, endD = d;
+      if (isOvernight) {
+        const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+        next.setDate(next.getDate() + 1);
+        endY = String(next.getFullYear());
+        endM = String(next.getMonth() + 1).padStart(2, '0');
+        endD = String(next.getDate()).padStart(2, '0');
+      }
+      const dtEnd = endY + endM + endD + 'T' + eh.padStart(2, '0') + em.padStart(2, '0') + '00';
+
+      const uid = 'shift-' + shift.date + '-' + shift.start.replace(':','') + '@schedule-miniapp';
+      const now = new Date();
+      const dtStamp = now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, '0') +
+        String(now.getDate()).padStart(2, '0') + 'T' +
+        String(now.getHours()).padStart(2, '0') +
+        String(now.getMinutes()).padStart(2, '0') + '00';
+
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Schedule MiniApp//RU',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        'UID:' + uid,
+        'DTSTAMP:' + dtStamp,
+        'DTSTART:' + dtStart,
+        'DTEND:' + dtEnd,
+        'SUMMARY:Смена ' + shift.start + '–' + shift.end,
+        'DESCRIPTION:Рабочая смена ' + shift.start + ' – ' + shift.end,
+        'BEGIN:VALARM',
+        'TRIGGER:-PT2H',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Напоминание о смене',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ];
+
+      return lines.join('\r\n');
     }
 
     function formatDateRu(isoDate) {
       const [y, m, d] = isoDate.split('-');
-      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','дека
+      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+      return parseInt(d) + ' ' + months[parseInt(m) - 1] + ' ' + y;
+    }
+
+    async function initApp() {
+      document.getElementById('phoneForm').style.display = 'none';
+      document.getElementById('calendarWrap').style.display = 'none';
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('loading').innerHTML = 'Загружаем данные…';
+
+      try {
+        await loadShifts();
+        const myShifts = allShifts.filter(s => s.phone === userPhone);
+        document.getElementById('loading').style.display = 'none';
+
+        if (myShifts.length === 0) {
+          const wrap = document.getElementById('calendarWrap');
+          wrap.style.display = 'block';
+          wrap.innerHTML = `<div class="not-found">
+            По номеру <b>${userPhone}</b> смены не найдены.<br>
+            Обратись к руководителю, чтобы проверить номер в системе.
+          </div>
+          <div style="text-align:center;margin-top:16px;">
+            <a href="#" id="resetPhone" style="color:#2481cc;font-size:13px;">Ввести другой номер</a>
+          </div>`;
+          document.getElementById('resetPhone').addEventListener('click', e => {
+            e.preventDefault();
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+          });
+          return;
+        }
+
+        document.getElementById('calendarWrap').style.display = 'block';
+        renderBanner();
+        renderCalendar();
+      } catch (e) {
+        document.getElementById('loading').innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
+      }
+    }
+
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      currentMonth.setMonth(currentMonth.getMonth() - 1);
+      renderCalendar();
+    });
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+      renderCalendar();
+    });
+
+    const saved = getSavedPhone();
+    if (saved) {
+      userPhone = normalizePhone(saved);
+      initApp();
+    } else {
+      showPhoneForm();
+    }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.childNodes.forEach(node => {
+        if (node.nodeType === 3 && node.textContent.trim() === '}') {
+          node.remove();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

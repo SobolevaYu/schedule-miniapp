@@ -113,7 +113,10 @@
       justify-content: space-between;
       font-size: 12px;
       border: 1px solid rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: transform 0.1s;
     }
+    .day:active { transform: scale(0.95); }
     .day-num { font-size: 12px; font-weight: 600; line-height: 1; }
     .day-time { font-size: 9px; line-height: 1.1; font-weight: 500; text-align: center; }
     .day-status { font-size: 14px; font-weight: 700; text-align: center; margin-top: 2px; }
@@ -156,6 +159,58 @@
     .banner.shift { background: #32CD32; color: white; }
     .banner.sick { background: #C0C0C0; color: #333; }
     .banner.vacation { background: #B0E0E6; color: #333; }
+
+    /* Попап */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .popup {
+      background: var(--tg-theme-bg-color, #ffffff);
+      border-radius: 16px 16px 0 0;
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      animation: slideUp 0.2s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .popup-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .popup-info {
+      font-size: 15px;
+      color: var(--tg-theme-hint-color, #999999);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .popup-btn {
+      width: 100%;
+      padding: 14px;
+      background: #32CD32;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .popup-btn.secondary {
+      background: transparent;
+      color: var(--tg-theme-link-color, #2481cc);
+      font-weight: 500;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -396,6 +451,9 @@
               div.style.background = '#FFFFFF';
               div.innerHTML = `<div class="day-num">${cell.num}</div>`;
             }
+
+            // Клик по дню со сменой
+            div.addEventListener('click', () => showShiftPopup(shift));
           } else {
             div.style.background = '#FFFFFF';
             div.innerHTML = `<div class="day-num">${cell.num}</div>`;
@@ -407,6 +465,148 @@
 
         container.appendChild(div);
       });
+    }
+
+    // ---- Попап со сменой ----
+    function showShiftPopup(shift) {
+      // Удаляем старый попап, если есть
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      let title = '';
+      let info = '';
+      let showIcs = false;
+
+      if (shift.status === 'Б') {
+        title = '🤒 Больничный';
+        info = 'Дата: ' + formatDateRu(shift.date);
+      } else if (shift.status === 'О') {
+        title = '🌴 Отпуск';
+        info = 'Дата: ' + formatDateRu(shift.date);
+      } else {
+        title = '🟢 Смена';
+        info = formatDateRu(shift.date) + '<br>' + shift.start + ' – ' + shift.end;
+        showIcs = true;
+      }
+
+      let buttonsHtml = '';
+      if (showIcs) {
+        buttonsHtml += '<button class="popup-btn" id="addIcs">📅 Добавить в календарь телефона</button>';
+      }
+      buttonsHtml += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
+
+      overlay.innerHTML = `
+        <div class="popup">
+          <div class="popup-title">${title}</div>
+          <div class="popup-info">${info}</div>
+          ${buttonsHtml}
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+
+      document.getElementById('closePopup').addEventListener('click', () => {
+        overlay.remove();
+      });
+
+      if (showIcs) {
+        document.getElementById('addIcs').addEventListener('click', () => {
+          downloadIcs(shift);
+          overlay.remove();
+        });
+      }
+    }
+
+    function formatDateRu(isoDate) {
+      // isoDate: "2026-10-09"
+      const [y, m, d] = isoDate.split('-');
+      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+      return parseInt(d) + ' ' + months[parseInt(m) - 1] + ' ' + y;
+    }
+
+    // ---- Генерация и скачивание .ics ----
+    function downloadIcs(shift) {
+      // Разбираем дату: "2026-10-09" → 2026, 10, 09
+      const [y, m, d] = shift.date.split('-').map(Number);
+
+      // Разбираем время: "08:00" → 8, 0
+      const [sh, sm] = shift.start.split(':').map(Number);
+      const [eh, em] = shift.end.split(':').map(Number);
+
+      // Если end < start — значит, ночная смена, end на следующий день
+      const isOvernight = (eh * 60 + em) <= (sh * 60 + sm);
+
+      // Формируем DTSTART
+      const dtStart = formatIcsDate(y, m, d, sh, sm);
+
+      // Формируем DTEND
+      let endY = y, endM = m, endD = d;
+      if (isOvernight) {
+        const next = new Date(y, m - 1, d);
+        next.setDate(next.getDate() + 1);
+        endY = next.getFullYear();
+        endM = next.getMonth() + 1;
+        endD = next.getDate();
+      }
+      const dtEnd = formatIcsDate(endY, endM, endD, eh, em);
+
+      // UID — уникальный идентификатор события
+      const uid = 'shift-' + shift.date + '-' + shift.start.replace(':','') + '-' + userPhone.replace(/[^0-9]/g,'') + '@schedule-miniapp';
+
+      // Дата создания (сейчас)
+      const now = new Date();
+      const dtStamp = formatIcsDate(now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes()) + '00';
+
+      const icsLines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Schedule MiniApp//RU',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        'UID:' + uid,
+        'DTSTAMP:' + dtStamp,
+        'DTSTART:' + dtStart,
+        'DTEND:' + dtEnd,
+        'SUMMARY:Смена ' + shift.start + '–' + shift.end,
+        'DESCRIPTION:Рабочая смена ' + shift.start + ' – ' + shift.end,
+        'BEGIN:VALARM',
+        'TRIGGER:-PT2H',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Напоминание о смене',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ];
+
+      const icsContent = icsLines.join('\r\n');
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'shift-' + shift.date + '.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function formatIcsDate(y, m, d, h, min) {
+      // Формат: YYYYMMDDTHHMMSS (без Z — значит локальное время)
+      return String(y) +
+        String(m).padStart(2, '0') +
+        String(d).padStart(2, '0') +
+        'T' +
+        String(h).padStart(2, '0') +
+        String(min).padStart(2, '0') +
+        '00';
     }
 
     async function initApp() {
@@ -465,7 +665,6 @@
   </script>
 
   <script>
-    // Убираем текстовые ноды "}" от Google Sheets, если они попали в body
     document.addEventListener('DOMContentLoaded', () => {
       document.body.childNodes.forEach(node => {
         if (node.nodeType === 3 && node.textContent.trim() === '}') {

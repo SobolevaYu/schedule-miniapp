@@ -706,8 +706,7 @@
       const [sh, sm] = shift.start.split(':');
       const [eh, em] = shift.end.split(':');
       const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
-      const startStr = y + m + d + 'T' + sh.padStart(2
-      '0') + sm.padStart(2, '0') + '00';
+     const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
       let endY = y, endM = m, endD = d;
       if (isOvernight) {
         const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));

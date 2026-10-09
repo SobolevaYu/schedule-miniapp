@@ -160,7 +160,6 @@
     .banner.sick { background: #C0C0C0; color: #333; }
     .banner.vacation { background: #B0E0E6; color: #333; }
 
-    /* Попап */
     .popup-overlay {
       position: fixed;
       inset: 0;
@@ -452,7 +451,6 @@
               div.innerHTML = `<div class="day-num">${cell.num}</div>`;
             }
 
-            // Клик по дню со сменой
             div.addEventListener('click', () => showShiftPopup(shift));
           } else {
             div.style.background = '#FFFFFF';
@@ -467,9 +465,7 @@
       });
     }
 
-    // ---- Попап со сменой ----
     function showShiftPopup(shift) {
-      // Удаляем старый попап, если есть
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
 
@@ -478,7 +474,7 @@
 
       let title = '';
       let info = '';
-      let showIcs = false;
+      let showCalendar = false;
 
       if (shift.status === 'Б') {
         title = '🤒 Больничный';
@@ -489,12 +485,12 @@
       } else {
         title = '🟢 Смена';
         info = formatDateRu(shift.date) + '<br>' + shift.start + ' – ' + shift.end;
-        showIcs = true;
+        showCalendar = true;
       }
 
       let buttonsHtml = '';
-      if (showIcs) {
-        buttonsHtml += '<button class="popup-btn" id="addIcs">📅 Добавить в календарь телефона</button>';
+      if (showCalendar) {
+        buttonsHtml += '<button class="popup-btn" id="addCalendar">📅 Добавить в календарь</button>';
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
 
@@ -516,97 +512,49 @@
         overlay.remove();
       });
 
-      if (showIcs) {
-        document.getElementById('addIcs').addEventListener('click', () => {
-          downloadIcs(shift);
+      if (showCalendar) {
+        document.getElementById('addCalendar').addEventListener('click', () => {
+          const url = buildGoogleCalendarUrl(shift);
+          if (tg && tg.openLink) {
+            tg.openLink(url);
+          } else {
+            window.open(url, '_blank');
+          }
           overlay.remove();
         });
       }
     }
 
+    function buildGoogleCalendarUrl(shift) {
+      const [y, m, d] = shift.date.split('-');
+      const [sh, sm] = shift.start.split(':');
+      const [eh, em] = shift.end.split(':');
+
+      const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
+
+      const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+
+      let endY = y, endM = m, endD = d;
+      if (isOvernight) {
+        const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+        next.setDate(next.getDate() + 1);
+        endY = String(next.getFullYear());
+        endM = String(next.getMonth() + 1).padStart(2, '0');
+        endD = String(next.getDate()).padStart(2, '0');
+      }
+      const endStr = endY + endM + endD + 'T' + eh.padStart(2, '0') + em.padStart(2, '0') + '00';
+
+      const text = encodeURIComponent('Смена ' + shift.start + '–' + shift.end);
+      const dates = startStr + '/' + endStr;
+      const details = encodeURIComponent('Рабочая смена');
+
+      return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text + '&dates=' + dates + '&details=' + details;
+    }
+
     function formatDateRu(isoDate) {
-      // isoDate: "2026-10-09"
       const [y, m, d] = isoDate.split('-');
       const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
       return parseInt(d) + ' ' + months[parseInt(m) - 1] + ' ' + y;
-    }
-
-    // ---- Генерация и скачивание .ics ----
-    function downloadIcs(shift) {
-      // Разбираем дату: "2026-10-09" → 2026, 10, 09
-      const [y, m, d] = shift.date.split('-').map(Number);
-
-      // Разбираем время: "08:00" → 8, 0
-      const [sh, sm] = shift.start.split(':').map(Number);
-      const [eh, em] = shift.end.split(':').map(Number);
-
-      // Если end < start — значит, ночная смена, end на следующий день
-      const isOvernight = (eh * 60 + em) <= (sh * 60 + sm);
-
-      // Формируем DTSTART
-      const dtStart = formatIcsDate(y, m, d, sh, sm);
-
-      // Формируем DTEND
-      let endY = y, endM = m, endD = d;
-      if (isOvernight) {
-        const next = new Date(y, m - 1, d);
-        next.setDate(next.getDate() + 1);
-        endY = next.getFullYear();
-        endM = next.getMonth() + 1;
-        endD = next.getDate();
-      }
-      const dtEnd = formatIcsDate(endY, endM, endD, eh, em);
-
-      // UID — уникальный идентификатор события
-      const uid = 'shift-' + shift.date + '-' + shift.start.replace(':','') + '-' + userPhone.replace(/[^0-9]/g,'') + '@schedule-miniapp';
-
-      // Дата создания (сейчас)
-      const now = new Date();
-      const dtStamp = formatIcsDate(now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes()) + '00';
-
-      const icsLines = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Schedule MiniApp//RU',
-        'CALSCALE:GREGORIAN',
-        'BEGIN:VEVENT',
-        'UID:' + uid,
-        'DTSTAMP:' + dtStamp,
-        'DTSTART:' + dtStart,
-        'DTEND:' + dtEnd,
-        'SUMMARY:Смена ' + shift.start + '–' + shift.end,
-        'DESCRIPTION:Рабочая смена ' + shift.start + ' – ' + shift.end,
-        'BEGIN:VALARM',
-        'TRIGGER:-PT2H',
-        'ACTION:DISPLAY',
-        'DESCRIPTION:Напоминание о смене',
-        'END:VALARM',
-        'END:VEVENT',
-        'END:VCALENDAR'
-      ];
-
-      const icsContent = icsLines.join('\r\n');
-      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'shift-' + shift.date + '.ics';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    function formatIcsDate(y, m, d, h, min) {
-      // Формат: YYYYMMDDTHHMMSS (без Z — значит локальное время)
-      return String(y) +
-        String(m).padStart(2, '0') +
-        String(d).padStart(2, '0') +
-        'T' +
-        String(h).padStart(2, '0') +
-        String(min).padStart(2, '0') +
-        '00';
     }
 
     async function initApp() {

@@ -115,21 +115,23 @@
     .time-fields { display: flex; gap: 12px; margin-bottom: 16px; }
     .time-fields > div { flex: 1; }
     .time-fields label { font-size: 13px; color: var(--tg-theme-hint-color, #999999); display: block; margin-bottom: 6px; }
-    .time-fields select, .time-fields input {
+    .time-fields select {
       width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
       font-size: 15px; text-align: center; background: white;
     }
 
     .tabs {
-  position: fixed;
-  bottom: 12px;
-  left: 12px;
-  right: 12px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  ...
-  padding: 8px 0;
-}
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: var(--tg-theme-bg-color, #ffffff);
+      display: flex;
+      z-index: 500;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 8px 0;
+    }
     .tab {
       flex: 1;
       text-align: center;
@@ -168,7 +170,6 @@
     <button id="saveManual" style="display:none">Сохранить</button>
   </div>
 
-  <!-- Вкладка: Расписание -->
   <div class="tab-content active" id="tabSchedule">
     <div id="calendarWrap" style="display:none">
       <div id="banner" style="display:none"></div>
@@ -196,7 +197,6 @@
     <div class="loading" id="loading" style="display:none">Загружаем данные…</div>
   </div>
 
-  <!-- Вкладка: Доступность -->
   <div class="tab-content" id="tabAvailability">
     <div class="info-block">
       Отметь дни, когда ты <b>можешь выйти на подработку</b>. Нажми на день в календаре — укажи часы. Руководитель увидит твою доступность.
@@ -218,7 +218,6 @@
     </div>
   </div>
 
-  <!-- Табы внизу -->
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">📅</span>
@@ -270,7 +269,7 @@
       document.getElementById('phoneForm').style.display = 'block';
       document.getElementById('tabsBar').style.display = 'none';
       document.getElementById('tabSchedule').classList.remove('active');
-document.getElementById('tabAvailability').classList.remove('active');
+      document.getElementById('tabAvailability').classList.remove('active');
 
       const shareBtn = document.getElementById('sharePhone');
       if (tg && tg.requestContact) {
@@ -653,7 +652,6 @@ document.getElementById('tabAvailability').classList.remove('active');
             })
           });
 
-          // Оптимистично обновляем локально
           const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
           if (idx >= 0) {
             allAvailability[idx].start = start;
@@ -664,35 +662,42 @@ document.getElementById('tabAvailability').classList.remove('active');
 
           overlay.remove();
           renderAvailabilityCalendar();
-                  } catch (e) {
+        } catch (e) {
           alert('Ошибка сохранения: ' + e.message);
         }
       });
 
       if (existing) {
-        document.getElementById('deleteAvail').addEventListener('click', async () => {
-          try {
-            await fetch(WEB_APP_URL, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'text/plain' },
-              body: JSON.stringify({
-                phone: userPhone,
-                date: dateStr,
-                start_time: '',
-                end_time: ''
-              })
-            });
+        const deleteBtn = document.getElementById('deleteAvail');
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', async () => {
+            deleteBtn.textContent = 'Удаляем…';
+            deleteBtn.disabled = true;
+            try {
+              await fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                  phone: userPhone,
+                  date: dateStr,
+                  start_time: '',
+                  end_time: ''
+                })
+              });
 
-            const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
-            if (idx >= 0) allAvailability.splice(idx, 1);
+              const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
+              if (idx >= 0) allAvailability.splice(idx, 1);
 
-            overlay.remove();
-            renderAvailabilityCalendar();
-          } catch (e) {
-            alert('Ошибка удаления: ' + e.message);
-          }
-        });
+              overlay.remove();
+              renderAvailabilityCalendar();
+            } catch (e) {
+              alert('Ошибка удаления: ' + e.message);
+              deleteBtn.textContent = 'Удалить отметку';
+              deleteBtn.disabled = false;
+            }
+          });
+        }
       }
     }
 
@@ -701,7 +706,8 @@ document.getElementById('tabAvailability').classList.remove('active');
       const [sh, sm] = shift.start.split(':');
       const [eh, em] = shift.end.split(':');
       const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
-      const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+      const startStr = y + m + d + 'T' + sh.padStart(2
+      '0') + sm.padStart(2, '0') + '00';
       let endY = y, endM = m, endD = d;
       if (isOvernight) {
         const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
@@ -731,9 +737,9 @@ document.getElementById('tabAvailability').classList.remove('active');
 
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
-document.getElementById('tabsBar').style.display = 'flex';
-document.getElementById('tabSchedule').classList.add('active');
-document.getElementById('tabAvailability').classList.remove('active');
+      document.getElementById('tabsBar').style.display = 'flex';
+      document.getElementById('tabSchedule').classList.add('active');
+      document.getElementById('tabAvailability').classList.remove('active');
 
       try {
         await Promise.all([loadShifts(), loadAvailability(), loadEmployeeIcsLinks()]);
@@ -760,7 +766,6 @@ document.getElementById('tabAvailability').classList.remove('active');
       }
     }
 
-    // ---- Переключение вкладок ----
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const target = tab.dataset.tab;
@@ -778,7 +783,6 @@ document.getElementById('tabAvailability').classList.remove('active');
       });
     });
 
-    // ---- Кнопки переключения месяца в расписании ----
     document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
       renderCalendar();
@@ -788,7 +792,6 @@ document.getElementById('tabAvailability').classList.remove('active');
       renderCalendar();
     });
 
-    // ---- Кнопки переключения месяца в доступности ----
     document.getElementById('prevMonthAvail').addEventListener('click', () => {
       currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1);
       renderAvailabilityCalendar();
@@ -798,7 +801,6 @@ document.getElementById('tabAvailability').classList.remove('active');
       renderAvailabilityCalendar();
     });
 
-    // ---- Старт ----
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

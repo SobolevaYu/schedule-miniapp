@@ -415,12 +415,12 @@
               alert('Ссылка на календарь не найдена. Обратись к руководителю.');
               return;
             }
-            // Меняем https:// на webcal://, чтобы iPhone предложил подписку
-            const webcalUrl = icsUrl.replace('https://', 'webcal://').replace('http://', 'webcal://');
+            // Пробуем открыть ОБЫЧНУЮ https-ссылку через openLink
+            // Это должно принудительно открыть Safari на iPhone
             if (tg && tg.openLink) {
-              tg.openLink(webcalUrl);
+              tg.openLink(icsUrl);
             } else {
-              window.location.href = webcalUrl;
+              window.open(icsUrl, '_blank');
             }
             overlay.remove();
           });

@@ -12,7 +12,7 @@
       background: var(--tg-theme-bg-color, #ffffff);
       color: var(--tg-theme-text-color, #000000);
       padding: 16px;
-      padding-bottom: 90px;
+      padding-bottom: 100px;
       min-height: 100vh;
     }
     h1 { font-size: 22px; margin-bottom: 4px; }
@@ -121,17 +121,15 @@
     }
 
     .tabs {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--tg-theme-bg-color, #ffffff);
-      border-top: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      z-index: 500;
-      padding: 6px 0;
-      padding-bottom: max(6px, env(safe-area-inset-bottom));
-    }
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  ...
+  padding: 8px 0;
+}
     .tab {
       flex: 1;
       text-align: center;
@@ -275,8 +273,8 @@
     function showPhoneForm() {
       document.getElementById('phoneForm').style.display = 'block';
       document.getElementById('tabsBar').style.display = 'none';
-      document.getElementById('tabSchedule').style.display = 'none';
-      document.getElementById('tabAvailability').style.display = 'none';
+      document.getElementById('tabSchedule').classList.remove('active');
+document.getElementById('tabAvailability').classList.remove('active');
 
       const shareBtn = document.getElementById('sharePhone');
       if (tg && tg.requestContact) {
@@ -737,8 +735,9 @@
 
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
-      document.getElementById('tabsBar').style.display = 'flex';
-      document.getElementById('tabSchedule').style.display = 'block';
+document.getElementById('tabsBar').style.display = 'flex';
+document.getElementById('tabSchedule').classList.add('active');
+document.getElementById('tabAvailability').classList.remove('active');
 
       try {
         await Promise.all([loadShifts(), loadAvailability(), loadEmployeeIcsLinks()]);

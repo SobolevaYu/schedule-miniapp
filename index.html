@@ -68,6 +68,7 @@
     .day.other-month { opacity: 0.25; }
     .day.today { outline: 2px solid #32CD32; outline-offset: -2px; }
     .day.available { background: #FFD700 !important; color: #333 !important; }
+    .day.has-people { background: #FFD700 !important; color: #333 !important; }
 
     .legend {
       margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px;
@@ -98,6 +99,7 @@
     .popup {
       background: var(--tg-theme-bg-color, #ffffff); border-radius: 16px 16px 0 0;
       padding: 20px; width: 100%; max-width: 500px; animation: slideUp 0.2s ease-out;
+      max-height: 80vh; overflow-y: auto;
     }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .popup-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
@@ -156,6 +158,18 @@
       line-height: 1.5;
       color: var(--tg-theme-hint-color, #999999);
     }
+
+    .admin-list-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-list-item:last-child { border-bottom: none; }
+    .admin-list-name { font-weight: 500; }
+    .admin-list-time { color: var(--tg-theme-hint-color, #999999); font-size: 14px; }
   </style>
 </head>
 <body>
@@ -218,6 +232,31 @@
     </div>
   </div>
 
+  <div class="tab-content" id="tabAdmin">
+    <div class="info-block">
+      Нажми на день — увидишь, кто может выйти на подработку.
+    </div>
+
+    <div class="month-header">
+      <button class="month-nav" id="prevMonthAdmin">←</button>
+      <div class="month-title" id="monthTitleAdmin">Октябрь 2026</div>
+      <button class="month-nav" id="nextMonthAdmin">→</button>
+    </div>
+
+    <div class="calendar">
+      <div class="weekdays">
+        <div class="weekday">Пн</div><div class="weekday">Вт</div><div class="weekday">Ср</div>
+        <div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div>
+        <div class="weekday">Вс</div>
+      </div>
+      <div class="days" id="daysAdmin"></div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color" style="background:#FFD700"></div>Есть отметки</div>
+    </div>
+  </div>
+
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">📅</span>
@@ -227,6 +266,10 @@
       <span class="tab-icon">🟡</span>
       Доступность
     </div>
+    <div class="tab" data-tab="admin" id="tabAdminBtn" style="display:none">
+      <span class="tab-icon">👑</span>
+      Админ
+    </div>
   </div>
 
   <script>
@@ -235,13 +278,16 @@
     const SHEET_AVAILABILITY = 'Доступность';
     const STORAGE_KEY = 'user_phone';
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';
+    const ADMIN_PHONE = '+79879286000';
 
     const tg = window.Telegram?.WebApp;
     let userPhone = null;
     let currentMonth = new Date();
     let currentMonthAvail = new Date();
+    let currentMonthAdmin = new Date();
     let allShifts = [];
     let allAvailability = [];
+    let employeesMap = {};
     let employeesIcsMap = {};
 
     if (tg) {
@@ -270,6 +316,7 @@
       document.getElementById('tabsBar').style.display = 'none';
       document.getElementById('tabSchedule').classList.remove('active');
       document.getElementById('tabAvailability').classList.remove('active');
+      document.getElementById('tabAdmin').classList.remove('active');
 
       const shareBtn = document.getElementById('sharePhone');
       if (tg && tg.requestContact) {
@@ -353,7 +400,7 @@
       }
     }
 
-    async function loadEmployeeIcsLinks() {
+    async function loadEmployees() {
       try {
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Сотрудники')}`;
         const res = await fetch(url);
@@ -363,18 +410,24 @@
         if (start === -1 || end === -1) return;
         const json = JSON.parse(text.substring(start, end + 1));
         const rows = json.table && json.table.rows ? json.table.rows : [];
+        employeesMap = {};
         employeesIcsMap = {};
         rows.forEach(row => {
           const phone = normalizePhone(row.c[0]?.v || '');
+          const name = String(row.c[1]?.v || '').trim();
           const icsUrl = String(row.c[2]?.v || '').trim();
-          if (phone && icsUrl) employeesIcsMap[phone] = icsUrl;
+          if (phone) {
+            if (name) employeesMap[phone] = name;
+            if (icsUrl) employeesIcsMap[phone] = icsUrl;
+          }
         });
       } catch (e) {
-        console.error('Не удалось загрузить ссылки ICS:', e);
+        console.error('Не удалось загрузить сотрудников:', e);
       }
     }
 
     function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
+    function getNameForPhone(phone) { return employeesMap[phone] || phone; }
 
     function renderBanner() {
       const banner = document.getElementById('banner');
@@ -404,12 +457,7 @@
       }
     }
 
-    function renderCalendar() {
-      const year = currentMonth.getFullYear();
-      const month = currentMonth.getMonth();
-      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-      document.getElementById('monthTitle').textContent = monthNames[month] + ' ' + year;
-
+    function buildMonthCells(year, month) {
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
       let startWeekday = firstDay.getDay() - 1;
@@ -434,7 +482,16 @@
       for (let i = 1; i <= remaining; i++) {
         cells.push({ num: i, other: true, date: null });
       }
+      return cells;
+    }
 
+    function renderCalendar() {
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      document.getElementById('monthTitle').textContent = monthNames[month] + ' ' + year;
+
+      const cells = buildMonthCells(year, month);
       const container = document.getElementById('days');
       container.innerHTML = '';
 
@@ -478,31 +535,7 @@
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitleAvail').textContent = monthNames[month] + ' ' + year;
 
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      let startWeekday = firstDay.getDay() - 1;
-      if (startWeekday < 0) startWeekday = 6;
-
-      const daysInMonth = lastDay.getDate();
-      const prevMonthLastDay = new Date(year, month, 0).getDate();
-      const cells = [];
-      const today = new Date();
-      const todayStr = today.getFullYear() + '-' +
-        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-        String(today.getDate()).padStart(2, '0');
-
-      for (let i = startWeekday - 1; i >= 0; i--) {
-        cells.push({ num: prevMonthLastDay - i, other: true, date: null });
-      }
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-        cells.push({ num: d, other: false, date: dateStr, isToday: dateStr === todayStr });
-      }
-      const remaining = (7 - (cells.length % 7)) % 7;
-      for (let i = 1; i <= remaining; i++) {
-        cells.push({ num: i, other: true, date: null });
-      }
-
+      const cells = buildMonthCells(year, month);
       const container = document.getElementById('daysAvail');
       container.innerHTML = '';
 
@@ -526,6 +559,75 @@
         }
         container.appendChild(div);
       });
+    }
+
+    function renderAdminCalendar() {
+      const year = currentMonthAdmin.getFullYear();
+      const month = currentMonthAdmin.getMonth();
+      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      document.getElementById('monthTitleAdmin').textContent = monthNames[month] + ' ' + year;
+
+      const cells = buildMonthCells(year, month);
+      const container = document.getElementById('daysAdmin');
+      container.innerHTML = '';
+
+      cells.forEach(cell => {
+        const div = document.createElement('div');
+        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+
+        if (cell.date) {
+          const count = allAvailability.filter(a => a.date === cell.date).length;
+          if (count > 0) {
+            div.classList.add('has-people');
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + count + ' чел.</div>';
+          } else {
+            div.style.background = '#FFFFFF';
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+          }
+          div.addEventListener('click', () => showAdminDayPopup(cell.date));
+        } else {
+          div.style.background = 'transparent';
+          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+        }
+        container.appendChild(div);
+      });
+    }
+
+    function showAdminDayPopup(dateStr) {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      const people = allAvailability.filter(a => a.date === dateStr);
+      people.sort((a, b) => {
+        const n1 = getNameForPhone(a.phone);
+        const n2 = getNameForPhone(b.phone);
+        return n1.localeCompare(n2, 'ru');
+      });
+
+      let listHtml = '';
+      if (people.length === 0) {
+        listHtml = '<div style="color:#999;font-size:14px;">—</div>';
+      } else {
+        people.forEach(p => {
+          const name = getNameForPhone(p.phone);
+          listHtml += '<div class="admin-list-item"><span class="admin-list-name">' + name + '</span><span class="admin-list-time">' + p.start + '–' + p.end + '</span></div>';
+        });
+      }
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">' + formatDateRu(dateStr) + '</div>' +
+        '<div class="popup-info">Могут выйти</div>' +
+        listHtml +
+        '<button class="popup-btn secondary" id="closeAdminPopup" style="margin-top:16px;">Закрыть</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeAdminPopup').addEventListener('click', () => overlay.remove());
     }
 
     function showShiftPopup(shift) {
@@ -577,7 +679,7 @@
           appleBtn.addEventListener('click', () => {
             const icsUrl = getIcsUrlForPhone(userPhone);
             if (!icsUrl) {
-              alert('Ссылка на календарь не найдена.');
+                            alert('Ссылка на календарь не найдена.');
               return;
             }
             if (tg && tg.openLink) tg.openLink(icsUrl);
@@ -662,6 +764,7 @@
 
           overlay.remove();
           renderAvailabilityCalendar();
+          renderAdminCalendar();
         } catch (e) {
           alert('Ошибка сохранения: ' + e.message);
         }
@@ -691,6 +794,7 @@
 
               overlay.remove();
               renderAvailabilityCalendar();
+              renderAdminCalendar();
             } catch (e) {
               alert('Ошибка удаления: ' + e.message);
               deleteBtn.textContent = 'Удалить отметку';
@@ -706,7 +810,7 @@
       const [sh, sm] = shift.start.split(':');
       const [eh, em] = shift.end.split(':');
       const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
-     const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+      const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
       let endY = y, endM = m, endD = d;
       if (isOvernight) {
         const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
@@ -739,9 +843,16 @@
       document.getElementById('tabsBar').style.display = 'flex';
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
+      document.getElementById('tabAdmin').classList.remove('active');
+
+      if (userPhone === ADMIN_PHONE) {
+        document.getElementById('tabAdminBtn').style.display = 'block';
+      } else {
+        document.getElementById('tabAdminBtn').style.display = 'none';
+      }
 
       try {
-        await Promise.all([loadShifts(), loadAvailability(), loadEmployeeIcsLinks()]);
+        await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
         const myShifts = allShifts.filter(s => s.phone === userPhone);
 
         if (myShifts.length === 0) {
@@ -760,6 +871,7 @@
         renderBanner();
         renderCalendar();
         renderAvailabilityCalendar();
+        renderAdminCalendar();
       } catch (e) {
         document.getElementById('tabSchedule').innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
       }
@@ -778,6 +890,10 @@
         } else if (target === 'availability') {
           document.getElementById('tabAvailability').classList.add('active');
           document.getElementById('pageSubtitle').textContent = 'Когда ты можешь выйти';
+        } else if (target === 'admin') {
+          document.getElementById('tabAdmin').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+          renderAdminCalendar();
         }
       });
     });
@@ -798,6 +914,15 @@
     document.getElementById('nextMonthAvail').addEventListener('click', () => {
       currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1);
       renderAvailabilityCalendar();
+    });
+
+    document.getElementById('prevMonthAdmin').addEventListener('click', () => {
+      currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1);
+      renderAdminCalendar();
+    });
+    document.getElementById('nextMonthAdmin').addEventListener('click', () => {
+      currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1);
+      renderAdminCalendar();
     });
 
     const saved = getSavedPhone();

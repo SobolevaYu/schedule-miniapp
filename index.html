@@ -1144,18 +1144,7 @@
       Нажми на день — увидишь, кто может выйти на подработку.
     </div>
         <button class="help-btn-mini" id="editScheduleBtn" style="width:auto;border-radius:12px;padding:0 16px;font-size:14px;">📝 Редактировать расписание</button>
-  <div class="tab-content" id="tabEditEmployees">
-    <div class="edit-header">
-      <button class="edit-back" id="editBackBtn">‹</button>
-      <div class="edit-title">Редактирование расписания</div>
-    </div>
 
-    <div class="info-block">
-      Выбери сотрудника, чтобы посмотреть и изменить его смены.
-    </div>
-
-    <div id="employeesList" class="employees-list"></div>
-  </div>
     <div class="month-header">
       <button class="month-nav" id="prevMonthAdmin">‹</button>
       <div class="month-title" id="monthTitleAdmin">Октябрь 2026</div>
@@ -1176,7 +1165,18 @@
       <div class="legend-item"><div class="legend-color" style="background:var(--avail-bg-light);border-color:var(--avail-border)"></div>Есть отметки</div>
     </div>
   </div>
+  <div class="tab-content" id="tabEditEmployees">
+    <div class="edit-header">
+      <button class="edit-back" id="editBackBtn">‹</button>
+      <div class="edit-title">Редактирование расписания</div>
+    </div>
 
+    <div class="info-block">
+      Выбери сотрудника, чтобы посмотреть и изменить его смены.
+    </div>
+
+    <div id="employeesList" class="employees-list"></div>
+  </div>
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">📅</span>
@@ -1990,19 +1990,7 @@
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
       renderHeader(); 
-            document.getElementById('editScheduleBtn').addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tabEditEmployees').classList.add('active');
-        document.getElementById('pageSubtitle').style.display = 'none';
-        renderEmployeesList();
-      });
-
-      document.getElementById('editBackBtn').addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tabAdmin').classList.add('active');
-        document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
-        document.getElementById('pageSubtitle').style.display = 'block';
-      });
+      
             document.getElementById('helpBtn').addEventListener('click', showHelp);
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');

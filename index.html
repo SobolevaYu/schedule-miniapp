@@ -1111,6 +1111,34 @@
     function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
     function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
 
+    async function registerTelegramId() {
+      try {
+        if (!tg || !tg.initDataUnsafe?.user?.id) return;
+        if (!userPhone) return;
+
+        const tgId = tg.initDataUnsafe.user.id;
+
+        // Проверяем, отправляли ли уже
+        const sentKey = 'tg_id_sent_' + tgId;
+        if (localStorage.getItem(sentKey) === '1') return;
+
+        await fetch(WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: 'register_telegram',
+            phone: userPhone,
+            telegram_id: tgId
+          })
+        });
+
+        localStorage.setItem(sentKey, '1');
+      } catch (e) {
+        console.warn('Не удалось зарегистрировать tg_id:', e);
+      }
+    }
+
     function showPhoneForm() {
       document.getElementById('phoneForm').style.display = 'block';
       document.getElementById('tabsBar').style.display = 'none';
@@ -1744,7 +1772,7 @@
       } else {
         document.getElementById('tabAdminBtn').style.display = 'none';
       }
-
+      registerTelegramId();
             try {
         // Сначала пробуем кэш
         const fromCache = loadCache();

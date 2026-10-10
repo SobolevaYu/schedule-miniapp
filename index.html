@@ -916,6 +916,63 @@
     @media (prefers-color-scheme: dark) {
       .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
     }
+      /* ============ КНОПКА ИНСТРУКЦИИ ============ */
+    .help-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--brand);
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .help-btn:active {
+      transform: scale(0.96);
+      background: rgba(16, 185, 129, 0.2);
+    }
+    .help-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .help-block {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .help-block:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .help-block-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .help-block-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--tg-theme-hint-color, #64748B);
+    }
+    @media (prefers-color-scheme: dark) {
+      .help-block-text { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
   </style>
 </head>
 <body>
@@ -929,6 +986,10 @@
     <div class="header-date" id="headerDate">—</div>
     <div class="header-today" id="headerToday" style="display:none"></div>
   </div>
+    <button class="help-btn" id="helpBtn">
+    <span class="help-icon">?</span>
+    Инструкция
+  </button>
   <p class="subtitle" id="pageSubtitle">Твоё расписание смен</p>
 
   <div class="phone-form" id="phoneForm" style="display:none">
@@ -1262,7 +1323,45 @@
 
     function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
     function getNameForPhone(phone) { return employeesMap[phone] || phone; }
+    function showHelp() {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
 
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">Как пользоваться</div>' +
+        '<div class="popup-info">Краткая инструкция</div>' +
+
+        '<div class="help-block">' +
+          '<div class="help-block-title">📅 Расписание</div>' +
+          '<div class="help-block-text">Нажми на день со сменой → увидишь детали. Кнопки внизу добавят смену в календарь телефона (Google или Apple). Телефон напомнит за 2 часа до смены.</div>' +
+        '</div>' +
+
+        '<div class="help-block">' +
+          '<div class="help-block-title">🟡 Доступность</div>' +
+          '<div class="help-block-text">Открой вкладку «Доступность» внизу. Нажми на день, когда можешь выйти на подработку. Укажи время (с какого и до какого часа). Сохрани. День подсветится жёлтым — руководитель его увидит.</div>' +
+        '</div>' +
+
+        '<div class="help-block">' +
+          '<div class="help-block-title">🔔 Напоминания</div>' +
+          '<div class="help-block-text">Если у тебя есть смена завтра, бот вечером пришлёт напоминание в чат.</div>' +
+        '</div>' +
+
+        '<div class="help-block">' +
+          '<div class="help-block-title">🌙 Ночные смены</div>' +
+          '<div class="help-block-text">Смены, которые переходят через полночь, отмечены луной ☾ и градиентом.</div>' +
+        '</div>' +
+
+        '<button class="popup-btn" id="closeHelpBtn" style="margin-top:12px;">Понятно</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeHelpBtn').addEventListener('click', () => overlay.remove());
+    }
     function renderHeader() {
       const now = new Date();
       const hour = now.getHours();
@@ -1767,7 +1866,8 @@
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
-      renderHeader();
+      renderHeader(); 
+            document.getElementById('helpBtn').addEventListener('click', showHelp);
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');

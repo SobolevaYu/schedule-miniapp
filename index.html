@@ -329,6 +329,28 @@
     .day.other-month {
       opacity: 0.25;
     }
+        /* ============ АНИМАЦИЯ СМЕНЫ МЕСЯЦА ============ */
+    .days.slide-left {
+      animation: slideFromRight 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .days.slide-right {
+      animation: slideFromLeft 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .days.fade-only {
+      animation: fadeOnly 0.25s ease-out;
+    }
+    @keyframes slideFromRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideFromLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeOnly {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
     /* ===== СЕГОДНЯ — заметно в обеих темах ===== */
     .day.today {
@@ -1245,7 +1267,16 @@
       const NS = 22 * 60;
       return E > NS || S < (6 * 60);
     }
-
+    function animateMonth(containerId, direction) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      el.classList.remove('slide-left', 'slide-right', 'fade-only');
+      void el.offsetWidth; // форсируем reflow, чтобы анимация сработала заново
+      el.classList.add(direction);
+      setTimeout(() => {
+        el.classList.remove(direction);
+      }, 320);
+    }
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
@@ -1659,61 +1690,69 @@
       });
     });
 
-    document.getElementById('prevMonth').addEventListener('click', () => {
+        document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
       renderCalendar();
+      animateMonth('days', 'slide-right');
     });
     document.getElementById('nextMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() + 1);
       renderCalendar();
+      animateMonth('days', 'slide-left');
     });
     document.getElementById('todayBtn').addEventListener('click', () => {
       currentMonth = new Date();
       renderCalendar();
+      animateMonth('days', 'fade-only');
     });
 
     document.getElementById('prevMonthAvail').addEventListener('click', () => {
       currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1);
       renderAvailabilityCalendar();
+      animateMonth('daysAvail', 'slide-right');
     });
     document.getElementById('nextMonthAvail').addEventListener('click', () => {
       currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1);
       renderAvailabilityCalendar();
+      animateMonth('daysAvail', 'slide-left');
     });
     document.getElementById('todayBtnAvail').addEventListener('click', () => {
       currentMonthAvail = new Date();
       renderAvailabilityCalendar();
+      animateMonth('daysAvail', 'fade-only');
     });
 
     document.getElementById('prevMonthAdmin').addEventListener('click', () => {
       currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1);
       renderAdminCalendar();
+      animateMonth('daysAdmin', 'slide-right');
     });
     document.getElementById('nextMonthAdmin').addEventListener('click', () => {
       currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1);
       renderAdminCalendar();
+      animateMonth('daysAdmin', 'slide-left');
     });
     document.getElementById('todayBtnAdmin').addEventListener('click', () => {
       currentMonthAdmin = new Date();
       renderAdminCalendar();
+      animateMonth('daysAdmin', 'fade-only');
     });
     
         // ============ СВАЙПЫ МЕЖДУ МЕСЯЦАМИ ============
     attachSwipe('days',
-      () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); },
-      () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); }
+      () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); animateMonth('days', 'slide-left'); },
+      () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); animateMonth('days', 'slide-right'); }
     );
 
     attachSwipe('daysAvail',
-      () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1); renderAvailabilityCalendar(); },
-      () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1); renderAvailabilityCalendar(); }
+      () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1); renderAvailabilityCalendar(); animateMonth('daysAvail', 'slide-left'); },
+      () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1); renderAvailabilityCalendar(); animateMonth('daysAvail', 'slide-right'); }
     );
 
     attachSwipe('daysAdmin',
-      () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); },
-      () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); }
+      () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-left'); },
+      () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-right'); }
     );
-
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

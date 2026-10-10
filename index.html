@@ -406,10 +406,27 @@
       }
     }
 
-    .night-icon {
-      font-size: 10px;
-      opacity: 0.85;
-      margin-left: 1px;
+        .night-icon {
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 1;
+      margin-left: 2px;
+    }
+
+    /* Ночная смена — лёгкий градиент, адаптивный к теме */
+    .day.shift.night {
+      background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.18) 0%,
+        rgba(59, 130, 246, 0.18) 100%);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+    @media (prefers-color-scheme: dark) {
+      .day.shift.night {
+        background: linear-gradient(135deg,
+          rgba(16, 185, 129, 0.28) 0%,
+          rgba(99, 102, 241, 0.28) 100%);
+        border-color: rgba(52, 211, 153, 0.55);
+      }
     }
 
     /* ============ ЛЕГЕНДА ============ */
@@ -692,9 +709,9 @@
     }
 
     /* ============ INFO-BLOCK ============ */
-    .info-block {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.2);
+       .info-block {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.15);
       border-radius: 14px;
       padding: 14px;
       margin-bottom: 16px;
@@ -704,8 +721,8 @@
     }
     @media (prefers-color-scheme: dark) {
       .info-block {
-        background: rgba(16, 185, 129, 0.1);
-        border-color: rgba(16, 185, 129, 0.25);
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.2);
         color: var(--tg-theme-hint-color, #94A3B8);
       }
     }
@@ -1028,7 +1045,53 @@
         banner.style.display = 'none';
       }
     }
+    function attachSwipe(containerId, onSwipeLeft, onSwipeRight) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
 
+      let startX = 0;
+      let startY = 0;
+      let moved = false;
+      const minDist = 50; // минимум 50px для свайпа
+
+      el.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        startX = t.clientX;
+        startY = t.clientY;
+        moved = false;
+      }, { passive: true });
+
+      el.addEventListener('touchmove', (e) => {
+        if (moved) return;
+        const t = e.touches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+
+        // Если горизонтальное движение больше вертикального — это свайп
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+          moved = true;
+        }
+      }, { passive: true });
+
+      el.addEventListener('touchend', (e) => {
+        if (moved) return;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+
+        // Проверяем, что горизонтальное движение — основное
+        if (Math.abs(dx) < Math.abs(dy)) return;
+        if (Math.abs(dx) < minDist) return;
+
+        if (dx < 0) {
+          // Свайп влево — следующий месяц
+          if (onSwipeLeft) onSwipeLeft();
+        } else {
+          // Свайп вправо — предыдущий месяц
+          if (onSwipeRight) onSwipeRight();
+        }
+      }, { passive: true });
+    }
     function buildMonthCells(year, month) {
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
@@ -1090,9 +1153,11 @@
             } else if (shift.status === 'О') {
               div.classList.add('vacation');
               div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">О</div>';
-            } else if (shift.start && shift.end) {
+                        } else if (shift.start && shift.end) {
               div.classList.add('shift');
-              const night = isNightShift(shift.start, shift.end) ? '<span class="night-icon">☾</span>' : '';
+              const isNight = isNightShift(shift.start, shift.end);
+              const night = isNight ? '<span class="night-icon">☾</span>' : '';
+              if (isNight) div.classList.add('night');
               div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + shift.start + '<br>' + shift.end + night + '</div>';
             } else {
               div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
@@ -1512,7 +1577,21 @@
       currentMonthAdmin = new Date();
       renderAdminCalendar();
     });
+    // ---- Свайп для всех трёх календарей ----
+    attachSwipe('days',
+      () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); },
+      () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); }
+    );
 
+    attachSwipe('daysAvail',
+      () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1); renderAvailabilityCalendar(); },
+      () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1); renderAvailabilityCalendar(); }
+    );
+
+    attachSwipe('daysAdmin',
+      () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); },
+      () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); }
+    );
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

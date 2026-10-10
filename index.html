@@ -34,15 +34,13 @@
       --avail-border: rgba(250, 204, 21, 0.7);
       --avail-text-light: #78350F;
       --avail-text-dark: #FDE68A;
-    }
-    /* Цвета для фоновых пятен */
-    :root {
-     --blob-1-light: rgba(16, 185, 129, 0.22);
-      --blob-3-light: rgba(99, 102, 241, 0.14);
 
+      --blob-1-light: rgba(16, 185, 129, 0.22);
+      --blob-3-light: rgba(99, 102, 241, 0.14);
       --blob-1-dark: rgba(16, 185, 129, 0.18);
       --blob-3-dark: rgba(99, 102, 241, 0.12);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { overflow-x: hidden; max-width: 100%; }
 
@@ -51,32 +49,31 @@
       background: transparent;
       color: var(--tg-theme-text-color, #0F172A);
       padding: 16px;
-      padding-bottom: 200px;
+      padding-bottom: 140px;
       min-height: 100vh;
       width: 100%;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
-         /* Все прямые дети body — над пятнами */
-    body > *:not(.bg-blobs) {
-      position: relative;
-      z-index: 1;
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: var(--tg-theme-text-color, #F1F5F9);
+      }
     }
-    body > .tab-content,
-    body > .header,
-    body > .subtitle,
-    body > .phone-form,
-    body > .loading {
-      position: relative;
-      z-index: 10;
-    }
-        /* ============ ФОНОВЫЕ ПЯТНА (BLOBS) ============ */
-        .bg-blobs {
+
+    /* ============ ФОНОВЫЕ ПЯТНА ============ */
+    .bg-blobs {
       position: fixed;
       inset: 0;
       overflow: hidden;
       pointer-events: none;
       z-index: -1;
+      background: var(--tg-theme-bg-color, #F5F7FA);
+    }
+    @media (prefers-color-scheme: dark) {
+      .bg-blobs {
+        background: var(--tg-theme-bg-color, #0F172A);
+      }
     }
     .blob {
       position: absolute;
@@ -84,7 +81,6 @@
       filter: blur(80px);
       -webkit-filter: blur(80px);
       will-change: transform;
-      transition: background 0.6s;
     }
     .blob-1 {
       width: 320px;
@@ -102,12 +98,10 @@
       background: var(--blob-3-light);
       animation: blobFloat3 30s ease-in-out infinite;
     }
-
     @media (prefers-color-scheme: dark) {
       .blob-1 { background: var(--blob-1-dark); }
       .blob-3 { background: var(--blob-3-dark); }
     }
-
     @keyframes blobFloat1 {
       0%, 100% { transform: translate(0, 0) scale(1); }
       33% { transform: translate(30px, 40px) scale(1.1); }
@@ -119,19 +113,63 @@
       80% { transform: translate(20px, -20px) scale(0.9); }
     }
 
-    @media (prefers-color-scheme: dark) {
-      body {
-        background: var(--tg-theme-bg-color, #0F172A);
-        color: var(--tg-theme-text-color, #F1F5F9);
-      }
-    }
-
-    h1 {
+    /* ============ HEADER ============ */
+    .header { margin-bottom: 20px; }
+    .header h1 {
       font-size: 24px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       letter-spacing: -0.5px;
     }
+    .header-date {
+      font-size: 14px;
+      color: var(--tg-theme-hint-color, #64748B);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    @media (prefers-color-scheme: dark) {
+      .header-date { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    .header-today {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid;
+    }
+    .header-today.shift {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #065F46;
+    }
+    .header-today.sick {
+      background: rgba(148, 163, 184, 0.2);
+      border-color: rgba(148, 163, 184, 0.5);
+      color: #334155;
+    }
+    .header-today.vacation {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: rgba(56, 189, 248, 0.5);
+      color: #075985;
+    }
+    .header-today.dayoff {
+      background: rgba(148, 163, 184, 0.12);
+      border-color: rgba(148, 163, 184, 0.3);
+      color: var(--tg-theme-hint-color, #64748B);
+    }
+    @media (prefers-color-scheme: dark) {
+      .header-today.shift { color: #6EE7B7; }
+      .header-today.sick { color: #CBD5E1; }
+      .header-today.vacation { color: #7DD3FC; }
+      .header-today.dayoff { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    .header-today-icon { font-size: 20px; flex-shrink: 0; }
+
     .subtitle {
       font-size: 14px;
       color: var(--tg-theme-hint-color, #64748B);
@@ -139,23 +177,6 @@
     }
     @media (prefers-color-scheme: dark) {
       .subtitle { color: var(--tg-theme-hint-color, #94A3B8); }
-    }
-
-    /* ============ GLASS-КАРТОЧКИ ============ */
-    .glass {
-      background: rgba(255, 255, 255, 0.65);
-      backdrop-filter: blur(16px) saturate(180%);
-      -webkit-backdrop-filter: blur(16px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 20px;
-      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
-    }
-    @media (prefers-color-scheme: dark) {
-      .glass {
-        background: rgba(30, 41, 59, 0.55);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-      }
     }
 
     /* ============ ФОРМА ТЕЛЕФОНА ============ */
@@ -245,7 +266,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-      gap: 8px;
+      gap: 6px;
     }
     .month-title {
       font-size: 18px;
@@ -253,6 +274,10 @@
       flex: 1;
       text-align: center;
       letter-spacing: -0.3px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .month-nav {
       background: rgba(255, 255, 255, 0.7);
@@ -260,8 +285,8 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 12px;
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       font-size: 18px;
       cursor: pointer;
       color: var(--tg-theme-text-color, #0F172A);
@@ -269,6 +294,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     .month-nav:active {
       transform: scale(0.92);
@@ -285,13 +311,14 @@
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid rgba(16, 185, 129, 0.4);
       border-radius: 12px;
-      padding: 0 12px;
-      height: 38px;
+      padding: 0 10px;
+      height: 36px;
       font-size: 12px;
       font-weight: 600;
       color: var(--brand);
       cursor: pointer;
       transition: transform 0.15s, background 0.15s;
+      flex-shrink: 0;
     }
     .today-btn:active {
       transform: scale(0.92);
@@ -339,7 +366,7 @@
       .weekday { color: var(--tg-theme-hint-color, #94A3B8); }
     }
 
-        .days {
+    .days {
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 3px;
@@ -365,9 +392,7 @@
       overflow: hidden;
       position: relative;
     }
-    .day:active {
-      transform: scale(0.94);
-    }
+    .day:active { transform: scale(0.94); }
     @media (prefers-color-scheme: dark) {
       .day {
         background: rgba(15, 23, 42, 0.4);
@@ -375,11 +400,7 @@
         color: var(--tg-theme-text-color, #F1F5F9);
       }
     }
-    .day-num {
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 1;
-    }
+    .day-num { font-size: 11px; font-weight: 600; line-height: 1; }
     .day-time {
       font-size: 9px;
       line-height: 1.05;
@@ -394,19 +415,11 @@
       text-align: center;
       margin-top: 2px;
     }
-    .day.other-month {
-      opacity: 0.25;
-    }
-        /* ============ АНИМАЦИЯ СМЕНЫ МЕСЯЦА ============ */
-    .days.slide-left {
-      animation: slideFromRight 0.28s cubic-bezier(0.32, 0.72, 0, 1);
-    }
-    .days.slide-right {
-      animation: slideFromLeft 0.28s cubic-bezier(0.32, 0.72, 0, 1);
-    }
-    .days.fade-only {
-      animation: fadeOnly 0.25s ease-out;
-    }
+    .day.other-month { opacity: 0.25; }
+
+    .days.slide-left { animation: slideFromRight 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
+    .days.slide-right { animation: slideFromLeft 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
+    .days.fade-only { animation: fadeOnly 0.25s ease-out; }
     @keyframes slideFromRight {
       from { opacity: 0; transform: translateX(30px); }
       to { opacity: 1; transform: translateX(0); }
@@ -420,7 +433,6 @@
       to { opacity: 1; }
     }
 
-    /* ===== СЕГОДНЯ — заметно в обеих темах ===== */
     .day.today {
       outline: 2px solid var(--brand);
       outline-offset: -2px;
@@ -433,7 +445,6 @@
       }
     }
 
-    /* ===== СТАТУСЫ ===== */
     .day.shift {
       background: var(--shift-bg-light);
       border-color: var(--shift-border);
@@ -446,7 +457,6 @@
         color: var(--shift-text-dark);
       }
     }
-
     .day.sick {
       background: var(--sick-bg-light);
       border-color: var(--sick-border);
@@ -459,7 +469,6 @@
         color: var(--sick-text-dark);
       }
     }
-
     .day.vacation {
       background: var(--vac-bg-light);
       border-color: var(--vac-border);
@@ -472,7 +481,6 @@
         color: var(--vac-text-dark);
       }
     }
-
     .day.available {
       background: var(--avail-bg-light);
       border-color: var(--avail-border);
@@ -485,7 +493,6 @@
         color: var(--avail-text-dark);
       }
     }
-
     .day.has-people {
       background: var(--avail-bg-light);
       border-color: var(--avail-border);
@@ -499,14 +506,12 @@
       }
     }
 
-        .night-icon {
+    .night-icon {
       font-size: 11px;
       font-weight: 700;
       opacity: 1;
       margin-left: 2px;
     }
-
-    /* Ночная смена — лёгкий градиент, адаптивный к теме */
     .day.shift.night {
       background: linear-gradient(135deg,
         rgba(16, 185, 129, 0.18) 0%,
@@ -523,9 +528,8 @@
     }
 
     /* ============ ЛЕГЕНДА ============ */
-        .legend {
+    .legend {
       margin-top: 12px;
-      margin-bottom: 8px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px 12px;
@@ -536,11 +540,7 @@
     @media (prefers-color-scheme: dark) {
       .legend { color: var(--tg-theme-hint-color, #94A3B8); }
     }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-color {
       width: 14px;
       height: 14px;
@@ -549,18 +549,8 @@
     }
 
     /* ============ LOADING / ERROR ============ */
-    .loading {
-      color: var(--tg-theme-hint-color, #64748B);
-      font-size: 14px;
-      text-align: center;
-      padding: 24px;
-    }
-    .error {
-      color: #EF4444;
-      font-size: 14px;
-      padding: 12px;
-      text-align: center;
-    }
+    .loading { color: var(--tg-theme-hint-color, #64748B); font-size: 14px; text-align: center; padding: 24px; }
+    .error { color: #EF4444; font-size: 14px; padding: 12px; text-align: center; }
     .not-found {
       background: rgba(239, 68, 68, 0.1);
       color: #DC2626;
@@ -571,10 +561,7 @@
       line-height: 1.5;
     }
     @media (prefers-color-scheme: dark) {
-      .not-found {
-        background: rgba(239, 68, 68, 0.15);
-        color: #FCA5A5;
-      }
+      .not-found { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; }
     }
 
     /* ============ БАННЕР ============ */
@@ -705,11 +692,7 @@
     }
 
     /* ============ ВРЕМЯ ============ */
-    .time-fields {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
+    .time-fields { display: flex; gap: 12px; margin-bottom: 18px; }
     .time-fields > div { flex: 1; }
     .time-fields label {
       font-size: 13px;
@@ -745,7 +728,7 @@
       bottom: 8px;
       left: 12px;
       right: 12px;
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.5);
@@ -753,12 +736,12 @@
       z-index: 500;
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
-      padding:6px 4px;
+      padding: 6px;
       gap: 4px;
     }
     @media (prefers-color-scheme: dark) {
       .tabs {
-        background: rgba(30, 41, 59, 0.75);
+        background: rgba(30, 41, 59, 0.8);
         border-color: rgba(148, 163, 184, 0.15);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       }
@@ -778,13 +761,13 @@
       .tab { color: var(--tg-theme-hint-color, #94A3B8); }
     }
     .tab-icon {
-      font-size: 18px;
+      font-size: 20px;
       display: block;
       margin-bottom: 2px;
       transition: transform 0.2s;
     }
     .tab.active {
-      color: var(--brand);
+            color: var(--brand);
       font-weight: 600;
       background: rgba(16, 185, 129, 0.12);
     }
@@ -804,7 +787,7 @@
     }
 
     /* ============ INFO-BLOCK ============ */
-       .info-block {
+    .info-block {
       background: rgba(16, 185, 129, 0.05);
       border: 1px solid rgba(16, 185, 129, 0.15);
       border-radius: 14px;
@@ -850,75 +833,14 @@
     @media (prefers-color-scheme: dark) {
       .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
     }
-        /* ============ HEADER С ДАТОЙ И СМЕНОЙ ============ */
-    .header {
-      margin-bottom: 20px;
-    }
-    .header h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      letter-spacing: -0.5px;
-    }
-    .header-date {
-      font-size: 14px;
-      color: var(--tg-theme-hint-color, #64748B);
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-    @media (prefers-color-scheme: dark) {
-      .header-date { color: var(--tg-theme-hint-color, #94A3B8); }
-    }
-    .header-today {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 500;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid;
-    }
-    .header-today.shift {
-      background: rgba(16, 185, 129, 0.15);
-      border-color: rgba(16, 185, 129, 0.4);
-      color: #065F46;
-    }
-    .header-today.sick {
-      background: rgba(148, 163, 184, 0.2);
-      border-color: rgba(148, 163, 184, 0.5);
-      color: #334155;
-    }
-    .header-today.vacation {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: rgba(56, 189, 248, 0.5);
-      color: #075985;
-    }
-    .header-today.dayoff {
-      background: rgba(148, 163, 184, 0.12);
-      border-color: rgba(148, 163, 184, 0.3);
-      color: var(--tg-theme-hint-color, #64748B);
-    }
-    @media (prefers-color-scheme: dark) {
-      .header-today.shift { color: #6EE7B7; }
-      .header-today.sick { color: #CBD5E1; }
-      .header-today.vacation { color: #7DD3FC; }
-      .header-today.dayoff { color: var(--tg-theme-hint-color, #94A3B8); }
-    }
-    .header-today-icon {
-      font-size: 20px;
-      flex-shrink: 0;
-    }
   </style>
 </head>
 <body>
-  <body>
-    <div class="bg-blobs" aria-hidden="true">
+  <div class="bg-blobs" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-3"></div>
   </div>
+
   <div class="header" id="header">
     <h1 id="greeting">Привет!</h1>
     <div class="header-date" id="headerDate">—</div>
@@ -957,7 +879,7 @@
         <div class="legend-item"><div class="legend-color" style="background:var(--shift-bg-light);border-color:var(--shift-border)"></div>Смена</div>
         <div class="legend-item"><div class="legend-color" style="background:var(--sick-bg-light);border-color:var(--sick-border)"></div>Больничный</div>
         <div class="legend-item"><div class="legend-color" style="background:var(--vac-bg-light);border-color:var(--vac-border)"></div>Отпуск</div>
-                <div class="legend-item"><span style="font-size:13px;line-height:1;">☾</span> Ночная</div>
+        <div class="legend-item"><span style="font-size:13px;line-height:1;">☾</span> Ночная</div>
       </div>
     </div>
     <div class="loading" id="loading" style="display:none">Загружаем данные…</div>
@@ -1000,7 +922,7 @@
     <div class="calendar">
       <div class="weekdays">
         <div class="weekday">Пн</div><div class="weekday">Вт</div><div class="weekday">Ср</div>
-                <div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div>
+        <div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div>
         <div class="weekday">Вс</div>
       </div>
       <div class="days" id="daysAdmin"></div>
@@ -1047,11 +969,6 @@
     if (tg) {
       tg.ready();
       tg.expand();
-      const user = tg.initDataUnsafe?.user;
-      if (user) {
-        document.getElementById('greeting').textContent =
-          'Привет, ' + (user.first_name || 'друг') + '!';
-      }
     }
 
     function normalizePhone(p) {
@@ -1182,6 +1099,7 @@
 
     function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
     function getNameForPhone(phone) { return employeesMap[phone] || phone; }
+
     function renderHeader() {
       const now = new Date();
       const hour = now.getHours();
@@ -1238,6 +1156,7 @@
       }
       todayEl.style.display = 'flex';
     }
+
     function renderBanner() {
       const banner = document.getElementById('banner');
       const tomorrow = new Date();
@@ -1265,51 +1184,35 @@
         banner.style.display = 'none';
       }
     }
-        function attachSwipe(containerId, onSwipeLeft, onSwipeRight) {
+
+    function attachSwipe(containerId, onSwipeLeft, onSwipeRight) {
       const el = document.getElementById(containerId);
-      if (!el) {
-        console.warn('attachSwipe: не найден #' + containerId);
-        return;
-      }
-
-      let startX = 0;
-      let startY = 0;
-      let tracking = false;
+      if (!el) return;
+      let startX = 0, startY = 0, tracking = false;
       const minDist = 40;
-
       el.addEventListener('touchstart', (e) => {
         if (e.touches.length !== 1) return;
         const t = e.touches[0];
-        startX = t.clientX;
-        startY = t.clientY;
-        tracking = true;
+        startX = t.clientX; startY = t.clientY; tracking = true;
       }, { passive: true });
-
       el.addEventListener('touchend', (e) => {
         if (!tracking) return;
         tracking = false;
         const t = e.changedTouches[0];
         const dx = t.clientX - startX;
         const dy = t.clientY - startY;
-
         if (Math.abs(dx) < minDist) return;
         if (Math.abs(dx) < Math.abs(dy) * 1.2) return;
-
-        if (dx < 0) {
-          if (onSwipeLeft) onSwipeLeft();
-        } else {
-          if (onSwipeRight) onSwipeRight();
-        }
+        if (dx < 0) { if (onSwipeLeft) onSwipeLeft(); }
+        else { if (onSwipeRight) onSwipeRight(); }
       }, { passive: true });
-
-      console.log('attachSwipe: подключён к #' + containerId);
     }
+
     function buildMonthCells(year, month) {
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
       let startWeekday = firstDay.getDay() - 1;
       if (startWeekday < 0) startWeekday = 6;
-
       const daysInMonth = lastDay.getDate();
       const prevMonthLastDay = new Date(year, month, 0).getDate();
       const cells = [];
@@ -1317,7 +1220,6 @@
       const todayStr = today.getFullYear() + '-' +
         String(today.getMonth() + 1).padStart(2, '0') + '-' +
         String(today.getDate()).padStart(2, '0');
-
       for (let i = startWeekday - 1; i >= 0; i--) {
         cells.push({ num: prevMonthLastDay - i, other: true, date: null });
       }
@@ -1341,30 +1243,29 @@
       const NS = 22 * 60;
       return E > NS || S < (6 * 60);
     }
+
     function animateMonth(containerId, direction) {
       const el = document.getElementById(containerId);
       if (!el) return;
       el.classList.remove('slide-left', 'slide-right', 'fade-only');
-      void el.offsetWidth; // форсируем reflow, чтобы анимация сработала заново
+      void el.offsetWidth;
       el.classList.add(direction);
       setTimeout(() => {
         el.classList.remove(direction);
       }, 320);
     }
+
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitle').textContent = monthNames[month] + ' ' + year;
-
       const cells = buildMonthCells(year, month);
       const container = document.getElementById('days');
       container.innerHTML = '';
-
       cells.forEach(cell => {
         const div = document.createElement('div');
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-
         if (cell.date) {
           const shift = allShifts.find(s => s.phone === userPhone && s.date === cell.date);
           if (shift) {
@@ -1374,7 +1275,7 @@
             } else if (shift.status === 'О') {
               div.classList.add('vacation');
               div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">О</div>';
-                        } else if (shift.start && shift.end) {
+            } else if (shift.start && shift.end) {
               div.classList.add('shift');
               const isNight = isNightShift(shift.start, shift.end);
               const night = isNight ? '<span class="night-icon">☾</span>' : '';
@@ -1399,15 +1300,12 @@
       const month = currentMonthAvail.getMonth();
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitleAvail').textContent = monthNames[month] + ' ' + year;
-
       const cells = buildMonthCells(year, month);
       const container = document.getElementById('daysAvail');
       container.innerHTML = '';
-
       cells.forEach(cell => {
         const div = document.createElement('div');
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-
         if (cell.date) {
           const avail = allAvailability.find(a => a.phone === userPhone && a.date === cell.date);
           if (avail) {
@@ -1429,15 +1327,12 @@
       const month = currentMonthAdmin.getMonth();
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitleAdmin').textContent = monthNames[month] + ' ' + year;
-
       const cells = buildMonthCells(year, month);
       const container = document.getElementById('daysAdmin');
       container.innerHTML = '';
-
       cells.forEach(cell => {
         const div = document.createElement('div');
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-
         if (cell.date) {
           const count = allAvailability.filter(a => a.date === cell.date).length;
           if (count > 0) {
@@ -1457,17 +1352,14 @@
     function showAdminDayPopup(dateStr) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
-
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
-
       const people = allAvailability.filter(a => a.date === dateStr);
       people.sort((a, b) => {
         const n1 = getNameForPhone(a.phone);
         const n2 = getNameForPhone(b.phone);
         return n1.localeCompare(n2, 'ru');
       });
-
       let listHtml = '';
       if (people.length === 0) {
         listHtml = '<div style="color:#999;font-size:14px;">—</div>';
@@ -1477,16 +1369,13 @@
           listHtml += '<div class="admin-list-item"><span class="admin-list-name">' + name + '</span><span class="admin-list-time">' + p.start + '–' + p.end + '</span></div>';
         });
       }
-
       overlay.innerHTML = '<div class="popup">' +
         '<div class="popup-title">' + formatDateRu(dateStr) + '</div>' +
         '<div class="popup-info">Могут выйти</div>' +
         listHtml +
         '<button class="popup-btn secondary" id="closeAdminPopup" style="margin-top:16px;">Закрыть</button>' +
         '</div>';
-
       document.body.appendChild(overlay);
-
       overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
       document.getElementById('closeAdminPopup').addEventListener('click', () => overlay.remove());
     }
@@ -1494,10 +1383,8 @@
     function showShiftPopup(shift) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
-
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
-
       let title = '', info = '', showCalendar = false;
       if (shift.status === 'Б') {
         title = '🤒 Больничный';
@@ -1511,7 +1398,6 @@
         info = formatDateRu(shift.date) + '<br>' + shift.start + ' – ' + shift.end;
         showCalendar = true;
       }
-
       let buttonsHtml = '';
       if (showCalendar) {
         buttonsHtml += '<button class="popup-btn google" id="addGoogle">📅 Добавить в Google Calendar</button>';
@@ -1521,13 +1407,10 @@
         }
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
-
       overlay.innerHTML = '<div class="popup"><div class="popup-title">' + title + '</div><div class="popup-info">' + info + '</div>' + buttonsHtml + '</div>';
       document.body.appendChild(overlay);
-
       overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
       document.getElementById('closePopup').addEventListener('click', () => overlay.remove());
-
       if (showCalendar) {
         document.getElementById('addGoogle').addEventListener('click', () => {
           const url = buildGoogleCalendarUrl(shift);
@@ -1535,15 +1418,11 @@
           else window.open(url, '_blank');
           overlay.remove();
         });
-
         const appleBtn = document.getElementById('addApple');
         if (appleBtn) {
           appleBtn.addEventListener('click', () => {
             const icsUrl = getIcsUrlForPhone(userPhone);
-            if (!icsUrl) {
-              alert('Ссылка на календарь не найдена.');
-              return;
-            }
+            if (!icsUrl) { alert('Ссылка на календарь не найдена.'); return; }
             if (tg && tg.openLink) tg.openLink(icsUrl);
             else window.open(icsUrl, '_blank');
             overlay.remove();
@@ -1565,20 +1444,16 @@
     function showAvailabilityPopup(dateStr, existing) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
-
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
-
       const defaultStart = existing ? existing.start : '10:00';
       const defaultEnd = existing ? existing.end : '18:00';
-
       let buttonsHtml = '';
       buttonsHtml += '<button class="popup-btn" id="saveAvail">Сохранить</button>';
       if (existing) {
         buttonsHtml += '<button class="popup-btn danger" id="deleteAvail">Удалить отметку</button>';
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closeAvailPopup">Отмена</button>';
-
       overlay.innerHTML = '<div class="popup">' +
         '<div class="popup-title">Могу выйти</div>' +
         '<div class="popup-info">' + formatDateRu(dateStr) + '</div>' +
@@ -1588,26 +1463,17 @@
         '</div>' +
         buttonsHtml +
         '</div>';
-
       document.body.appendChild(overlay);
-
       overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
       document.getElementById('closeAvailPopup').addEventListener('click', () => overlay.remove());
-
       document.getElementById('saveAvail').addEventListener('click', async () => {
         const start = document.getElementById('availStart').value;
         const end = document.getElementById('availEnd').value;
-
-        if (start >= end) {
-          alert('Время окончания должно быть позже времени начала');
-          return;
-        }
-
+        if (start >= end) { alert('Время окончания должно быть позже времени начала'); return; }
         try {
           await fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
+            method: 'POST', mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
               phone: userPhone,
               date: dateStr,
@@ -1703,17 +1569,18 @@
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
-            renderHeader();
+      renderHeader();
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
-            document.getElementById('pageSubtitle').style.display = 'none';
+      document.getElementById('pageSubtitle').style.display = 'none';
 
-            if (ADMIN_PHONES.includes(userPhone)) {
+      if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
         document.getElementById('tabAdminBtn').style.display = 'none';
       }
+
       try {
         await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
         const myShifts = allShifts.filter(s => s.phone === userPhone);
@@ -1730,7 +1597,7 @@
           return;
         }
 
-                document.getElementById('calendarWrap').style.display = 'block';
+        document.getElementById('calendarWrap').style.display = 'block';
         renderHeader();
         renderBanner();
         renderCalendar();
@@ -1748,7 +1615,7 @@
         tab.classList.add('active');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-               if (target === 'schedule') {
+        if (target === 'schedule') {
           document.getElementById('tabSchedule').classList.add('active');
           document.getElementById('pageSubtitle').style.display = 'none';
         } else if (target === 'availability') {
@@ -1764,7 +1631,7 @@
       });
     });
 
-        document.getElementById('prevMonth').addEventListener('click', () => {
+    document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
       renderCalendar();
       animateMonth('days', 'slide-right');
@@ -1811,8 +1678,7 @@
       renderAdminCalendar();
       animateMonth('daysAdmin', 'fade-only');
     });
-    
-        // ============ СВАЙПЫ МЕЖДУ МЕСЯЦАМИ ============
+
     attachSwipe('days',
       () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); animateMonth('days', 'slide-left'); },
       () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); animateMonth('days', 'slide-right'); }
@@ -1827,6 +1693,7 @@
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-left'); },
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-right'); }
     );
+
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

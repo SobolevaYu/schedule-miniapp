@@ -985,7 +985,35 @@
 
     <div id="employeesList" class="employees-list"></div>
   </div>
+    <div class="tab-content" id="tabEditEmployeeCalendar">
+    <div class="edit-header">
+      <button class="edit-back" id="editCalendarBackBtn">‹</button>
+      <div class="edit-title" id="editCalendarTitle">Сотрудник</div>
+    </div>
 
+    <div class="month-header">
+      <button class="month-nav" id="prevMonthEdit">‹</button>
+      <div class="month-title" id="monthTitleEdit">Октябрь 2026</div>
+      <button class="today-btn" id="todayBtnEdit">Сегодня</button>
+      <button class="month-nav" id="nextMonthEdit">›</button>
+    </div>
+
+    <div class="calendar">
+      <div class="weekdays">
+        <div class="weekday">Пн</div><div class="weekday">Вт</div><div class="weekday">Ср</div>
+        <div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div>
+        <div class="weekday">Вс</div>
+      </div>
+      <div class="days" id="daysEdit"></div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color" style="background:var(--shift-bg-light);border-color:var(--shift-border)"></div>Смена</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--sick-bg-light);border-color:var(--sick-border)"></div>Больничный</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--vac-bg-light);border-color:var(--vac-border)"></div>Отпуск</div>
+      <div class="legend-item"><span style="font-size:13px;line-height:1;">☾</span> Ночная</div>
+    </div>
+  </div>
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">📅</span>
@@ -1019,6 +1047,8 @@
     let currentMonth = new Date();
     let currentMonthAvail = new Date();
     let currentMonthAdmin = new Date();
+        let currentMonthEdit = new Date();
+    let currentEditPhone = null;
     let allShifts = [];
     let allAvailability = [];
     let employeesMap = {};
@@ -1485,6 +1515,80 @@
     // ============================================
     // СПИСОК СОТРУДНИКОВ ДЛЯ РЕДАКТОРА
     // ============================================
+        // ============================================
+    // РЕНДЕР КАЛЕНДАРЯ РЕДАКТИРОВАНИЯ (СМЕНЫ СОТРУДНИКА)
+    // ============================================
+    function renderEditCalendar() {
+      if (!currentEditPhone) return;
+
+      const year = currentMonthEdit.getFullYear();
+      const month = currentMonthEdit.getMonth();
+      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      document.getElementById('monthTitleEdit').textContent = monthNames[month] + ' ' + year;
+
+      const cells = buildMonthCells(year, month);
+      const container = document.getElementById('daysEdit');
+      container.innerHTML = '';
+
+      cells.forEach(cell => {
+        const div = document.createElement('div');
+        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+
+        if (cell.date) {
+          const shift = allShifts.find(s => s.phone === currentEditPhone && s.date === cell.date);
+          if (shift) {
+            if (shift.status === 'Б') {
+              div.classList.add('sick');
+              div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">Б</div>';
+            } else if (shift.status === 'О') {
+              div.classList.add('vacation');
+              div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">О</div>';
+            } else if (shift.start && shift.end) {
+              div.classList.add('shift');
+              const isNight = isNightShift(shift.start, shift.end);
+              const night = isNight ? '<span class="night-icon">☾</span>' : '';
+              if (isNight) div.classList.add('night');
+              div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + shift.start + '<br>' + shift.end + night + '</div>';
+            } else {
+              div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+            }
+          } else {
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+          }
+        } else {
+          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+        }
+        container.appendChild(div);
+      });
+    }
+
+    // ============================================
+    // ОТКРЫТЬ КАЛЕНДАРЬ СОТРУДНИКА
+    // ============================================
+    function openEmployeeCalendar(phone, name) {
+      currentEditPhone = phone;
+      currentMonthEdit = new Date();
+
+      document.getElementById('editCalendarTitle').textContent = name;
+
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabEditEmployeeCalendar').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'none';
+
+      renderEditCalendar();
+    }
+
+    // ============================================
+    // ЗАКРЫТЬ КАЛЕНДАРЬ → ВЕРНУТЬСЯ К СПИСКУ
+    // ============================================
+    function closeEmployeeCalendar() {
+      currentEditPhone = null;
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabEditEmployees').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'none';
+      renderEmployeesList();
+    }
+
     function renderEmployeesList() {
       const list = document.getElementById('employeesList');
       list.innerHTML = '';
@@ -1502,7 +1606,7 @@
         item.className = 'employee-item';
         item.innerHTML = '<div class="employee-name">' + name + '</div><div class="employee-arrow">›</div>';
         item.addEventListener('click', () => {
-          showToast('Скоро', 'Календарь ' + name + ' — в разработке');
+                  openEmployeeCalendar(phone, name);
         });
         list.appendChild(item);
       });
@@ -1850,6 +1954,31 @@
 
       const helpBtn = document.getElementById('helpBtn');
       if (helpBtn) helpBtn.addEventListener('click', showHelp);
+            // Кнопки календаря редактирования
+      const calBackBtn = document.getElementById('editCalendarBackBtn');
+      if (calBackBtn) calBackBtn.addEventListener('click', closeEmployeeCalendar);
+
+      const prevMonthEdit = document.getElementById('prevMonthEdit');
+      if (prevMonthEdit) prevMonthEdit.addEventListener('click', () => {
+        currentMonthEdit.setMonth(currentMonthEdit.getMonth() - 1);
+        renderEditCalendar();
+        animateMonth('daysEdit', 'slide-right');
+      });
+
+      const nextMonthEdit = document.getElementById('nextMonthEdit');
+      if (nextMonthEdit) nextMonthEdit.addEventListener('click', () => {
+        currentMonthEdit.setMonth(currentMonthEdit.getMonth() + 1);
+        renderEditCalendar();
+        animateMonth('daysEdit', 'slide-left');
+      });
+
+      const todayBtnEdit = document.getElementById('todayBtnEdit');
+      if (todayBtnEdit) todayBtnEdit.addEventListener('click', () => {
+        currentMonthEdit = new Date();
+        renderEditCalendar();
+        animateMonth('daysEdit', 'fade-only');
+      });
+
 
       // Показываем вкладку админа для админов
       if (ADMIN_PHONES.includes(userPhone)) {

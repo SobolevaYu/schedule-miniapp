@@ -972,6 +972,96 @@
         border-color: rgba(52, 211, 153, 0.9);
       }
     }
+        /* ============ РЕДАКТИРОВАНИЕ — СПИСОК СОТРУДНИКОВ ============ */
+    .edit-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .edit-back {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--tg-theme-text-color, #0F172A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+    .edit-back:active { transform: scale(0.92); }
+    @media (prefers-color-scheme: dark) {
+      .edit-back {
+        background: rgba(30, 41, 59, 0.55);
+        border-color: rgba(148, 163, 184, 0.15);
+        color: var(--tg-theme-text-color, #F1F5F9);
+      }
+    }
+    .edit-title {
+      font-size: 18px;
+      font-weight: 700;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .employees-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .employee-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
+      cursor: pointer;
+      transition: transform 0.12s, background 0.15s;
+    }
+    .employee-item:active {
+      transform: scale(0.98);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    @media (prefers-color-scheme: dark) {
+      .employee-item {
+        background: rgba(30, 41, 59, 0.55);
+        border-color: rgba(148, 163, 184, 0.15);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      }
+      .employee-item:active {
+        background: rgba(16, 185, 129, 0.15);
+      }
+    }
+    .employee-name {
+      font-size: 15px;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .employee-arrow {
+      font-size: 20px;
+      color: var(--tg-theme-hint-color, #94A3B8);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -1053,7 +1143,19 @@
     <div class="info-block">
       Нажми на день — увидишь, кто может выйти на подработку.
     </div>
+        <button class="help-btn-mini" id="editScheduleBtn" style="width:auto;border-radius:12px;padding:0 16px;font-size:14px;">📝 Редактировать расписание</button>
+  <div class="tab-content" id="tabEditEmployees">
+    <div class="edit-header">
+      <button class="edit-back" id="editBackBtn">‹</button>
+      <div class="edit-title">Редактирование расписания</div>
+    </div>
 
+    <div class="info-block">
+      Выбери сотрудника, чтобы посмотреть и изменить его смены.
+    </div>
+
+    <div id="employeesList" class="employees-list"></div>
+  </div>
     <div class="month-header">
       <button class="month-nav" id="prevMonthAdmin">‹</button>
       <div class="month-title" id="monthTitleAdmin">Октябрь 2026</div>
@@ -1581,7 +1683,30 @@
         container.appendChild(div);
       });
     }
+    function renderEmployeesList() {
+      const list = document.getElementById('employeesList');
+      list.innerHTML = '';
 
+      const entries = Object.entries(employeesMap);
+      if (entries.length === 0) {
+        list.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Нет сотрудников</div>';
+        return;
+      }
+
+      // Сортируем по имени
+      entries.sort((a, b) => a[1].localeCompare(b[1], 'ru'));
+
+      entries.forEach(([phone, name]) => {
+        const item = document.createElement('div');
+        item.className = 'employee-item';
+        item.innerHTML = '<div class="employee-name">' + name + '</div><div class="employee-arrow">›</div>';
+        item.addEventListener('click', () => {
+          // TODO: открыть календарь сотрудника — добавим на следующем этапе
+          alert('Скоро: календарь ' + name);
+        });
+        list.appendChild(item);
+      });
+    }
     function renderAdminCalendar() {
       const year = currentMonthAdmin.getFullYear();
       const month = currentMonthAdmin.getMonth();
@@ -1865,6 +1990,19 @@
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
       renderHeader(); 
+            document.getElementById('editScheduleBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tabEditEmployees').classList.add('active');
+        document.getElementById('pageSubtitle').style.display = 'none';
+        renderEmployeesList();
+      });
+
+      document.getElementById('editBackBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tabAdmin').classList.add('active');
+        document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+        document.getElementById('pageSubtitle').style.display = 'block';
+      });
             document.getElementById('helpBtn').addEventListener('click', showHelp);
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');

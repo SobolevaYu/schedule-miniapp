@@ -1062,6 +1062,49 @@
       color: var(--tg-theme-hint-color, #94A3B8);
       flex-shrink: 0;
     }
+        /* ============ КНОПКА РЕДАКТИРОВАНИЯ В АДМИНКЕ ============ */
+    .admin-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(16, 185, 129, 0.12);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      border: 1.5px solid rgba(16, 185, 129, 0.5);
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--brand);
+      cursor: pointer;
+      margin-bottom: 16px;
+      font-family: inherit;
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
+    }
+    .admin-action-btn:active {
+      transform: scale(0.98);
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.7);
+    }
+    @media (prefers-color-scheme: dark) {
+      .admin-action-btn {
+        background: rgba(52, 211, 153, 0.15);
+        border-color: rgba(52, 211, 153, 0.6);
+        color: var(--brand-light);
+        box-shadow: 0 2px 10px rgba(52, 211, 153, 0.2);
+      }
+      .admin-action-btn:active {
+        background: rgba(52, 211, 153, 0.25);
+        border-color: rgba(52, 211, 153, 0.8);
+      }
+    }
+    .admin-action-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -1139,11 +1182,15 @@
     </div>
   </div>
 
-  <div class="tab-content" id="tabAdmin">
+    <div class="tab-content" id="tabAdmin">
     <div class="info-block">
       Нажми на день — увидишь, кто может выйти на подработку.
     </div>
-        <button class="help-btn-mini" id="editScheduleBtn" style="width:auto;border-radius:12px;padding:0 16px;font-size:14px;">📝 Редактировать расписание</button>
+
+    <button class="admin-action-btn" id="editScheduleBtn">
+      <span class="admin-action-icon">📝</span>
+      Редактировать расписание
+    </button>
 
     <div class="month-header">
       <button class="month-nav" id="prevMonthAdmin">‹</button>
@@ -1165,6 +1212,7 @@
       <div class="legend-item"><div class="legend-color" style="background:var(--avail-bg-light);border-color:var(--avail-border)"></div>Есть отметки</div>
     </div>
   </div>
+
   <div class="tab-content" id="tabEditEmployees">
     <div class="edit-header">
       <button class="edit-back" id="editBackBtn">‹</button>
@@ -1992,9 +2040,60 @@
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
+            document.getElementById('editScheduleBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tabEditEmployees').classList.add('active');
+        document.getElementById('pageSubtitle').style.display = 'none';
+        renderEmployeesList();
+      });
+
+      document.getElementById('editBackBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tabAdmin').classList.add('active');
+        document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+        document.getElementById('pageSubtitle').style.display = 'block';
+      });
+
       renderHeader(); 
-      
+            const editBtn = document.getElementById('editScheduleBtn');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabEditEmployees').classList.add('active');
+          document.getElementById('pageSubtitle').style.display = 'none';
+          renderEmployeesList();
+        });
+      }
+
+      const backBtn = document.getElementById('editBackBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabAdmin').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+          document.getElementById('pageSubtitle').style.display = 'block';
+        });
+      }
             document.getElementById('helpBtn').addEventListener('click', showHelp);
+                  const editBtn = document.getElementById('editScheduleBtn');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabEditEmployees').classList.add('active');
+          document.getElementById('pageSubtitle').style.display = 'none';
+          renderEmployeesList();
+        });
+      }
+
+      const backBtn = document.getElementById('editBackBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabAdmin').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+          document.getElementById('pageSubtitle').style.display = 'block';
+        });
+      }
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
@@ -2004,6 +2103,26 @@
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
         document.getElementById('tabAdminBtn').style.display = 'none';
+      }
+            // Обработчики кнопок в админке
+      const editBtn = document.getElementById('editScheduleBtn');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabEditEmployees').classList.add('active');
+          document.getElementById('pageSubtitle').style.display = 'none';
+          renderEmployeesList();
+        });
+      }
+
+      const backBtn = document.getElementById('editBackBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabAdmin').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+          document.getElementById('pageSubtitle').style.display = 'block';
+        });
       }
       registerTelegramId();
             try {

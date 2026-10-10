@@ -37,9 +37,9 @@
     }
     /* Цвета для фоновых пятен */
     :root {
-      --blob-1-light: rgba(16, 185, 129, 0.35);
-      --blob-2-light: rgba(251, 146, 60, 0.28);
-      --blob-3-light: rgba(99, 102, 241, 0.22);
+     --blob-1-light: rgba(16, 185, 129, 0.22);
+      --blob-2-light: rgba(251, 146, 60, 0.18);
+      --blob-3-light: rgba(99, 102, 241, 0.14);
 
       --blob-1-dark: rgba(16, 185, 129, 0.18);
       --blob-2-dark: rgba(251, 146, 60, 0.14);
@@ -53,24 +53,32 @@
       background: var(--tg-theme-bg-color, #F5F7FA);
       color: var(--tg-theme-text-color, #0F172A);
       padding: 16px;
-      padding-bottom: 120px;
+      padding-bottom: 160px;
       min-height: 100vh;
       width: 100%;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
-        /* Все прямые дети body — над пятнами */
+         /* Все прямые дети body — над пятнами */
     body > *:not(.bg-blobs) {
       position: relative;
       z-index: 1;
     }
+    body > .tab-content,
+    body > .header,
+    body > .subtitle,
+    body > .phone-form,
+    body > .loading {
+      position: relative;
+      z-index: 10;
+    }
         /* ============ ФОНОВЫЕ ПЯТНА (BLOBS) ============ */
-    .bg-blobs {
+        .bg-blobs {
       position: fixed;
       inset: 0;
       overflow: hidden;
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
     }
     .blob {
       position: absolute;

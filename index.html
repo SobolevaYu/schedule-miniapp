@@ -1353,7 +1353,7 @@
     }
 
     async function loadShifts() {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Сотрудники')}`;
       const res = await fetch(url);
       const text = await res.text();
       const start = text.indexOf('{');
@@ -1684,14 +1684,17 @@
       });
     }
     function renderEmployeesList() {
-      const list = document.getElementById('employeesList');
-      list.innerHTML = '';
+  const list = document.getElementById('employeesList');
 
-      const entries = Object.entries(employeesMap);
-      if (entries.length === 0) {
-        list.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Нет сотрудников</div>';
-        return;
-      }
+  // Отладка — что видит функция
+  const info = 'employeesMap: ' + JSON.stringify(employeesMap) + '\n\n' +
+               'list: ' + (list ? 'есть' : 'НЕТ');
+
+  list.innerHTML = '<div style="text-align:center;padding:20px;font-size:12px;color:#999;">' +
+    info + '</div>';
+
+  return;
+}
 
       // Сортируем по имени
       entries.sort((a, b) => a[1].localeCompare(b[1], 'ru'));

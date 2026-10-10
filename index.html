@@ -1518,6 +1518,152 @@
         // ============================================
     // РЕНДЕР КАЛЕНДАРЯ РЕДАКТИРОВАНИЯ (СМЕНЫ СОТРУДНИКА)
     // ============================================
+        // ============================================
+    // ПОПАП РЕДАКТИРОВАНИЯ СМЕНЫ
+    // ============================================
+    function showEditShiftPopup(dateStr) {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const existing = allShifts.find(s => s.phone === currentEditPhone && s.date === dateStr);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      let title = formatDateRu(dateStr);
+      let currentInfo = '';
+      let isShift = false;
+
+      if (existing) {
+        if (existing.status === 'Б') {
+          currentInfo = 'Сейчас: 🅱️ Больничный';
+        } else if (existing.status === 'О') {
+          currentInfo = 'Сейчас: 🟠 Отпуск';
+        } else if (existing.start && existing.end) {
+          currentInfo = 'Сейчас: ' + existing.start + '–' + existing.end;
+          isShift = true;
+        }
+      }
+
+      const defaultStart = (existing && existing.start) ? existing.start : '09:00';
+      const defaultEnd = (existing && existing.end) ? existing.end : '18:00';
+
+      let html = '<div class="popup">';
+      html += '<div class="popup-title">' + title + '</div>';
+      if (currentInfo) {
+        html += '<div class="popup-info">' + currentInfo + '</div>';
+      } else {
+        html += '<div class="popup-info">Нет смены</div>';
+      }
+
+      // Время + Сохранить
+      html += '<div class="time-fields">';
+      html += '<div><label>С</label><select id="editStart">' + buildTimeOptions(defaultStart) + '</select></div>';
+      html += '<div><label>До</label><select id="editEnd">' + buildTimeOptions(defaultEnd) + '</select></div>';
+      html += '</div>';
+      html += '<button class="popup-btn" id="saveEditShift">💾 Сохранить смену</button>';
+
+      // Б/О
+      html += '<button class="popup-btn" id="setSick" style="background:rgba(148,163,184,0.9);color:#333;">🅱️ Больничный</button>';
+      html += '<button class="popup-btn" id="setVacation" style="background:rgba(56,189,248,0.9);color:#075985;">🟠 Отпуск</button>';
+
+      // Удалить
+      if (existing) {
+        html += '<button class="popup-btn danger" id="deleteShift">🗑 Удалить</button>';
+      }
+
+      html += '<button class="popup-btn secondary" id="closeEditPopup">Отмена</button>';
+      html += '</div>';
+
+      overlay.innerHTML = html;
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeEditPopup').addEventListener('click', () => overlay.remove());
+
+      // Сохранить смену
+      document.getElementById('saveEditShift').addEventListener('click', async () => {
+        const start = document.getElementById('editStart').value;
+        const end = document.getElementById('editEnd').value;
+        if (start >= end) {
+          showToast('Ошибка', 'Конец должен быть позже начала', true);
+          return;
+        }
+        await saveShiftChange(currentEditPhone, dateStr, start, end, '');
+        overlay.remove();
+      });
+
+      // Больничный
+      document.getElementById('setSick').addEventListener('click', async () => {
+        await saveShiftChange(currentEditPhone, dateStr, '', '', 'Б');
+        overlay.remove();
+      });
+
+      // Отпуск
+      document.getElementById('setVacation').addEventListener('click', async () => {
+        await saveShiftChange(currentEditPhone, dateStr, '', '', 'О');
+        overlay.remove();
+      });
+
+      // Удалить
+      const deleteBtn = document.getElementById('deleteShift');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', async () => {
+          await saveShiftChange(currentEditPhone, dateStr, '', '', 'DELETE');
+          overlay.remove();
+        });
+      }
+    }
+
+    // ============================================
+    // СОХРАНЕНИЕ ИЗМЕНЕНИЯ В ТАБЛИЦУ
+    // ============================================
+    async function saveShiftChange(phone, date, start, end, status) {
+      try {
+        if (!tg || !tg.initData) {
+          showToast('Ошибка', 'Нет initData', true);
+          return;
+        }
+
+        await fetch(WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: 'update_shift',
+            initData: tg.initData,
+            phone: phone,
+            date: date,
+            start_time: start,
+            end_time: end,
+            status: status
+          })
+        });
+
+        // Обновляем локальные данные сразу (оптимистично)
+        const idx = allShifts.findIndex(s => s.phone === phone && s.date === date);
+
+        if (status === 'DELETE') {
+          if (idx >= 0) allShifts.splice(idx, 1);
+          showToast('Удалено', formatDateRu(date) + ' · смена снята');
+        } else if (status === 'Б' || status === 'О') {
+          const newShift = { phone, date, start: '', end: '', status: status };
+          if (idx >= 0) allShifts[idx] = newShift; else allShifts.push(newShift);
+          showToast('Сохранено', formatDateRu(date) + ' · ' + (status === 'Б' ? 'больничный' : 'отпуск'));
+        } else {
+          const newShift = { phone, date, start, end, status: '' };
+          if (idx >= 0) allShifts[idx] = newShift; else allShifts.push(newShift);
+          showToast('Сохранено!', formatDateRu(date) + ' · ' + start + '–' + end);
+        }
+
+        // Пересобираем календарь
+        renderEditCalendar();
+      } catch (e) {
+        showToast('Ошибка', 'Не удалось сохранить', true);
+        console.error(e);
+      }
+    }
+
     function renderEditCalendar() {
       if (!currentEditPhone) return;
 
@@ -1555,6 +1701,7 @@
           } else {
             div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
           }
+                    div.addEventListener('click', () => showEditShiftPopup(cell.date));
         } else {
           div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
         }

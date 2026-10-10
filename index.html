@@ -271,11 +271,14 @@
       .weekday { color: var(--tg-theme-hint-color, #94A3B8); }
     }
 
-    .days {
+        .days {
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 3px;
       width: 100%;
+      touch-action: pan-y;
+      -webkit-user-select: none;
+      user-select: none;
     }
     .day {
       aspect-ratio: 1;
@@ -867,7 +870,7 @@
     const SHEET_AVAILABILITY = 'Доступность';
     const STORAGE_KEY = 'user_phone';
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';
-    const ADMIN_PHONE = '+79879286721';
+    const ADMIN_PHONES = ['+79879286721', '+79102490096'];
 
     const tg = window.Telegram?.WebApp;
     let userPhone = null;
@@ -1486,12 +1489,11 @@
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
 
-      if (userPhone === ADMIN_PHONE) {
+            if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
         document.getElementById('tabAdminBtn').style.display = 'none';
       }
-
       try {
         await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
         const myShifts = allShifts.filter(s => s.phone === userPhone);
@@ -1577,7 +1579,8 @@
       currentMonthAdmin = new Date();
       renderAdminCalendar();
     });
-    // ---- Свайп для всех трёх календарей ----
+    
+        // ============ СВАЙПЫ МЕЖДУ МЕСЯЦАМИ ============
     attachSwipe('days',
       () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); },
       () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); }
@@ -1592,6 +1595,7 @@
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); },
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); }
     );
+
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

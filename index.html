@@ -916,39 +916,44 @@
     @media (prefers-color-scheme: dark) {
       .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
     }
-      /* ============ КНОПКА ИНСТРУКЦИИ ============ */
-    .help-btn {
+      /* ============ СТРОКА ШАПКИ С КНОПКОЙ ============ */
+    .header-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(16, 185, 129, 0.12);
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .header-row h1 {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ============ МИНИ-КНОПКА ИНСТРУКЦИИ ============ */
+    .help-btn-mini {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      border-radius: 12px;
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 600;
+      border: 1px solid rgba(16, 185, 129, 0.4);
       color: var(--brand);
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
-      margin-bottom: 20px;
-      transition: transform 0.15s, background 0.15s;
-    }
-    .help-btn:active {
-      transform: scale(0.96);
-      background: rgba(16, 185, 129, 0.2);
-    }
-    .help-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
+      padding: 0;
+      flex-shrink: 0;
+      transition: transform 0.15s, background 0.15s;
+      font-family: inherit;
+    }
+    .help-btn-mini:active {
+      transform: scale(0.9);
+      background: rgba(16, 185, 129, 0.25);
     }
     .help-block {
       margin-bottom: 16px;
@@ -981,15 +986,14 @@
     <div class="blob blob-3"></div>
   </div>
 
-  <div class="header" id="header">
-    <h1 id="greeting">Привет!</h1>
+    <div class="header" id="header">
+    <div class="header-row">
+      <h1 id="greeting">Привет!</h1>
+      <button class="help-btn-mini" id="helpBtn" aria-label="Инструкция">?</button>
+    </div>
     <div class="header-date" id="headerDate">—</div>
     <div class="header-today" id="headerToday" style="display:none"></div>
   </div>
-    <button class="help-btn" id="helpBtn">
-    <span class="help-icon">?</span>
-    Инструкция
-  </button>
   <p class="subtitle" id="pageSubtitle">Твоё расписание смен</p>
 
   <div class="phone-form" id="phoneForm" style="display:none">

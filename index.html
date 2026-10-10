@@ -35,7 +35,16 @@
       --avail-text-light: #78350F;
       --avail-text-dark: #FDE68A;
     }
+    /* Цвета для фоновых пятен */
+    :root {
+      --blob-1-light: rgba(16, 185, 129, 0.35);
+      --blob-2-light: rgba(251, 146, 60, 0.28);
+      --blob-3-light: rgba(99, 102, 241, 0.22);
 
+      --blob-1-dark: rgba(16, 185, 129, 0.18);
+      --blob-2-dark: rgba(251, 146, 60, 0.14);
+      --blob-3-dark: rgba(99, 102, 241, 0.12);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { overflow-x: hidden; max-width: 100%; }
 
@@ -49,6 +58,72 @@
       width: 100%;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+    }
+        /* Все прямые дети body — над пятнами */
+    body > *:not(.bg-blobs) {
+      position: relative;
+      z-index: 1;
+    }
+        /* ============ ФОНОВЫЕ ПЯТНА (BLOBS) ============ */
+    .bg-blobs {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      -webkit-filter: blur(80px);
+      will-change: transform;
+      transition: background 0.6s;
+    }
+    .blob-1 {
+      width: 320px;
+      height: 320px;
+      top: -80px;
+      left: -80px;
+      background: var(--blob-1-light);
+      animation: blobFloat1 22s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 280px;
+      height: 280px;
+      bottom: -100px;
+      right: -80px;
+      background: var(--blob-2-light);
+      animation: blobFloat2 26s ease-in-out infinite;
+    }
+    .blob-3 {
+      width: 240px;
+      height: 240px;
+      top: 40%;
+      right: -100px;
+      background: var(--blob-3-light);
+      animation: blobFloat3 30s ease-in-out infinite;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .blob-1 { background: var(--blob-1-dark); }
+      .blob-2 { background: var(--blob-2-dark); }
+      .blob-3 { background: var(--blob-3-dark); }
+    }
+
+    @keyframes blobFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, 40px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+    @keyframes blobFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-40px, -30px) scale(1.15); }
+    }
+    @keyframes blobFloat3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40% { transform: translate(-30px, 50px) scale(1.1); }
+      80% { transform: translate(20px, -20px) scale(0.9); }
     }
 
     @media (prefers-color-scheme: dark) {
@@ -845,6 +920,12 @@
   </style>
 </head>
 <body>
+  <body>
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
   <div class="header" id="header">
     <h1 id="greeting">Привет!</h1>
     <div class="header-date" id="headerDate">—</div>

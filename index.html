@@ -1061,7 +1061,53 @@
       if (s && s[0] !== '+') s = '+' + s;
       return s;
     }
+    // ============ КЭШ ============
+    const CACHE_KEYS = {
+      shifts: 'cache_shifts',
+      availability: 'cache_availability',
+      employees: 'cache_employees',
+      time: 'cache_time'
+    };
+    const CACHE_TTL = 5 * 60 * 1000; // 5 минут
 
+    function saveCache() {
+      try {
+        localStorage.setItem(CACHE_KEYS.shifts, JSON.stringify(allShifts));
+        localStorage.setItem(CACHE_KEYS.availability, JSON.stringify(allAvailability));
+        localStorage.setItem(CACHE_KEYS.employees, JSON.stringify({
+          names: employeesMap,
+          ics: employeesIcsMap
+        }));
+        localStorage.setItem(CACHE_KEYS.time, String(Date.now()));
+      } catch (e) {
+        console.warn('Не удалось сохранить кэш:', e);
+      }
+    }
+
+    function loadCache() {
+      try {
+        const timeStr = localStorage.getItem(CACHE_KEYS.time);
+        if (!timeStr) return false;
+        const time = parseInt(timeStr, 10);
+        if (Date.now() - time > CACHE_TTL * 12) return false; // больше часа — не грузим
+
+        const shiftsStr = localStorage.getItem(CACHE_KEYS.shifts);
+        const availStr = localStorage.getItem(CACHE_KEYS.availability);
+        const empStr = localStorage.getItem(CACHE_KEYS.employees);
+
+        if (shiftsStr) allShifts = JSON.parse(shiftsStr);
+        if (availStr) allAvailability = JSON.parse(availStr);
+        if (empStr) {
+          const emp = JSON.parse(empStr);
+          employeesMap = emp.names || {};
+          employeesIcsMap = emp.ics || {};
+        }
+        return true;
+      } catch (e) {
+        console.warn('Не удалось загрузить кэш:', e);
+        return false;
+      }
+    }
     function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
     function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
 
@@ -1699,8 +1745,26 @@
         document.getElementById('tabAdminBtn').style.display = 'none';
       }
 
-      try {
+            try {
+        // Сначала пробуем кэш
+        const fromCache = loadCache();
+
+        if (fromCache) {
+          // Показываем сразу из кэша
+          document.getElementById('calendarWrap').style.display = 'block';
+          renderHeader();
+          renderBanner();
+          renderCalendar();
+          renderAvailabilityCalendar();
+          renderAdminCalendar();
+        }
+
+        // Потом грузим свежие данные
         await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
+
+        // Сохраняем в кэш
+        saveCache();
+
         const myShifts = allShifts.filter(s => s.phone === userPhone);
 
         if (myShifts.length === 0) {
@@ -1715,7 +1779,7 @@
           return;
         }
 
-        document.getElementById('calendarWrap').style.display = 'block';
+                document.getElementById('calendarWrap').style.display = 'block';
         renderHeader();
         renderBanner();
         renderCalendar();

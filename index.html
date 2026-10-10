@@ -1111,12 +1111,18 @@
     function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
     function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
 
-    async function registerTelegramId() {
+            async function registerTelegramId() {
       try {
         if (!tg || !tg.initDataUnsafe?.user?.id) return;
         if (!userPhone) return;
 
         const tgId = tg.initDataUnsafe.user.id;
+        const initData = tg.initData || '';
+
+        if (!initData) {
+          console.warn('initData пустой — пропускаем регистрацию');
+          return;
+        }
 
         // Проверяем, отправляли ли уже
         const sentKey = 'tg_id_sent_' + tgId;
@@ -1129,7 +1135,8 @@
           body: JSON.stringify({
             action: 'register_telegram',
             phone: userPhone,
-            telegram_id: tgId
+            telegram_id: tgId,
+            initData: initData
           })
         });
 
@@ -1138,7 +1145,6 @@
         console.warn('Не удалось зарегистрировать tg_id:', e);
       }
     }
-
     function showPhoneForm() {
       document.getElementById('phoneForm').style.display = 'block';
       document.getElementById('tabsBar').style.display = 'none';

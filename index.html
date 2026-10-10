@@ -759,10 +759,75 @@
     @media (prefers-color-scheme: dark) {
       .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
     }
+        /* ============ HEADER С ДАТОЙ И СМЕНОЙ ============ */
+    .header {
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .header-date {
+      font-size: 14px;
+      color: var(--tg-theme-hint-color, #64748B);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    @media (prefers-color-scheme: dark) {
+      .header-date { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    .header-today {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid;
+    }
+    .header-today.shift {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #065F46;
+    }
+    .header-today.sick {
+      background: rgba(148, 163, 184, 0.2);
+      border-color: rgba(148, 163, 184, 0.5);
+      color: #334155;
+    }
+    .header-today.vacation {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: rgba(56, 189, 248, 0.5);
+      color: #075985;
+    }
+    .header-today.dayoff {
+      background: rgba(148, 163, 184, 0.12);
+      border-color: rgba(148, 163, 184, 0.3);
+      color: var(--tg-theme-hint-color, #64748B);
+    }
+    @media (prefers-color-scheme: dark) {
+      .header-today.shift { color: #6EE7B7; }
+      .header-today.sick { color: #CBD5E1; }
+      .header-today.vacation { color: #7DD3FC; }
+      .header-today.dayoff { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    .header-today-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
-  <h1 id="greeting">Привет!</h1>
+  <div class="header" id="header">
+    <h1 id="greeting">Привет!</h1>
+    <div class="header-date" id="headerDate">—</div>
+    <div class="header-today" id="headerToday" style="display:none"></div>
+  </div>
   <p class="subtitle" id="pageSubtitle">Твоё расписание смен</p>
 
   <div class="phone-form" id="phoneForm" style="display:none">
@@ -1021,7 +1086,62 @@
 
     function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
     function getNameForPhone(phone) { return employeesMap[phone] || phone; }
+    function renderHeader() {
+      const now = new Date();
+      const hour = now.getHours();
 
+      let greeting = 'Доброе утро';
+      let icon = '☀️';
+      if (hour >= 12 && hour < 18) {
+        greeting = 'Добрый день';
+        icon = '🌤️';
+      } else if (hour >= 18 || hour < 5) {
+        greeting = 'Добрый вечер';
+        icon = '🌙';
+      }
+
+      let name = 'друг';
+      if (tg && tg.initDataUnsafe?.user) {
+        name = tg.initDataUnsafe.user.first_name || 'друг';
+      }
+
+      document.getElementById('greeting').textContent = greeting + ', ' + name + '! ' + icon;
+
+      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+      const days = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+      const dayName = days[now.getDay()];
+      const dayNameCap = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+      document.getElementById('headerDate').textContent =
+        dayNameCap + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+      const todayStr = now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0');
+
+      const todayShift = allShifts.find(s => s.phone === userPhone && s.date === todayStr);
+      const todayEl = document.getElementById('headerToday');
+
+      if (todayShift) {
+        if (todayShift.status === 'Б') {
+          todayEl.className = 'header-today sick';
+          todayEl.innerHTML = '<span class="header-today-icon">🤒</span> Сегодня: больничный';
+        } else if (todayShift.status === 'О') {
+          todayEl.className = 'header-today vacation';
+          todayEl.innerHTML = '<span class="header-today-icon">🌴</span> Сегодня: отпуск';
+        } else if (todayShift.start && todayShift.end) {
+          const night = isNightShift(todayShift.start, todayShift.end) ? ' ☾' : '';
+          todayEl.className = 'header-today shift';
+          todayEl.innerHTML = '<span class="header-today-icon">🔔</span> Сегодня смена: ' + todayShift.start + '–' + todayShift.end + night;
+        } else {
+          todayEl.style.display = 'none';
+          return;
+        }
+      } else {
+        todayEl.className = 'header-today dayoff';
+        todayEl.innerHTML = '<span class="header-today-icon">🌴</span> Сегодня выходной';
+      }
+      todayEl.style.display = 'flex';
+    }
     function renderBanner() {
       const banner = document.getElementById('banner');
       const tomorrow = new Date();
@@ -1478,6 +1598,7 @@
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
+            renderHeader();
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
@@ -1503,7 +1624,8 @@
           return;
         }
 
-        document.getElementById('calendarWrap').style.display = 'block';
+                document.getElementById('calendarWrap').style.display = 'block';
+        renderHeader();
         renderBanner();
         renderCalendar();
         renderAvailabilityCalendar();

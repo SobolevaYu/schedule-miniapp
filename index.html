@@ -56,45 +56,32 @@
       -webkit-font-smoothing: antialiased;
     }
     @media (prefers-color-scheme: dark) {
-      body {
-        color: var(--tg-theme-text-color, #F1F5F9);
-      }
+      body { color: var(--tg-theme-text-color, #F1F5F9); }
     }
 
-    /* ============ ФОНОВЫЕ ПЯТНА ============ */
     .bg-blobs {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
+      position: fixed; inset: 0;
+      overflow: hidden; pointer-events: none;
       z-index: -1;
       background: var(--tg-theme-bg-color, #F5F7FA);
     }
     @media (prefers-color-scheme: dark) {
-      .bg-blobs {
-        background: var(--tg-theme-bg-color, #0F172A);
-      }
+      .bg-blobs { background: var(--tg-theme-bg-color, #0F172A); }
     }
     .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      -webkit-filter: blur(80px);
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); -webkit-filter: blur(80px);
       will-change: transform;
     }
     .blob-1 {
-      width: 320px;
-      height: 320px;
-      top: -80px;
-      left: -80px;
+      width: 320px; height: 320px;
+      top: -80px; left: -80px;
       background: var(--blob-1-light);
       animation: blobFloat1 22s ease-in-out infinite;
     }
     .blob-3 {
-      width: 240px;
-      height: 240px;
-      top: 40%;
-      right: -100px;
+      width: 240px; height: 240px;
+      top: 40%; right: -100px;
       background: var(--blob-3-light);
       animation: blobFloat3 30s ease-in-out infinite;
     }
@@ -113,31 +100,29 @@
       80% { transform: translate(20px, -20px) scale(0.9); }
     }
 
-    /* ============ HEADER ============ */
     .header { margin-bottom: 20px; }
-    .header h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 6px;
+    .header-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: 12px; margin-bottom: 6px;
+    }
+    .header-row h1 {
+      font-size: 24px; font-weight: 700;
       letter-spacing: -0.5px;
+      flex: 1; min-width: 0; margin: 0;
     }
     .header-date {
       font-size: 14px;
       color: var(--tg-theme-hint-color, #64748B);
-      margin-bottom: 12px;
-      font-weight: 500;
+      margin-bottom: 12px; font-weight: 500;
     }
     @media (prefers-color-scheme: dark) {
       .header-date { color: var(--tg-theme-hint-color, #94A3B8); }
     }
     .header-today {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 14px;
+      font-size: 14px; font-weight: 500;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid;
@@ -170,6 +155,34 @@
     }
     .header-today-icon { font-size: 20px; flex-shrink: 0; }
 
+    .help-btn-mini {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(16, 185, 129, 0.22);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      border: 1.5px solid rgba(16, 185, 129, 0.65);
+      color: #059669;
+      font-size: 17px; font-weight: 800;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0; flex-shrink: 0;
+      transition: transform 0.15s, background 0.15s;
+      font-family: inherit;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+      line-height: 1;
+    }
+    .help-btn-mini:active {
+      transform: scale(0.88);
+      background: rgba(16, 185, 129, 0.35);
+    }
+    @media (prefers-color-scheme: dark) {
+      .help-btn-mini {
+        background: rgba(52, 211, 153, 0.22);
+        border-color: rgba(52, 211, 153, 0.7);
+        color: #6EE7B7;
+      }
+    }
+
     .subtitle {
       font-size: 14px;
       color: var(--tg-theme-hint-color, #64748B);
@@ -179,105 +192,67 @@
       .subtitle { color: var(--tg-theme-hint-color, #94A3B8); }
     }
 
-    /* ============ ФОРМА ТЕЛЕФОНА ============ */
     .phone-form {
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 20px;
-      padding: 24px 20px;
-      margin-bottom: 16px;
+      padding: 24px 20px; margin-bottom: 16px;
       text-align: center;
       box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
     }
     @media (prefers-color-scheme: dark) {
       .phone-form {
         background: rgba(30, 41, 59, 0.55);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        border-color: rgba(148, 163, 184, 0.15);
       }
     }
     .phone-form .hint {
       font-size: 14px;
       color: var(--tg-theme-hint-color, #64748B);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-    @media (prefers-color-scheme: dark) {
-      .phone-form .hint { color: var(--tg-theme-hint-color, #94A3B8); }
+      margin-bottom: 16px; line-height: 1.5;
     }
     .phone-form button {
-      width: 100%;
-      padding: 14px;
+      width: 100%; padding: 14px;
       background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 10px;
-      transition: transform 0.15s, box-shadow 0.15s;
+      color: white; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; margin-bottom: 10px;
       box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
     }
-    .phone-form button:active {
-      transform: scale(0.98);
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
-    }
+    .phone-form button:active { transform: scale(0.98); }
     .phone-form .manual {
-      display: block;
-      background: none;
-      color: var(--brand);
-      font-size: 13px;
-      text-decoration: none;
-      cursor: pointer;
-      margin: 0 auto;
-      padding: 8px;
+      display: block; background: none; color: var(--brand);
+      font-size: 13px; text-decoration: none; cursor: pointer;
+      margin: 0 auto; padding: 8px;
       border-bottom: 1px dashed var(--brand);
     }
     .phone-form input {
-      width: 100%;
-      padding: 14px;
+      width: 100%; padding: 14px;
       border: 1px solid rgba(148, 163, 184, 0.3);
-      border-radius: 12px;
-      font-size: 15px;
-      margin-bottom: 10px;
-      text-align: center;
+      border-radius: 12px; font-size: 15px;
+      margin-bottom: 10px; text-align: center;
       background: rgba(255, 255, 255, 0.6);
       color: var(--tg-theme-text-color, #0F172A);
-      transition: border-color 0.15s;
     }
-    .phone-form input:focus {
-      outline: none;
-      border-color: var(--brand);
-    }
+    .phone-form input:focus { outline: none; border-color: var(--brand); }
     @media (prefers-color-scheme: dark) {
       .phone-form input {
         background: rgba(15, 23, 42, 0.5);
         color: var(--tg-theme-text-color, #F1F5F9);
-        border-color: rgba(148, 163, 184, 0.2);
       }
     }
 
-    /* ============ ШАПКА МЕСЯЦА ============ */
     .month-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      gap: 6px;
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 12px; gap: 6px;
     }
     .month-title {
-      font-size: 18px;
-      font-weight: 700;
-      flex: 1;
-      text-align: center;
-      letter-spacing: -0.3px;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 18px; font-weight: 700; flex: 1;
+      text-align: center; letter-spacing: -0.3px;
+      min-width: 0; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
     }
     .month-nav {
       background: rgba(255, 255, 255, 0.7);
@@ -285,21 +260,13 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 12px;
-      width: 36px;
-      height: 36px;
-      font-size: 18px;
-      cursor: pointer;
+      width: 36px; height: 36px;
+      font-size: 18px; cursor: pointer;
       color: var(--tg-theme-text-color, #0F172A);
-      transition: transform 0.15s, background 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .month-nav:active {
-      transform: scale(0.92);
-      background: rgba(16, 185, 129, 0.15);
-    }
+    .month-nav:active { transform: scale(0.92); background: rgba(16, 185, 129, 0.15); }
     @media (prefers-color-scheme: dark) {
       .month-nav {
         background: rgba(30, 41, 59, 0.55);
@@ -310,57 +277,39 @@
     .today-btn {
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid rgba(16, 185, 129, 0.4);
-      border-radius: 12px;
-      padding: 0 10px;
-      height: 36px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--brand);
-      cursor: pointer;
-      transition: transform 0.15s, background 0.15s;
-      flex-shrink: 0;
+      border-radius: 12px; padding: 0 10px;
+      height: 36px; font-size: 12px; font-weight: 600;
+      color: var(--brand); cursor: pointer; flex-shrink: 0;
     }
-    .today-btn:active {
-      transform: scale(0.92);
-      background: rgba(16, 185, 129, 0.25);
-    }
+    .today-btn:active { transform: scale(0.92); }
 
-    /* ============ КАЛЕНДАРЬ ============ */
     .calendar {
       background: rgba(255, 255, 255, 0.65);
       backdrop-filter: blur(16px) saturate(180%);
       -webkit-backdrop-filter: blur(16px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 20px;
-      padding: 12px;
-      width: 100%;
-      max-width: 100%;
+      border-radius: 20px; padding: 12px;
+      width: 100%; max-width: 100%;
       overflow: hidden;
       box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
     }
     @media (prefers-color-scheme: dark) {
       .calendar {
         background: rgba(30, 41, 59, 0.55);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        border-color: rgba(148, 163, 184, 0.15);
       }
     }
 
     .weekdays {
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 3px;
-      margin-bottom: 6px;
+      gap: 3px; margin-bottom: 6px;
     }
     .weekday {
-      text-align: center;
-      font-size: 11px;
+      text-align: center; font-size: 11px;
       color: var(--tg-theme-hint-color, #64748B);
-      text-transform: uppercase;
-      font-weight: 600;
+      text-transform: uppercase; font-weight: 600;
       padding: 4px 0;
-      letter-spacing: 0.3px;
-      min-width: 0;
     }
     @media (prefers-color-scheme: dark) {
       .weekday { color: var(--tg-theme-hint-color, #94A3B8); }
@@ -369,28 +318,20 @@
     .days {
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 3px;
-      width: 100%;
+      gap: 3px; width: 100%;
       touch-action: pan-y;
-      -webkit-user-select: none;
-      user-select: none;
+      -webkit-user-select: none; user-select: none;
     }
     .day {
-      aspect-ratio: 1;
-      border-radius: 10px;
-      padding: 3px;
-      display: flex;
-      flex-direction: column;
+      aspect-ratio: 1; border-radius: 10px; padding: 3px;
+      display: flex; flex-direction: column;
       justify-content: space-between;
       font-size: 12px;
       border: 1px solid rgba(148, 163, 184, 0.15);
       background: rgba(255, 255, 255, 0.5);
       color: var(--tg-theme-text-color, #0F172A);
       cursor: pointer;
-      transition: transform 0.12s, box-shadow 0.12s;
-      min-width: 0;
-      overflow: hidden;
-      position: relative;
+      min-width: 0; overflow: hidden; position: relative;
     }
     .day:active { transform: scale(0.94); }
     @media (prefers-color-scheme: dark) {
@@ -402,36 +343,19 @@
     }
     .day-num { font-size: 11px; font-weight: 600; line-height: 1; }
     .day-time {
-      font-size: 9px;
-      line-height: 1.05;
-      font-weight: 600;
+      font-size: 9px; line-height: 1.05; font-weight: 600;
       text-align: center;
-      word-break: break-word;
-      overflow-wrap: anywhere;
+      word-break: break-word; overflow-wrap: anywhere;
     }
-    .day-status {
-      font-size: 13px;
-      font-weight: 700;
-      text-align: center;
-      margin-top: 2px;
-    }
+    .day-status { font-size: 13px; font-weight: 700; text-align: center; margin-top: 2px; }
     .day.other-month { opacity: 0.25; }
 
     .days.slide-left { animation: slideFromRight 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
     .days.slide-right { animation: slideFromLeft 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
     .days.fade-only { animation: fadeOnly 0.25s ease-out; }
-    @keyframes slideFromRight {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes slideFromLeft {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fadeOnly {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    @keyframes slideFromRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideFromLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeOnly { from { opacity: 0; } to { opacity: 1; } }
 
     .day.today {
       outline: 2px solid var(--brand);
@@ -453,7 +377,6 @@
     @media (prefers-color-scheme: dark) {
       .day.shift {
         background: var(--shift-bg-dark);
-        border-color: var(--shift-border);
         color: var(--shift-text-dark);
       }
     }
@@ -465,7 +388,6 @@
     @media (prefers-color-scheme: dark) {
       .day.sick {
         background: var(--sick-bg-dark);
-        border-color: var(--sick-border);
         color: var(--sick-text-dark);
       }
     }
@@ -477,41 +399,24 @@
     @media (prefers-color-scheme: dark) {
       .day.vacation {
         background: var(--vac-bg-dark);
-        border-color: var(--vac-border);
         color: var(--vac-text-dark);
       }
     }
-    .day.available {
-      background: var(--avail-bg-light);
-      border-color: var(--avail-border);
-      color: var(--avail-text-light);
-    }
-    @media (prefers-color-scheme: dark) {
-      .day.available {
-        background: var(--avail-bg-dark);
-        border-color: var(--avail-border);
-        color: var(--avail-text-dark);
-      }
-    }
+    .day.available,
     .day.has-people {
       background: var(--avail-bg-light);
       border-color: var(--avail-border);
       color: var(--avail-text-light);
     }
     @media (prefers-color-scheme: dark) {
+      .day.available,
       .day.has-people {
         background: var(--avail-bg-dark);
-        border-color: var(--avail-border);
         color: var(--avail-text-dark);
       }
     }
 
-    .night-icon {
-      font-size: 11px;
-      font-weight: 700;
-      opacity: 1;
-      margin-left: 2px;
-    }
+    .night-icon { font-size: 11px; font-weight: 700; margin-left: 2px; }
     .day.shift.night {
       background: linear-gradient(135deg,
         rgba(16, 185, 129, 0.18) 0%,
@@ -527,13 +432,10 @@
       }
     }
 
-    /* ============ ЛЕГЕНДА ============ */
     .legend {
       margin-top: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 12px;
-      font-size: 11px;
+      display: flex; flex-wrap: wrap;
+      gap: 8px 12px; font-size: 11px;
       color: var(--tg-theme-hint-color, #64748B);
       line-height: 1.3;
     }
@@ -542,38 +444,25 @@
     }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
+      width: 14px; height: 14px; border-radius: 4px;
       border: 1px solid rgba(148, 163, 184, 0.3);
     }
 
-    /* ============ LOADING / ERROR ============ */
     .loading { color: var(--tg-theme-hint-color, #64748B); font-size: 14px; text-align: center; padding: 24px; }
     .error { color: #EF4444; font-size: 14px; padding: 12px; text-align: center; }
     .not-found {
       background: rgba(239, 68, 68, 0.1);
-      color: #DC2626;
-      padding: 20px;
-      border-radius: 16px;
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.5;
+      color: #DC2626; padding: 20px; border-radius: 16px;
+      text-align: center; font-size: 14px; line-height: 1.5;
     }
     @media (prefers-color-scheme: dark) {
       .not-found { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; }
     }
 
-    /* ============ БАННЕР ============ */
     .banner {
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      font-size: 14px;
-      line-height: 1.4;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      border-radius: 16px; padding: 14px 16px;
+      margin-bottom: 16px; font-size: 14px; line-height: 1.4;
+      display: flex; align-items: center; gap: 10px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       font-weight: 500;
@@ -600,23 +489,16 @@
       .banner.vacation { color: #7DD3FC; }
     }
 
-    /* ============ ПОПАП ============ */
     .popup-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(15, 23, 42, 0.5);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      display: flex; align-items: flex-end; justify-content: center;
       z-index: 1000;
       animation: fadeIn 0.15s ease-out;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .popup {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(24px) saturate(180%);
@@ -624,11 +506,9 @@
       border: 1px solid rgba(255, 255, 255, 0.6);
       border-radius: 24px 24px 0 0;
       padding: 24px 20px;
-      width: 100%;
-      max-width: 500px;
+      width: 100%; max-width: 500px;
       animation: slideUp 0.22s cubic-bezier(0.32, 0.72, 0, 1);
-      max-height: 85vh;
-      overflow-y: auto;
+      max-height: 85vh; overflow-y: auto;
       box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
     }
     @media (prefers-color-scheme: dark) {
@@ -642,32 +522,23 @@
       to { transform: translateY(0); }
     }
     .popup-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      letter-spacing: -0.3px;
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 6px; letter-spacing: -0.3px;
     }
     .popup-info {
       font-size: 15px;
       color: var(--tg-theme-hint-color, #64748B);
-      margin-bottom: 20px;
-      line-height: 1.5;
+      margin-bottom: 20px; line-height: 1.5;
     }
     @media (prefers-color-scheme: dark) {
       .popup-info { color: var(--tg-theme-hint-color, #94A3B8); }
     }
     .popup-btn {
-      width: 100%;
-      padding: 14px;
+      width: 100%; padding: 14px;
       background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 8px;
-      transition: transform 0.15s, box-shadow 0.15s;
+      color: white; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; margin-bottom: 8px;
       box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
     .popup-btn:active { transform: scale(0.98); }
@@ -681,35 +552,24 @@
     }
     .popup-btn.danger {
       background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
     }
     .popup-btn.secondary {
       background: transparent;
       color: var(--tg-theme-link-color, var(--brand));
-      font-weight: 500;
-      margin-bottom: 0;
-      box-shadow: none;
+      font-weight: 500; margin-bottom: 0; box-shadow: none;
     }
 
-    /* ============ ВРЕМЯ ============ */
     .time-fields { display: flex; gap: 12px; margin-bottom: 18px; }
     .time-fields > div { flex: 1; }
     .time-fields label {
       font-size: 13px;
       color: var(--tg-theme-hint-color, #64748B);
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-    @media (prefers-color-scheme: dark) {
-      .time-fields label { color: var(--tg-theme-hint-color, #94A3B8); }
+      display: block; margin-bottom: 6px; font-weight: 500;
     }
     .time-fields select {
-      width: 100%;
-      padding: 12px;
+      width: 100%; padding: 12px;
       border: 1px solid rgba(148, 163, 184, 0.3);
-      border-radius: 12px;
-      font-size: 15px;
+      border-radius: 12px; font-size: 15px;
       text-align: center;
       background: rgba(255, 255, 255, 0.7);
       color: var(--tg-theme-text-color, #0F172A);
@@ -722,35 +582,27 @@
       }
     }
 
-    /* ============ ТАБЫ ============ */
     .tabs {
-      position: fixed;
-      bottom: 8px;
-      left: 12px;
-      right: 12px;
+      position: fixed; bottom: 8px;
+      left: 12px; right: 12px;
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.5);
-      display: flex;
-      z-index: 500;
+      display: flex; z-index: 500;
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
-      padding: 6px;
-      gap: 4px;
+      padding: 6px; gap: 4px;
     }
     @media (prefers-color-scheme: dark) {
       .tabs {
         background: rgba(30, 41, 59, 0.8);
         border-color: rgba(148, 163, 184, 0.15);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       }
     }
     .tab {
-      flex: 1;
-      text-align: center;
-      padding: 8px 4px;
-      cursor: pointer;
+      flex: 1; text-align: center;
+      padding: 8px 4px; cursor: pointer;
       font-size: 11px;
       color: var(--tg-theme-hint-color, #64748B);
       user-select: none;
@@ -761,21 +613,16 @@
       .tab { color: var(--tg-theme-hint-color, #94A3B8); }
     }
     .tab-icon {
-      font-size: 20px;
-      display: block;
+      font-size: 20px; display: block;
       margin-bottom: 2px;
       transition: transform 0.2s;
     }
     .tab.active {
-            color: var(--brand);
-      font-weight: 600;
+      color: var(--brand); font-weight: 600;
       background: rgba(16, 185, 129, 0.12);
     }
-    .tab.active .tab-icon {
-      transform: scale(1.1);
-    }
+    .tab.active .tab-icon { transform: scale(1.1); }
 
-    /* ============ ВКЛАДКИ ============ */
     .tab-content { display: none; }
     .tab-content.active {
       display: block;
@@ -786,15 +633,12 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ============ INFO-BLOCK ============ */
     .info-block {
       background: rgba(16, 185, 129, 0.05);
       border: 1px solid rgba(16, 185, 129, 0.15);
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 14px; padding: 14px;
       margin-bottom: 16px;
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 13px; line-height: 1.5;
       color: var(--tg-theme-hint-color, #475569);
     }
     @media (prefers-color-scheme: dark) {
@@ -805,36 +649,29 @@
       }
     }
 
-    /* ============ АДМИН-СПИСОК ============ */
     .admin-list-item {
       padding: 12px 4px;
       border-bottom: 1px solid rgba(148, 163, 184, 0.15);
       font-size: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 12px;
     }
     .admin-list-item:last-child { border-bottom: none; }
     .admin-list-name {
-      font-weight: 600;
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-weight: 600; flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis;
       white-space: nowrap;
     }
     .admin-list-time {
       color: var(--tg-theme-hint-color, #64748B);
-      font-size: 14px;
-      font-weight: 500;
-      flex-shrink: 0;
+      font-size: 14px; font-weight: 500; flex-shrink: 0;
     }
-        /* ============ ВСПЛЫВАШКА (TOAST) ============ */
+    @media (prefers-color-scheme: dark) {
+      .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+
     .toast {
-      position: fixed;
-      top: 16px;
-      left: 50%;
+      position: fixed; top: 16px; left: 50%;
       transform: translateX(-50%) translateY(-120%);
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(24px) saturate(180%);
@@ -846,9 +683,7 @@
       max-width: calc(100% - 32px);
       box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
       z-index: 2000;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
                   opacity 0.35s ease-out;
       opacity: 0;
@@ -862,39 +697,26 @@
       .toast {
         background: rgba(30, 41, 59, 0.92);
         border-color: rgba(52, 211, 153, 0.5);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       }
     }
     .toast-icon {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 12px;
       background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
     }
     .toast-icon svg {
-      width: 20px;
-      height: 20px;
-      stroke: white;
-      stroke-width: 3;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 20px; height: 20px;
+      stroke: white; stroke-width: 3;
+      fill: none; stroke-linecap: round; stroke-linejoin: round;
     }
-    .toast-text {
-      flex: 1;
-      min-width: 0;
-    }
+    .toast-text { flex: 1; min-width: 0; }
     .toast-title {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 15px; font-weight: 700;
       color: var(--tg-theme-text-color, #0F172A);
       margin-bottom: 2px;
-      letter-spacing: -0.2px;
     }
     .toast-sub {
       font-size: 13px;
@@ -911,90 +733,24 @@
     }
     .toast.toast-error .toast-icon {
       background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    }
-    @media (prefers-color-scheme: dark) {
-      .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
-    }
-      /* ============ СТРОКА ШАПКИ С КНОПКОЙ ============ */
-    .header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-    .header-row h1 {
-      margin-bottom: 0;
-      flex: 1;
-      min-width: 0;
     }
 
-    /* ============ МИНИ-КНОПКА ИНСТРУКЦИИ ============ */
-    .help-btn-mini {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(16, 185, 129, 0.22);
-      backdrop-filter: blur(14px) saturate(180%);
-      -webkit-backdrop-filter: blur(14px) saturate(180%);
-      border: 1.5px solid rgba(16, 185, 129, 0.65);
-      color: #059669;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      flex-shrink: 0;
-      transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
-      font-family: inherit;
-      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
-      line-height: 1;
-    }
-    .help-btn-mini:active {
-      transform: scale(0.88);
-      background: rgba(16, 185, 129, 0.35);
-      border-color: rgba(16, 185, 129, 0.85);
-      box-shadow: 0 1px 4px rgba(16, 185, 129, 0.3);
-    }
-    /* Тёмная тема */
-    @media (prefers-color-scheme: dark) {
-      .help-btn-mini {
-        background: rgba(52, 211, 153, 0.22);
-        border-color: rgba(52, 211, 153, 0.7);
-        color: #6EE7B7;
-        box-shadow: 0 2px 10px rgba(52, 211, 153, 0.25);
-      }
-      .help-btn-mini:active {
-        background: rgba(52, 211, 153, 0.35);
-        border-color: rgba(52, 211, 153, 0.9);
-      }
-    }
-        /* ============ РЕДАКТИРОВАНИЕ — СПИСОК СОТРУДНИКОВ ============ */
+    /* ============ СПИСОК СОТРУДНИКОВ В РЕДАКТОРЕ ============ */
     .edit-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      display: flex; align-items: center;
+      gap: 12px; margin-bottom: 16px;
     }
     .edit-back {
-      width: 38px;
-      height: 38px;
+      width: 38px; height: 38px;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.5);
-      font-size: 20px;
-      cursor: pointer;
+      font-size: 20px; cursor: pointer;
       color: var(--tg-theme-text-color, #0F172A);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      transition: transform 0.15s;
     }
     .edit-back:active { transform: scale(0.92); }
     @media (prefers-color-scheme: dark) {
@@ -1005,27 +761,18 @@
       }
     }
     .edit-title {
-      font-size: 18px;
-      font-weight: 700;
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 18px; font-weight: 700;
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis;
       white-space: nowrap;
     }
-
     .employees-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: flex; flex-direction: column; gap: 8px;
     }
     .employee-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 16px;
-      border-radius: 14px;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+      padding: 14px 16px; border-radius: 14px;
       background: rgba(255, 255, 255, 0.65);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -1042,19 +789,15 @@
       .employee-item {
         background: rgba(30, 41, 59, 0.55);
         border-color: rgba(148, 163, 184, 0.15);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
       }
       .employee-item:active {
         background: rgba(16, 185, 129, 0.15);
       }
     }
     .employee-name {
-      font-size: 15px;
-      font-weight: 600;
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 15px; font-weight: 600;
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis;
       white-space: nowrap;
     }
     .employee-arrow {
@@ -1062,48 +805,65 @@
       color: var(--tg-theme-hint-color, #94A3B8);
       flex-shrink: 0;
     }
-        /* ============ КНОПКА РЕДАКТИРОВАНИЯ В АДМИНКЕ ============ */
+
+    /* ============ КНОПКА РЕДАКТИРОВАНИЯ В АДМИНКЕ ============ */
     .admin-action-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px 16px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; width: 100%; padding: 14px 16px;
       background: rgba(16, 185, 129, 0.12);
       backdrop-filter: blur(14px) saturate(180%);
       -webkit-backdrop-filter: blur(14px) saturate(180%);
       border: 1.5px solid rgba(16, 185, 129, 0.5);
       border-radius: 14px;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 15px; font-weight: 600;
       color: var(--brand);
-      cursor: pointer;
-      margin-bottom: 16px;
+      cursor: pointer; margin-bottom: 16px;
       font-family: inherit;
-      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+      transition: transform 0.15s, background 0.15s;
       box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
     }
     .admin-action-btn:active {
       transform: scale(0.98);
       background: rgba(16, 185, 129, 0.2);
-      border-color: rgba(16, 185, 129, 0.7);
     }
     @media (prefers-color-scheme: dark) {
       .admin-action-btn {
         background: rgba(52, 211, 153, 0.15);
         border-color: rgba(52, 211, 153, 0.6);
         color: var(--brand-light);
-        box-shadow: 0 2px 10px rgba(52, 211, 153, 0.2);
       }
       .admin-action-btn:active {
         background: rgba(52, 211, 153, 0.25);
-        border-color: rgba(52, 211, 153, 0.8);
       }
     }
-    .admin-action-icon {
-      font-size: 18px;
-      line-height: 1;
+    .admin-action-icon { font-size: 18px; line-height: 1; }
+        /* ============ HELP-БЛОКИ В ИНСТРУКЦИИ ============ */
+    .help-block {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .help-block:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .help-block-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--tg-theme-text-color, #0F172A);
+    }
+    @media (prefers-color-scheme: dark) {
+      .help-block-title { color: var(--tg-theme-text-color, #F1F5F9); }
+    }
+    .help-block-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--tg-theme-hint-color, #64748B);
+    }
+    @media (prefers-color-scheme: dark) {
+      .help-block-text { color: var(--tg-theme-hint-color, #94A3B8); }
     }
   </style>
 </head>
@@ -1113,7 +873,7 @@
     <div class="blob blob-3"></div>
   </div>
 
-    <div class="header" id="header">
+  <div class="header" id="header">
     <div class="header-row">
       <h1 id="greeting">Привет!</h1>
       <button class="help-btn-mini" id="helpBtn" aria-label="Инструкция">?</button>
@@ -1182,7 +942,7 @@
     </div>
   </div>
 
-    <div class="tab-content" id="tabAdmin">
+  <div class="tab-content" id="tabAdmin">
     <div class="info-block">
       Нажми на день — увидишь, кто может выйти на подработку.
     </div>
@@ -1225,6 +985,7 @@
 
     <div id="employeesList" class="employees-list"></div>
   </div>
+
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">📅</span>
@@ -1239,8 +1000,10 @@
       Админ
     </div>
   </div>
-
-  <script>
+    <script>
+    // ============================================
+    // КОНСТАНТЫ
+    // ============================================
     const SHEET_ID = '1CpWhm4KHW3pKi5BbMRo7nzAqpCkkUtYe-qmHVIVX648';
     const SHEET_NAME = 'Смены';
     const SHEET_AVAILABILITY = 'Доступность';
@@ -1248,6 +1011,9 @@
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';
     const ADMIN_PHONES = ['+79879286721', '+79102490096'];
 
+    // ============================================
+    // СОСТОЯНИЕ
+    // ============================================
     const tg = window.Telegram?.WebApp;
     let userPhone = null;
     let currentMonth = new Date();
@@ -1263,6 +1029,9 @@
       tg.expand();
     }
 
+    // ============================================
+    // УТИЛИТЫ
+    // ============================================
     function normalizePhone(p) {
       if (!p) return '';
       let s = String(p).trim();
@@ -1270,14 +1039,43 @@
       if (s && s[0] !== '+') s = '+' + s;
       return s;
     }
-    // ============ КЭШ ============
+
+    function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
+    function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
+
+    function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
+    function getNameForPhone(phone) { return employeesMap[phone] || phone; }
+
+    function formatDateRu(isoDate) {
+      if (!isoDate || typeof isoDate !== 'string') return '—';
+      const parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      const y = parts[0];
+      const m = parseInt(parts[1]);
+      const d = parseInt(parts[2]);
+      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+      if (isNaN(m) || isNaN(d) || m < 1 || m > 12) return isoDate;
+      return d + ' ' + months[m - 1] + ' ' + y;
+    }
+
+    function isNightShift(startStr, endStr) {
+      const [sh, sm] = startStr.split(':').map(Number);
+      const [eh, em] = endStr.split(':').map(Number);
+      const S = sh * 60 + sm;
+      let E = eh * 60 + em;
+      if (E <= S) E += 24 * 60;
+      return E > 22 * 60 || S < 6 * 60;
+    }
+
+    // ============================================
+    // КЭШ
+    // ============================================
     const CACHE_KEYS = {
       shifts: 'cache_shifts',
       availability: 'cache_availability',
       employees: 'cache_employees',
       time: 'cache_time'
     };
-    const CACHE_TTL = 5 * 60 * 1000; // 5 минут
 
     function saveCache() {
       try {
@@ -1298,7 +1096,7 @@
         const timeStr = localStorage.getItem(CACHE_KEYS.time);
         if (!timeStr) return false;
         const time = parseInt(timeStr, 10);
-        if (Date.now() - time > CACHE_TTL * 12) return false; // больше часа — не грузим
+        if (Date.now() - time > 60 * 60 * 1000) return false;
 
         const shiftsStr = localStorage.getItem(CACHE_KEYS.shifts);
         const availStr = localStorage.getItem(CACHE_KEYS.availability);
@@ -1317,96 +1115,17 @@
         return false;
       }
     }
-    function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
-    function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
 
-            async function registerTelegramId() {
-      try {
-        if (!tg || !tg.initDataUnsafe?.user?.id) return;
-        if (!userPhone) return;
-
-        const tgId = tg.initDataUnsafe.user.id;
-        const initData = tg.initData || '';
-
-        if (!initData) {
-          console.warn('initData пустой — пропускаем регистрацию');
-          return;
-        }
-
-        // Проверяем, отправляли ли уже
-        const sentKey = 'tg_id_sent_' + tgId;
-        if (localStorage.getItem(sentKey) === '1') return;
-
-        await fetch(WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            action: 'register_telegram',
-            phone: userPhone,
-            telegram_id: tgId,
-            initData: initData
-          })
-        });
-
-        localStorage.setItem(sentKey, '1');
-      } catch (e) {
-        console.warn('Не удалось зарегистрировать tg_id:', e);
-      }
-    }
-    function showPhoneForm() {
-      document.getElementById('phoneForm').style.display = 'block';
-      document.getElementById('tabsBar').style.display = 'none';
-      document.getElementById('tabSchedule').classList.remove('active');
-      document.getElementById('tabAvailability').classList.remove('active');
-      document.getElementById('tabAdmin').classList.remove('active');
-
-      const shareBtn = document.getElementById('sharePhone');
-      if (tg && tg.requestContact) {
-        shareBtn.addEventListener('click', () => {
-          tg.requestContact((ok, event) => {
-            if (!ok) return;
-            const phone = event?.responseUnsafe?.contact?.phone_number
-              || tg.initDataUnsafe?.contact?.phone_number;
-            if (phone) {
-              const normalized = normalizePhone(phone);
-              savePhone(normalized);
-              userPhone = normalized;
-              initApp();
-            }
-          });
-        });
-      } else {
-        shareBtn.style.display = 'none';
-      }
-
-      const manualLink = document.getElementById('manualLink');
-      const phoneInput = document.getElementById('phoneInput');
-      const saveManual = document.getElementById('saveManual');
-      manualLink.addEventListener('click', () => {
-        phoneInput.style.display = 'block';
-        saveManual.style.display = 'block';
-        manualLink.style.display = 'none';
-      });
-      saveManual.addEventListener('click', () => {
-        const val = normalizePhone(phoneInput.value);
-        if (val.length < 10) {
-          alert('Введи корректный номер, например +79639190173');
-          return;
-        }
-        savePhone(val);
-        userPhone = val;
-        initApp();
-      });
-    }
-
+    // ============================================
+    // ЗАГРУЗКА ДАННЫХ
+    // ============================================
     async function loadShifts() {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Сотрудники')}`;
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
       const res = await fetch(url);
       const text = await res.text();
       const start = text.indexOf('{');
       const end = text.lastIndexOf('}');
-      if (start === -1 || end === -1 || end <= start) throw new Error('Неверный ответ от Google Sheets');
+      if (start === -1 || end === -1 || end <= start) throw new Error('Неверный ответ Google Sheets');
       const json = JSON.parse(text.substring(start, end + 1));
       const rows = json.table && json.table.rows ? json.table.rows : [];
       allShifts = rows
@@ -1469,60 +1188,88 @@
       }
     }
 
-    function getIcsUrlForPhone(phone) { return employeesIcsMap[phone] || null; }
-    function getNameForPhone(phone) { return employeesMap[phone] || phone; }
-    function showHelp() {
-      const old = document.querySelector('.popup-overlay');
-      if (old) old.remove();
+    // ============================================
+    // РЕГИСТРАЦИЯ TG_ID
+    // ============================================
+    async function registerTelegramId() {
+      try {
+        if (!tg || !tg.initDataUnsafe?.user?.id) return;
+        if (!userPhone) return;
 
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
+        const tgId = tg.initDataUnsafe.user.id;
+        const initData = tg.initData || '';
+        if (!initData) return;
 
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">Как пользоваться</div>' +
-        '<div class="popup-info">Краткая инструкция</div>' +
+        const sentKey = 'tg_id_sent_' + tgId;
+        if (localStorage.getItem(sentKey) === '1') return;
 
-        '<div class="help-block">' +
-          '<div class="help-block-title">📅 Расписание</div>' +
-          '<div class="help-block-text">Нажми на день со сменой → увидишь детали. Кнопки внизу добавят смену в календарь телефона (Google или Apple). Телефон напомнит за 2 часа до смены.</div>' +
-        '</div>' +
+        await fetch(WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: 'register_telegram',
+            phone: userPhone,
+            telegram_id: tgId,
+            initData: initData
+          })
+        });
 
-        '<div class="help-block">' +
-          '<div class="help-block-title">🟡 Доступность</div>' +
-          '<div class="help-block-text">Открой вкладку «Доступность» внизу. Нажми на день, когда можешь выйти на подработку. Укажи время (с какого и до какого часа). Сохрани. День подсветится жёлтым — руководитель его увидит.</div>' +
-        '</div>' +
-
-        '<div class="help-block">' +
-          '<div class="help-block-title">🔔 Напоминания</div>' +
-          '<div class="help-block-text">Если у тебя есть смена завтра, бот вечером пришлёт напоминание в чат.</div>' +
-        '</div>' +
-
-        '<div class="help-block">' +
-          '<div class="help-block-title">🌙 Ночные смены</div>' +
-          '<div class="help-block-text">Смены, которые переходят через полночь, отмечены луной ☾ и градиентом.</div>' +
-        '</div>' +
-
-        '<button class="popup-btn" id="closeHelpBtn" style="margin-top:12px;">Понятно</button>' +
-        '</div>';
-
-      document.body.appendChild(overlay);
-
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeHelpBtn').addEventListener('click', () => overlay.remove());
+        localStorage.setItem(sentKey, '1');
+      } catch (e) {
+        console.warn('Не удалось зарегистрировать tg_id:', e);
+      }
     }
+
+    // ============================================
+    // КАЛЕНДАРЬ — ЯЧЕЙКИ МЕСЯЦА
+    // ============================================
+    function buildMonthCells(year, month) {
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      let startWeekday = firstDay.getDay() - 1;
+      if (startWeekday < 0) startWeekday = 6;
+      const daysInMonth = lastDay.getDate();
+      const prevMonthLastDay = new Date(year, month, 0).getDate();
+      const cells = [];
+      const today = new Date();
+      const todayStr = today.getFullYear() + '-' +
+        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+        String(today.getDate()).padStart(2, '0');
+      for (let i = startWeekday - 1; i >= 0; i--) {
+        cells.push({ num: prevMonthLastDay - i, other: true, date: null });
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        cells.push({ num: d, other: false, date: dateStr, isToday: dateStr === todayStr });
+      }
+      const remaining = (7 - (cells.length % 7)) % 7;
+      for (let i = 1; i <= remaining; i++) {
+        cells.push({ num: i, other: true, date: null });
+      }
+      return cells;
+    }
+
+    function animateMonth(containerId, direction) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      el.classList.remove('slide-left', 'slide-right', 'fade-only');
+      void el.offsetWidth;
+      el.classList.add(direction);
+      setTimeout(() => el.classList.remove(direction), 320);
+    }
+
+    // ============================================
+    // РЕНДЕР HEADER
+    // ============================================
     function renderHeader() {
       const now = new Date();
       const hour = now.getHours();
 
       let greeting = 'Доброе утро';
       let icon = '☀️';
-      if (hour >= 12 && hour < 18) {
-        greeting = 'Добрый день';
-        icon = '🌤️';
-      } else if (hour >= 18 || hour < 5) {
-        greeting = 'Добрый вечер';
-        icon = '🌙';
-      }
+      if (hour >= 12 && hour < 18) { greeting = 'Добрый день'; icon = '🌤️'; }
+      else if (hour >= 18 || hour < 5) { greeting = 'Добрый вечер'; icon = '🌙'; }
 
       let name = 'друг';
       if (tg && tg.initDataUnsafe?.user) {
@@ -1533,8 +1280,7 @@
 
       const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
       const days = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
-      const dayName = days[now.getDay()];
-      const dayNameCap = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+      const dayNameCap = days[now.getDay()].charAt(0).toUpperCase() + days[now.getDay()].slice(1);
       document.getElementById('headerDate').textContent =
         dayNameCap + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
 
@@ -1567,6 +1313,9 @@
       todayEl.style.display = 'flex';
     }
 
+    // ============================================
+    // РЕНДЕР БАННЕРА «ЗАВТРА»
+    // ============================================
     function renderBanner() {
       const banner = document.getElementById('banner');
       const tomorrow = new Date();
@@ -1595,6 +1344,9 @@
       }
     }
 
+    // ============================================
+    // СВАЙПЫ
+    // ============================================
     function attachSwipe(containerId, onSwipeLeft, onSwipeRight) {
       const el = document.getElementById(containerId);
       if (!el) return;
@@ -1618,64 +1370,23 @@
       }, { passive: true });
     }
 
-    function buildMonthCells(year, month) {
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      let startWeekday = firstDay.getDay() - 1;
-      if (startWeekday < 0) startWeekday = 6;
-      const daysInMonth = lastDay.getDate();
-      const prevMonthLastDay = new Date(year, month, 0).getDate();
-      const cells = [];
-      const today = new Date();
-      const todayStr = today.getFullYear() + '-' +
-        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-        String(today.getDate()).padStart(2, '0');
-      for (let i = startWeekday - 1; i >= 0; i--) {
-        cells.push({ num: prevMonthLastDay - i, other: true, date: null });
-      }
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-        cells.push({ num: d, other: false, date: dateStr, isToday: dateStr === todayStr });
-      }
-      const remaining = (7 - (cells.length % 7)) % 7;
-      for (let i = 1; i <= remaining; i++) {
-        cells.push({ num: i, other: true, date: null });
-      }
-      return cells;
-    }
-
-    function isNightShift(startStr, endStr) {
-      const [sh, sm] = startStr.split(':').map(Number);
-      const [eh, em] = endStr.split(':').map(Number);
-      const S = sh * 60 + sm;
-      let E = eh * 60 + em;
-      if (E <= S) E += 24 * 60;
-      const NS = 22 * 60;
-      return E > NS || S < (6 * 60);
-    }
-
-    function animateMonth(containerId, direction) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-      el.classList.remove('slide-left', 'slide-right', 'fade-only');
-      void el.offsetWidth;
-      el.classList.add(direction);
-      setTimeout(() => {
-        el.classList.remove(direction);
-      }, 320);
-    }
-
+    // ============================================
+    // РЕНДЕР КАЛЕНДАРЯ (СМЕНЫ)
+    // ============================================
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitle').textContent = monthNames[month] + ' ' + year;
+
       const cells = buildMonthCells(year, month);
       const container = document.getElementById('days');
       container.innerHTML = '';
+
       cells.forEach(cell => {
         const div = document.createElement('div');
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+
         if (cell.date) {
           const shift = allShifts.find(s => s.phone === userPhone && s.date === cell.date);
           if (shift) {
@@ -1695,7 +1406,7 @@
               div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
             }
             div.addEventListener('click', () => showShiftPopup(shift));
-          } else {
+                    } else {
             div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
           }
         } else {
@@ -1705,17 +1416,23 @@
       });
     }
 
+    // ============================================
+    // РЕНДЕР КАЛЕНДАРЯ (ДОСТУПНОСТЬ)
+    // ============================================
     function renderAvailabilityCalendar() {
       const year = currentMonthAvail.getFullYear();
       const month = currentMonthAvail.getMonth();
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitleAvail').textContent = monthNames[month] + ' ' + year;
+
       const cells = buildMonthCells(year, month);
       const container = document.getElementById('daysAvail');
       container.innerHTML = '';
+
       cells.forEach(cell => {
         const div = document.createElement('div');
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+
         if (cell.date) {
           const avail = allAvailability.find(a => a.phone === userPhone && a.date === cell.date);
           if (avail) {
@@ -1731,44 +1448,24 @@
         container.appendChild(div);
       });
     }
-    function renderEmployeesList() {
-  const list = document.getElementById('employeesList');
 
-  // Отладка — что видит функция
-  const info = 'employeesMap: ' + JSON.stringify(employeesMap) + '\n\n' +
-               'list: ' + (list ? 'есть' : 'НЕТ');
-
-  list.innerHTML = '<div style="text-align:center;padding:20px;font-size:12px;color:#999;">' +
-    info + '</div>';
-
-  return;
-}
-
-      // Сортируем по имени
-      entries.sort((a, b) => a[1].localeCompare(b[1], 'ru'));
-
-      entries.forEach(([phone, name]) => {
-        const item = document.createElement('div');
-        item.className = 'employee-item';
-        item.innerHTML = '<div class="employee-name">' + name + '</div><div class="employee-arrow">›</div>';
-        item.addEventListener('click', () => {
-          // TODO: открыть календарь сотрудника — добавим на следующем этапе
-          alert('Скоро: календарь ' + name);
-        });
-        list.appendChild(item);
-      });
-    }
+    // ============================================
+    // РЕНДЕР КАЛЕНДАРЯ (АДМИН — ДОСТУПНОСТЬ)
+    // ============================================
     function renderAdminCalendar() {
       const year = currentMonthAdmin.getFullYear();
       const month = currentMonthAdmin.getMonth();
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       document.getElementById('monthTitleAdmin').textContent = monthNames[month] + ' ' + year;
+
       const cells = buildMonthCells(year, month);
       const container = document.getElementById('daysAdmin');
       container.innerHTML = '';
+
       cells.forEach(cell => {
         const div = document.createElement('div');
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+
         if (cell.date) {
           const count = allAvailability.filter(a => a.date === cell.date).length;
           if (count > 0) {
@@ -1785,32 +1482,59 @@
       });
     }
 
+    // ============================================
+    // СПИСОК СОТРУДНИКОВ ДЛЯ РЕДАКТОРА
+    // ============================================
+    function renderEmployeesList() {
+      const list = document.getElementById('employeesList');
+      list.innerHTML = '';
+
+      const entries = Object.entries(employeesMap);
+      if (entries.length === 0) {
+        list.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Нет сотрудников</div>';
+        return;
+      }
+
+      entries.sort((a, b) => a[1].localeCompare(b[1], 'ru'));
+
+      entries.forEach(([phone, name]) => {
+        const item = document.createElement('div');
+        item.className = 'employee-item';
+        item.innerHTML = '<div class="employee-name">' + name + '</div><div class="employee-arrow">›</div>';
+        item.addEventListener('click', () => {
+          showToast('Скоро', 'Календарь ' + name + ' — в разработке');
+        });
+        list.appendChild(item);
+      });
+    }
+
+    // ============================================
+    // ПОПАПЫ
+    // ============================================
     function showAdminDayPopup(dateStr) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
       const people = allAvailability.filter(a => a.date === dateStr);
-      people.sort((a, b) => {
-        const n1 = getNameForPhone(a.phone);
-        const n2 = getNameForPhone(b.phone);
-        return n1.localeCompare(n2, 'ru');
-      });
+      people.sort((a, b) => getNameForPhone(a.phone).localeCompare(getNameForPhone(b.phone), 'ru'));
+
       let listHtml = '';
       if (people.length === 0) {
         listHtml = '<div style="color:#999;font-size:14px;">—</div>';
       } else {
         people.forEach(p => {
-          const name = getNameForPhone(p.phone);
-          listHtml += '<div class="admin-list-item"><span class="admin-list-name">' + name + '</span><span class="admin-list-time">' + p.start + '–' + p.end + '</span></div>';
+          listHtml += '<div class="admin-list-item"><span class="admin-list-name">' + getNameForPhone(p.phone) + '</span><span class="admin-list-time">' + p.start + '–' + p.end + '</span></div>';
         });
       }
+
       overlay.innerHTML = '<div class="popup">' +
         '<div class="popup-title">' + formatDateRu(dateStr) + '</div>' +
         '<div class="popup-info">Могут выйти</div>' +
         listHtml +
         '<button class="popup-btn secondary" id="closeAdminPopup" style="margin-top:16px;">Закрыть</button>' +
         '</div>';
+
       document.body.appendChild(overlay);
       overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
       document.getElementById('closeAdminPopup').addEventListener('click', () => overlay.remove());
@@ -1821,6 +1545,7 @@
       if (old) old.remove();
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
+
       let title = '', info = '', showCalendar = false;
       if (shift.status === 'Б') {
         title = '🤒 Больничный';
@@ -1834,6 +1559,7 @@
         info = formatDateRu(shift.date) + '<br>' + shift.start + ' – ' + shift.end;
         showCalendar = true;
       }
+
       let buttonsHtml = '';
       if (showCalendar) {
         buttonsHtml += '<button class="popup-btn google" id="addGoogle">📅 Добавить в Google Calendar</button>';
@@ -1843,12 +1569,15 @@
         }
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
+
       overlay.innerHTML = '<div class="popup"><div class="popup-title">' + title + '</div><div class="popup-info">' + info + '</div>' + buttonsHtml + '</div>';
       document.body.appendChild(overlay);
+
       overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
       document.getElementById('closePopup').addEventListener('click', () => overlay.remove());
+
       if (showCalendar) {
-                document.getElementById('addGoogle').addEventListener('click', () => {
+        document.getElementById('addGoogle').addEventListener('click', () => {
           const url = buildGoogleCalendarUrl(shift);
           if (tg && tg.openLink) tg.openLink(url);
           else window.open(url, '_blank');
@@ -1859,11 +1588,11 @@
         if (appleBtn) {
           appleBtn.addEventListener('click', () => {
             const icsUrl = getIcsUrlForPhone(userPhone);
-            if (!icsUrl) { alert('Ссылка на календарь не найдена.'); return; }
+            if (!icsUrl) { showToast('Ошибка', 'Ссылка не найдена', true); return; }
             if (tg && tg.openLink) tg.openLink(icsUrl);
             else window.open(icsUrl, '_blank');
-            showToast('Открыто', 'Apple Calendar');
             overlay.remove();
+            showToast('Открыто', 'Apple Calendar');
           });
         }
       }
@@ -1886,12 +1615,13 @@
       overlay.className = 'popup-overlay';
       const defaultStart = existing ? existing.start : '10:00';
       const defaultEnd = existing ? existing.end : '18:00';
-      let buttonsHtml = '';
-      buttonsHtml += '<button class="popup-btn" id="saveAvail">Сохранить</button>';
+
+      let buttonsHtml = '<button class="popup-btn" id="saveAvail">Сохранить</button>';
       if (existing) {
         buttonsHtml += '<button class="popup-btn danger" id="deleteAvail">Удалить отметку</button>';
       }
       buttonsHtml += '<button class="popup-btn secondary" id="closeAvailPopup">Отмена</button>';
+
       overlay.innerHTML = '<div class="popup">' +
         '<div class="popup-title">Могу выйти</div>' +
         '<div class="popup-info">' + formatDateRu(dateStr) + '</div>' +
@@ -1901,25 +1631,21 @@
         '</div>' +
         buttonsHtml +
         '</div>';
+
       document.body.appendChild(overlay);
       overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
       document.getElementById('closeAvailPopup').addEventListener('click', () => overlay.remove());
+
       document.getElementById('saveAvail').addEventListener('click', async () => {
         const start = document.getElementById('availStart').value;
         const end = document.getElementById('availEnd').value;
-        if (start >= end) { alert('Время окончания должно быть позже времени начала'); return; }
+        if (start >= end) { showToast('Ошибка', 'Конец должен быть позже начала', true); return; }
         try {
           await fetch(WEB_APP_URL, {
             method: 'POST', mode: 'no-cors',
-                        headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-              phone: userPhone,
-              date: dateStr,
-              start_time: start,
-              end_time: end
-            })
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ phone: userPhone, date: dateStr, start_time: start, end_time: end })
           });
-
           const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
           if (idx >= 0) {
             allAvailability[idx].start = start;
@@ -1927,7 +1653,6 @@
           } else {
             allAvailability.push({ phone: userPhone, date: dateStr, start, end });
           }
-
           overlay.remove();
           renderAvailabilityCalendar();
           renderAdminCalendar();
@@ -1945,21 +1670,13 @@
             deleteBtn.disabled = true;
             try {
               await fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
+                method: 'POST', mode: 'no-cors',
                 headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({
-                  phone: userPhone,
-                  date: dateStr,
-                  start_time: '',
-                  end_time: ''
-                })
+                body: JSON.stringify({ phone: userPhone, date: dateStr, start_time: '', end_time: '' })
               });
-
               const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
               if (idx >= 0) allAvailability.splice(idx, 1);
-
-                            overlay.remove();
+              overlay.remove();
               renderAvailabilityCalendar();
               renderAdminCalendar();
               showToast('Удалено', formatDateRu(dateStr) + ' · отметка снята');
@@ -1973,6 +1690,9 @@
       }
     }
 
+    // ============================================
+    // ПОСТРОЕНИЕ ССЫЛОК И УВЕДОМЛЕНИЙ
+    // ============================================
     function buildGoogleCalendarUrl(shift) {
       const [y, m, d] = shift.date.split('-');
       const [sh, sm] = shift.start.split(':');
@@ -1993,6 +1713,7 @@
       const details = encodeURIComponent('Рабочая смена');
       return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text + '&dates=' + dates + '&details=' + details;
     }
+
     function showToast(title, subtitle, isError) {
       const old = document.querySelector('.toast');
       if (old) old.remove();
@@ -2000,143 +1721,149 @@
       const toast = document.createElement('div');
       toast.className = 'toast' + (isError ? ' toast-error' : '');
 
-      toast.innerHTML =
-        '<div class="toast-icon">' +
-          '<svg viewBox="0 0 24 24">' +
-            (isError
-              ? '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
-              : '<polyline points="20 6 9 17 4 12"/>'
-            ) +
-          '</svg>' +
-        '</div>' +
+      toast.innerHTML = '<div class="toast-icon"><svg viewBox="0 0 24 24">' +
+        (isError
+          ? '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
+          : '<polyline points="20 6 9 17 4 12"/>') +
+        '</svg></div>' +
         '<div class="toast-text">' +
           '<div class="toast-title">' + title + '</div>' +
           (subtitle ? '<div class="toast-sub">' + subtitle + '</div>' : '') +
         '</div>';
 
       document.body.appendChild(toast);
-
-      requestAnimationFrame(() => {
-        toast.classList.add('show');
-      });
+      requestAnimationFrame(() => toast.classList.add('show'));
 
       setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
       }, 2200);
     }
-    function formatDateRu(isoDate) {
-      if (!isoDate || typeof isoDate !== 'string') return '—';
-      const parts = isoDate.split('-');
-      if (parts.length !== 3) return isoDate;
-      const y = parts[0];
-      const m = parseInt(parts[1]);
-      const d = parseInt(parts[2]);
-      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-      if (isNaN(m) || isNaN(d) || m < 1 || m > 12) return isoDate;
-      return d + ' ' + months[m - 1] + ' ' + y;
+
+    function showHelp() {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">Как пользоваться</div>' +
+        '<div class="popup-info">Краткая инструкция</div>' +
+        '<div class="help-block"><div class="help-block-title">📅 Расписание</div><div class="help-block-text">Нажми на день со сменой → увидишь детали. Кнопки внизу добавят смену в календарь телефона (Google или Apple). Телефон напомнит за 2 часа до смены.</div></div>' +
+        '<div class="help-block"><div class="help-block-title">🟡 Доступность</div><div class="help-block-text">Открой вкладку «Доступность» внизу. Нажми на день, когда можешь выйти на подработку. Укажи время. Сохрани. День подсветится жёлтым.</div></div>' +
+        '<div class="help-block"><div class="help-block-title">🔔 Напоминания</div><div class="help-block-text">Если у тебя есть смена завтра, бот вечером пришлёт напоминание в чат.</div></div>' +
+        '<div class="help-block"><div class="help-block-title">🌙 Ночные смены</div><div class="help-block-text">Смены, которые переходят через полночь, отмечены луной ☾ и градиентом.</div></div>' +
+        '<button class="popup-btn" id="closeHelpBtn" style="margin-top:12px;">Понятно</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeHelpBtn').addEventListener('click', () => overlay.remove());
     }
 
+    // ============================================
+    // ПЕРЕКЛЮЧЕНИЕ НА СПИСОК СОТРУДНИКОВ И ОБРАТНО
+    // ============================================
+    function openEditEmployees() {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabEditEmployees').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'none';
+      renderEmployeesList();
+    }
+
+    function closeEditEmployees() {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabAdmin').classList.add('active');
+      document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+      document.getElementById('pageSubtitle').style.display = 'block';
+    }
+
+    // ============================================
+    // ФОРМА ТЕЛЕФОНА
+    // ============================================
+    function showPhoneForm() {
+      document.getElementById('phoneForm').style.display = 'block';
+      document.getElementById('tabsBar').style.display = 'none';
+      document.getElementById('tabSchedule').classList.remove('active');
+      document.getElementById('tabAvailability').classList.remove('active');
+      document.getElementById('tabAdmin').classList.remove('active');
+      document.getElementById('tabEditEmployees').classList.remove('active');
+
+      const shareBtn = document.getElementById('sharePhone');
+      if (tg && tg.requestContact) {
+        shareBtn.addEventListener('click', () => {
+          tg.requestContact((ok, event) => {
+            if (!ok) return;
+            const phone = event?.responseUnsafe?.contact?.phone_number
+              || tg.initDataUnsafe?.contact?.phone_number;
+            if (phone) {
+              const normalized = normalizePhone(phone);
+              savePhone(normalized);
+              userPhone = normalized;
+              initApp();
+            }
+          });
+        });
+      } else {
+        shareBtn.style.display = 'none';
+      }
+
+      const manualLink = document.getElementById('manualLink');
+      const phoneInput = document.getElementById('phoneInput');
+      const saveManual = document.getElementById('saveManual');
+      manualLink.addEventListener('click', () => {
+        phoneInput.style.display = 'block';
+        saveManual.style.display = 'block';
+        manualLink.style.display = 'none';
+      });
+      saveManual.addEventListener('click', () => {
+        const val = normalizePhone(phoneInput.value);
+        if (val.length < 10) {
+          alert('Введи корректный номер, например +79639190173');
+          return;
+        }
+        savePhone(val);
+        userPhone = val;
+        initApp();
+      });
+    }
+
+    // ============================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ============================================
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
-             const editBtn = document.getElementById('editScheduleBtn');
-      if (editBtn) {
-        editBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabEditEmployees').classList.add('active');
-          document.getElementById('pageSubtitle').style.display = 'none';
-          renderEmployeesList();
-        });
-      }
-
-      const backBtn = document.getElementById('editBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabAdmin').classList.add('active');
-          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
-          document.getElementById('pageSubtitle').style.display = 'block';
-        });
-      }
-
-      renderHeader(); 
-            const editBtn = document.getElementById('editScheduleBtn');
-      if (editBtn) {
-        editBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabEditEmployees').classList.add('active');
-          document.getElementById('pageSubtitle').style.display = 'none';
-          renderEmployeesList();
-        });
-      }
-
-      const backBtn = document.getElementById('editBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabAdmin').classList.add('active');
-          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
-          document.getElementById('pageSubtitle').style.display = 'block';
-        });
-      }
-            document.getElementById('helpBtn').addEventListener('click', showHelp);
-                  const editBtn = document.getElementById('editScheduleBtn');
-      if (editBtn) {
-        editBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabEditEmployees').classList.add('active');
-          document.getElementById('pageSubtitle').style.display = 'none';
-          renderEmployeesList();
-        });
-      }
-
-      const backBtn = document.getElementById('editBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabAdmin').classList.add('active');
-          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
-          document.getElementById('pageSubtitle').style.display = 'block';
-        });
-      }
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
+      document.getElementById('tabEditEmployees').classList.remove('active');
       document.getElementById('pageSubtitle').style.display = 'none';
 
+      // Кнопки админки — один раз
+      const editBtn = document.getElementById('editScheduleBtn');
+      if (editBtn) editBtn.addEventListener('click', openEditEmployees);
+
+      const backBtn = document.getElementById('editBackBtn');
+      if (backBtn) backBtn.addEventListener('click', closeEditEmployees);
+
+      const helpBtn = document.getElementById('helpBtn');
+      if (helpBtn) helpBtn.addEventListener('click', showHelp);
+
+      // Показываем вкладку админа для админов
       if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
         document.getElementById('tabAdminBtn').style.display = 'none';
       }
-            // Обработчики кнопок в админке
-      const editBtn = document.getElementById('editScheduleBtn');
-      if (editBtn) {
-        editBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabEditEmployees').classList.add('active');
-          document.getElementById('pageSubtitle').style.display = 'none';
-          renderEmployeesList();
-        });
-      }
 
-      const backBtn = document.getElementById('editBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          document.getElementById('tabAdmin').classList.add('active');
-          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
-          document.getElementById('pageSubtitle').style.display = 'block';
-        });
-      }
+      // Регистрируем tg_id
       registerTelegramId();
-            try {
-        // Сначала пробуем кэш
-        const fromCache = loadCache();
 
+      try {
+        const fromCache = loadCache();
         if (fromCache) {
-          // Показываем сразу из кэша
           document.getElementById('calendarWrap').style.display = 'block';
           renderHeader();
           renderBanner();
@@ -2145,14 +1872,10 @@
           renderAdminCalendar();
         }
 
-        // Потом грузим свежие данные
         await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
-
-        // Сохраняем в кэш
         saveCache();
 
         const myShifts = allShifts.filter(s => s.phone === userPhone);
-
         if (myShifts.length === 0) {
           const wrap = document.getElementById('tabSchedule');
           wrap.innerHTML = '<div class="not-found">По номеру <b>' + userPhone + '</b> смены не найдены.<br>Обратись к руководителю, чтобы проверить номер в системе.</div>' +
@@ -2165,7 +1888,7 @@
           return;
         }
 
-                document.getElementById('calendarWrap').style.display = 'block';
+        document.getElementById('calendarWrap').style.display = 'block';
         renderHeader();
         renderBanner();
         renderCalendar();
@@ -2176,6 +1899,9 @@
       }
     }
 
+    // ============================================
+    // ТАБЫ (СНИЗУ)
+    // ============================================
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const target = tab.dataset.tab;
@@ -2199,6 +1925,9 @@
       });
     });
 
+    // ============================================
+    // КНОПКИ НАВИГАЦИИ ПО МЕСЯЦАМ
+    // ============================================
     document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
       renderCalendar();
@@ -2247,6 +1976,9 @@
       animateMonth('daysAdmin', 'fade-only');
     });
 
+    // ============================================
+    // СВАЙПЫ
+    // ============================================
     attachSwipe('days',
       () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); animateMonth('days', 'slide-left'); },
       () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); animateMonth('days', 'slide-right'); }
@@ -2262,6 +1994,9 @@
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-right'); }
     );
 
+    // ============================================
+    // СТАРТ
+    // ============================================
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

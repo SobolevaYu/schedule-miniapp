@@ -1602,6 +1602,7 @@
       document.getElementById('tabSchedule').classList.add('active');
       document.getElementById('tabAvailability').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
+            document.getElementById('pageSubtitle').style.display = 'none';
 
             if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
@@ -1642,15 +1643,17 @@
         tab.classList.add('active');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-        if (target === 'schedule') {
+               if (target === 'schedule') {
           document.getElementById('tabSchedule').classList.add('active');
-          document.getElementById('pageSubtitle').textContent = 'Твоё расписание смен';
+          document.getElementById('pageSubtitle').style.display = 'none';
         } else if (target === 'availability') {
           document.getElementById('tabAvailability').classList.add('active');
           document.getElementById('pageSubtitle').textContent = 'Когда ты можешь выйти';
+          document.getElementById('pageSubtitle').style.display = 'block';
         } else if (target === 'admin') {
           document.getElementById('tabAdmin').classList.add('active');
           document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+          document.getElementById('pageSubtitle').style.display = 'block';
           renderAdminCalendar();
         }
       });

@@ -2040,19 +2040,25 @@
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
-            document.getElementById('editScheduleBtn').addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tabEditEmployees').classList.add('active');
-        document.getElementById('pageSubtitle').style.display = 'none';
-        renderEmployeesList();
-      });
+             const editBtn = document.getElementById('editScheduleBtn');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabEditEmployees').classList.add('active');
+          document.getElementById('pageSubtitle').style.display = 'none';
+          renderEmployeesList();
+        });
+      }
 
-      document.getElementById('editBackBtn').addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tabAdmin').classList.add('active');
-        document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
-        document.getElementById('pageSubtitle').style.display = 'block';
-      });
+      const backBtn = document.getElementById('editBackBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tabAdmin').classList.add('active');
+          document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+          document.getElementById('pageSubtitle').style.display = 'block';
+        });
+      }
 
       renderHeader(); 
             const editBtn = document.getElementById('editScheduleBtn');

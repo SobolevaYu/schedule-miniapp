@@ -53,7 +53,7 @@
       background: var(--tg-theme-bg-color, #F5F7FA);
       color: var(--tg-theme-text-color, #0F172A);
       padding: 16px;
-      padding-bottom: 160px;
+      padding-bottom: 180px;
       min-height: 100vh;
       width: 100%;
       overflow-x: hidden;
@@ -96,14 +96,6 @@
       background: var(--blob-1-light);
       animation: blobFloat1 22s ease-in-out infinite;
     }
-    .blob-2 {
-      width: 280px;
-      height: 280px;
-      bottom: -100px;
-      right: -80px;
-      background: var(--blob-2-light);
-      animation: blobFloat2 26s ease-in-out infinite;
-    }
     .blob-3 {
       width: 240px;
       height: 240px;
@@ -115,7 +107,6 @@
 
     @media (prefers-color-scheme: dark) {
       .blob-1 { background: var(--blob-1-dark); }
-      .blob-2 { background: var(--blob-2-dark); }
       .blob-3 { background: var(--blob-3-dark); }
     }
 
@@ -123,10 +114,6 @@
       0%, 100% { transform: translate(0, 0) scale(1); }
       33% { transform: translate(30px, 40px) scale(1.1); }
       66% { transform: translate(-20px, 20px) scale(0.95); }
-    }
-    @keyframes blobFloat2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-40px, -30px) scale(1.15); }
     }
     @keyframes blobFloat3 {
       0%, 100% { transform: translate(0, 0) scale(1); }
@@ -539,7 +526,8 @@
 
     /* ============ ЛЕГЕНДА ============ */
         .legend {
-      margin-top: 16px;
+      margin-top: 12px;
+      margin-bottom: 8px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px 12px;
@@ -929,9 +917,8 @@
 </head>
 <body>
   <body>
-  <div class="bg-blobs" aria-hidden="true">
+    <div class="bg-blobs" aria-hidden="true">
     <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
   </div>
   <div class="header" id="header">

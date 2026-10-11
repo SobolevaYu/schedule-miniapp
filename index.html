@@ -1770,12 +1770,15 @@
         showToast('Ошибка', 'Некорректная дата', true);
         return false;
       }
-      let serverOk = false;
+           let serverOk = false;
       let resp = null;
       try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
         resp = await postToServer({
           action: 'update_shift',
-          initData: tg.initData,
+          telegram_id: tgId,
           phone: phone,
           date: date,
           start_time: start,

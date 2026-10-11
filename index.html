@@ -1165,7 +1165,7 @@
     // ============================================
     // ЗАГРУЗКА ДАННЫХ
     // ============================================
-    async function loadShifts() {
+       async function loadShifts() {
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
       const res = await fetch(url);
       const text = await res.text();
@@ -1177,13 +1177,60 @@
       allShifts = rows
         .map(row => ({
           phone: normalizePhone(row.c[0]?.v || ''),
-          date: row.c[1]?.f || '',
-          start: row.c[2]?.f || '',
-          end: row.c[3]?.f || '',
+          date: gvizToIsoDate(row.c[1]),
+          start: gvizToTime(row.c[2]),
+          end: gvizToTime(row.c[3]),
           status: (row.c[4]?.v || '').toString().trim().toUpperCase(),
         }))
-        .filter(s => s.phone);
+        .filter(s => s.phone && s.date);
     }
+
+    // Преобразует ячейку gviz в дату вида YYYY-MM-DD.
+    // Понимает: настоящие даты Google (Date(...)), ISO (2026-10-17),
+    // русский формат (17.10.2026).
+    function gvizToIsoDate(cell) {
+      if (!cell) return '';
+
+      // 1. Google отдаёт даты как "Date(2026,9,17)" — месяц с нуля
+      if (typeof cell.v === 'string') {
+        const m = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
+        if (m) {
+          const y = m[1];
+          const mo = pad2(parseInt(m[2], 10) + 1);
+          const d = pad2(m[3]);
+          return y + '-' + mo + '-' + d;
+        }
+      }
+
+      // 2. Пробуем .f и .v по очереди — какой-нибудь да распознается
+      const candidates = [cell.f, cell.v];
+      for (let i = 0; i < candidates.length; i++) {
+        const s = String(candidates[i] || '').trim();
+        if (!s) continue;
+
+        // ISO: 2026-10-17
+        let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (m) return m[1] + '-' + pad2(m[2]) + '-' + pad2(m[3]);
+
+        // Русский: 17.10.2026 или 17/10/2026
+        m = s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
+        if (m) return m[3] + '-' + pad2(m[2]) + '-' + pad2(m[1]);
+      }
+
+      return '';
+    }
+
+    // То же для времени: возвращает "HH:MM"
+    function gvizToTime(cell) {
+      if (!cell) return '';
+      const s = String(cell.f || cell.v || '').trim();
+      if (!s) return '';
+      const m = s.match(/^(\d{1,2}):(\d{2})/);
+      if (m) return pad2(m[1]) + ':' + m[2];
+      return s;
+    }
+
+    function pad2(x) { return String(x).padStart(2, '0'); }
 
     async function loadAvailability() {
       try {
@@ -1672,8 +1719,15 @@
           showToast('Сохранено!', formatDateRu(date) + ' · ' + start + '–' + end);
         }
 
-        // Пересобираем календарь
+          // Сохраняем в кэш
+        saveCache();
+
+        // Пересобираем ВСЕ календари
         renderEditCalendar();
+        renderCalendar();
+        renderAdminCalendar();
+        renderHeader();
+        renderBanner();
       } catch (e) {
         showToast('Ошибка', 'Не удалось сохранить', true);
         console.error(e);
@@ -2205,6 +2259,9 @@
         if (target === 'schedule') {
           document.getElementById('tabSchedule').classList.add('active');
           document.getElementById('pageSubtitle').style.display = 'none';
+          renderCalendar();
+          renderHeader();
+          renderBanner();
         } else if (target === 'availability') {
           document.getElementById('tabAvailability').classList.add('active');
           document.getElementById('pageSubtitle').textContent = 'Когда ты можешь выйти';

@@ -744,7 +744,6 @@
       background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
     }
 
-    /* ============ СПИСОК СОТРУДНИКОВ В РЕДАКТОРЕ ============ */
     .edit-header {
       display: flex; align-items: center;
       gap: 12px; margin-bottom: 16px;
@@ -815,7 +814,6 @@
       flex-shrink: 0;
     }
 
-    /* ============ КНОПКА РЕДАКТИРОВАНИЯ В АДМИНКЕ ============ */
     .admin-action-btn {
       display: flex; align-items: center; justify-content: center;
       gap: 8px; width: 100%; padding: 14px 16px;
@@ -846,7 +844,7 @@
       }
     }
     .admin-action-icon { font-size: 18px; line-height: 1; }
-        /* ============ HELP-БЛОКИ В ИНСТРУКЦИИ ============ */
+
     .help-block {
       margin-bottom: 16px;
       padding-bottom: 16px;
@@ -994,7 +992,8 @@
 
     <div id="employeesList" class="employees-list"></div>
   </div>
-    <div class="tab-content" id="tabEditEmployeeCalendar">
+
+  <div class="tab-content" id="tabEditEmployeeCalendar">
     <div class="edit-header">
       <button class="edit-back" id="editCalendarBackBtn">‹</button>
       <div class="edit-title" id="editCalendarTitle">Сотрудник</div>
@@ -1023,6 +1022,7 @@
       <div class="legend-item"><span style="font-size:13px;line-height:1;">☾</span> Ночная</div>
     </div>
   </div>
+
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">📅</span>
@@ -1037,16 +1037,18 @@
       Админ
     </div>
   </div>
-    <script>
-          // Уникальная функция-маркер. Служебная, не используется.
+
+  <script>
+    // Уникальная функция-маркер. Служебная, не используется.
     // Автор: Soboleva Yu. | ID: 7f3b9c2a-2026-10-10
     function __sysCheckMarker_SobolevaYu() {
       return 'SobolevaYu-2026-7f3b9c2a';
     }
+
     // ============================================
     // КОНСТАНТЫ
     // ============================================
-        const __AUTHOR__ = 'Soboleva Yu.';
+    const __AUTHOR__ = 'Soboleva Yu.';
     const __BUILD__ = '7f3b9c2a-2026-10-10';
     const SHEET_ID = '1CpWhm4KHW3pKi5BbMRo7nzAqpCkkUtYe-qmHVIVX648';
     const SHEET_NAME = 'Смены';
@@ -1063,7 +1065,7 @@
     let currentMonth = new Date();
     let currentMonthAvail = new Date();
     let currentMonthAdmin = new Date();
-        let currentMonthEdit = new Date();
+    let currentMonthEdit = new Date();
     let currentEditPhone = null;
     let allShifts = [];
     let allAvailability = [];
@@ -1104,13 +1106,30 @@
       return d + ' ' + months[m - 1] + ' ' + y;
     }
 
+    function pad2(x) { return String(x).padStart(2, '0'); }
+
+    // Безопасная проверка: ночная ли смена.
+    // Если данные битые/пустые — возвращает false, не падает.
     function isNightShift(startStr, endStr) {
-      const [sh, sm] = startStr.split(':').map(Number);
-      const [eh, em] = endStr.split(':').map(Number);
+      if (!startStr || !endStr) return false;
+      const startParts = String(startStr).split(':');
+      const endParts = String(endStr).split(':');
+      if (startParts.length < 2 || endParts.length < 2) return false;
+      const sh = parseInt(startParts[0], 10);
+      const sm = parseInt(startParts[1], 10);
+      const eh = parseInt(endParts[0], 10);
+      const em = parseInt(endParts[1], 10);
+      if (isNaN(sh) || isNaN(sm) || isNaN(eh) || isNaN(em)) return false;
       const S = sh * 60 + sm;
       let E = eh * 60 + em;
       if (E <= S) E += 24 * 60;
       return E > 22 * 60 || S < 6 * 60;
+    }
+
+    // Проверяет, что строка — валидная дата YYYY-MM-DD
+    function isValidIsoDate(s) {
+      if (!s || typeof s !== 'string') return false;
+      return /^\d{4}-\d{2}-\d{2}$/.test(s);
     }
 
     // ============================================
@@ -1163,10 +1182,59 @@
     }
 
     // ============================================
-    // ЗАГРУЗКА ДАННЫХ
+    // ЗАГРУЗКА ДАННЫХ (gviz)
     // ============================================
-       async function loadShifts() {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    // Google отдаёт ячейки как объекты {v: значение, f: форматированное}.
+    // Мы НЕ полагаемся на .f — потому что для строковых значений он пустой.
+    // Приводим сами к нужному виду.
+
+    function gvizToIsoDate(cell) {
+      if (!cell) return '';
+
+      // Дата в формате "Date(2026,9,17)" — месяц с нуля
+      if (typeof cell.v === 'string') {
+        const m = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
+        if (m) {
+          return m[1] + '-' + pad2(parseInt(m[2], 10) + 1) + '-' + pad2(m[3]);
+        }
+      }
+
+      const candidates = [cell.f, cell.v];
+      for (let i = 0; i < candidates.length; i++) {
+        const s = String(candidates[i] || '').trim();
+        if (!s) continue;
+
+        let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (m) return m[1] + '-' + pad2(m[2]) + '-' + pad2(m[3]);
+
+        m = s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
+        if (m) return m[3] + '-' + pad2(m[2]) + '-' + pad2(m[1]);
+      }
+      return '';
+    }
+
+    function gvizToTime(cell) {
+      if (!cell) return '';
+
+      // Время как "Date(1899,11,30,9,0,0)" — часы и минуты на позициях 4 и 5
+      if (typeof cell.v === 'string') {
+        const m = cell.v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+)/);
+        if (m) return pad2(m[4]) + ':' + pad2(m[5]);
+      }
+
+      const candidates = [cell.f, cell.v];
+      for (let i = 0; i < candidates.length; i++) {
+        const s = String(candidates[i] || '').trim();
+        if (!s) continue;
+        const m = s.match(/^(\d{1,2}):(\d{2})/);
+        if (m) return pad2(m[1]) + ':' + m[2];
+      }
+      return '';
+    }
+
+    async function loadShifts() {
+      const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+        '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(SHEET_NAME);
       const res = await fetch(url);
       const text = await res.text();
       const start = text.indexOf('{');
@@ -1176,65 +1244,19 @@
       const rows = json.table && json.table.rows ? json.table.rows : [];
       allShifts = rows
         .map(row => ({
-          phone: normalizePhone(row.c[0]?.v || ''),
+          phone: normalizePhone(row.c[0] && row.c[0].v || ''),
           date: gvizToIsoDate(row.c[1]),
           start: gvizToTime(row.c[2]),
           end: gvizToTime(row.c[3]),
-          status: (row.c[4]?.v || '').toString().trim().toUpperCase(),
+          status: String((row.c[4] && row.c[4].v) || '').trim().toUpperCase()
         }))
         .filter(s => s.phone && s.date);
     }
 
-    // Преобразует ячейку gviz в дату вида YYYY-MM-DD.
-    // Понимает: настоящие даты Google (Date(...)), ISO (2026-10-17),
-    // русский формат (17.10.2026).
-    function gvizToIsoDate(cell) {
-      if (!cell) return '';
-
-      // 1. Google отдаёт даты как "Date(2026,9,17)" — месяц с нуля
-      if (typeof cell.v === 'string') {
-        const m = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
-        if (m) {
-          const y = m[1];
-          const mo = pad2(parseInt(m[2], 10) + 1);
-          const d = pad2(m[3]);
-          return y + '-' + mo + '-' + d;
-        }
-      }
-
-      // 2. Пробуем .f и .v по очереди — какой-нибудь да распознается
-      const candidates = [cell.f, cell.v];
-      for (let i = 0; i < candidates.length; i++) {
-        const s = String(candidates[i] || '').trim();
-        if (!s) continue;
-
-        // ISO: 2026-10-17
-        let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
-        if (m) return m[1] + '-' + pad2(m[2]) + '-' + pad2(m[3]);
-
-        // Русский: 17.10.2026 или 17/10/2026
-        m = s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
-        if (m) return m[3] + '-' + pad2(m[2]) + '-' + pad2(m[1]);
-      }
-
-      return '';
-    }
-
-    // То же для времени: возвращает "HH:MM"
-    function gvizToTime(cell) {
-      if (!cell) return '';
-      const s = String(cell.f || cell.v || '').trim();
-      if (!s) return '';
-      const m = s.match(/^(\d{1,2}):(\d{2})/);
-      if (m) return pad2(m[1]) + ':' + m[2];
-      return s;
-    }
-
-    function pad2(x) { return String(x).padStart(2, '0'); }
-
     async function loadAvailability() {
       try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_AVAILABILITY)}`;
+        const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+          '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(SHEET_AVAILABILITY);
         const res = await fetch(url);
         const text = await res.text();
         const start = text.indexOf('{');
@@ -1244,10 +1266,10 @@
         const rows = json.table && json.table.rows ? json.table.rows : [];
         allAvailability = rows
           .map(row => ({
-            phone: normalizePhone(row.c[0]?.v || ''),
-            date: row.c[1]?.f || '',
-            start: row.c[2]?.f || '',
-            end: row.c[3]?.f || '',
+            phone: normalizePhone(row.c[0] && row.c[0].v || ''),
+            date: gvizToIsoDate(row.c[1]),
+            start: gvizToTime(row.c[2]),
+            end: gvizToTime(row.c[3])
           }))
           .filter(a => a.phone && a.date);
       } catch (e) {
@@ -1257,7 +1279,8 @@
 
     async function loadEmployees() {
       try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Сотрудники')}`;
+        const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+          '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent('Сотрудники');
         const res = await fetch(url);
         const text = await res.text();
         const start = text.indexOf('{');
@@ -1268,9 +1291,9 @@
         employeesMap = {};
         employeesIcsMap = {};
         rows.forEach(row => {
-          const phone = normalizePhone(row.c[0]?.v || '');
-          const name = String(row.c[1]?.v || '').trim();
-          const icsUrl = String(row.c[2]?.v || '').trim();
+          const phone = normalizePhone(row.c[0] && row.c[0].v || '');
+          const name = String((row.c[1] && row.c[1].v) || '').trim();
+          const icsUrl = String((row.c[2] && row.c[2].v) || '').trim();
           if (phone) {
             if (name) employeesMap[phone] = name;
             if (icsUrl) employeesIcsMap[phone] = icsUrl;
@@ -1282,11 +1305,30 @@
     }
 
     // ============================================
+    // ЗАПИСЬ НА СЕРВЕР (Apps Script)
+    // ============================================
+    // ВАЖНО: не используем mode: 'no-cors' — нам нужен ответ сервера,
+    // чтобы понять, сохранилось ли на самом деле.
+    async function postToServer(payload) {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); }
+      catch (e) { throw new Error('Сервер вернул не JSON: ' + text.substring(0, 200)); }
+      return data;
+    }
+
+    // ============================================
     // РЕГИСТРАЦИЯ TG_ID
     // ============================================
     async function registerTelegramId() {
       try {
-        if (!tg || !tg.initDataUnsafe?.user?.id) return;
+        if (!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user || !tg.initDataUnsafe.user.id) return;
         if (!userPhone) return;
 
         const tgId = tg.initDataUnsafe.user.id;
@@ -1296,21 +1338,19 @@
         const sentKey = 'tg_id_sent_' + tgId;
         if (localStorage.getItem(sentKey) === '1') return;
 
-        await fetch(WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
+        try {
+          await postToServer({
             action: 'register_telegram',
             phone: userPhone,
             telegram_id: tgId,
             initData: initData
-          })
-        });
-
-        localStorage.setItem(sentKey, '1');
+          });
+          localStorage.setItem(sentKey, '1');
+        } catch (e) {
+          console.warn('Не удалось зарегистрировать tg_id:', e);
+        }
       } catch (e) {
-        console.warn('Не удалось зарегистрировать tg_id:', e);
+        console.warn('registerTelegramId:', e);
       }
     }
 
@@ -1327,13 +1367,12 @@
       const cells = [];
       const today = new Date();
       const todayStr = today.getFullYear() + '-' +
-        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-        String(today.getDate()).padStart(2, '0');
+        pad2(today.getMonth() + 1) + '-' + pad2(today.getDate());
       for (let i = startWeekday - 1; i >= 0; i--) {
         cells.push({ num: prevMonthLastDay - i, other: true, date: null });
       }
       for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        const dateStr = year + '-' + pad2(month + 1) + '-' + pad2(d);
         cells.push({ num: d, other: false, date: dateStr, isToday: dateStr === todayStr });
       }
       const remaining = (7 - (cells.length % 7)) % 7;
@@ -1365,7 +1404,7 @@
       else if (hour >= 18 || hour < 5) { greeting = 'Добрый вечер'; icon = '🌙'; }
 
       let name = 'друг';
-      if (tg && tg.initDataUnsafe?.user) {
+      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
         name = tg.initDataUnsafe.user.first_name || 'друг';
       }
 
@@ -1378,8 +1417,7 @@
         dayNameCap + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
 
       const todayStr = now.getFullYear() + '-' +
-        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-        String(now.getDate()).padStart(2, '0');
+        pad2(now.getMonth() + 1) + '-' + pad2(now.getDate());
 
       const todayShift = allShifts.find(s => s.phone === userPhone && s.date === todayStr);
       const todayEl = document.getElementById('headerToday');
@@ -1414,8 +1452,7 @@
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tStr = tomorrow.getFullYear() + '-' +
-        String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
-        String(tomorrow.getDate()).padStart(2, '0');
+        pad2(tomorrow.getMonth() + 1) + '-' + pad2(tomorrow.getDate());
 
       const shift = allShifts.find(s => s.phone === userPhone && s.date === tStr);
       if (!shift) { banner.style.display = 'none'; return; }
@@ -1499,7 +1536,7 @@
               div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
             }
             div.addEventListener('click', () => showShiftPopup(shift));
-                    } else {
+          } else {
             div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
           }
         } else {
@@ -1528,7 +1565,7 @@
 
         if (cell.date) {
           const avail = allAvailability.find(a => a.phone === userPhone && a.date === cell.date);
-          if (avail) {
+          if (avail && avail.start && avail.end) {
             div.classList.add('available');
             div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + avail.start + '<br>' + avail.end + '</div>';
           } else {
@@ -1576,164 +1613,8 @@
     }
 
     // ============================================
-    // СПИСОК СОТРУДНИКОВ ДЛЯ РЕДАКТОРА
-    // ============================================
-        // ============================================
     // РЕНДЕР КАЛЕНДАРЯ РЕДАКТИРОВАНИЯ (СМЕНЫ СОТРУДНИКА)
     // ============================================
-        // ============================================
-    // ПОПАП РЕДАКТИРОВАНИЯ СМЕНЫ
-    // ============================================
-    function showEditShiftPopup(dateStr) {
-      const old = document.querySelector('.popup-overlay');
-      if (old) old.remove();
-
-      const existing = allShifts.find(s => s.phone === currentEditPhone && s.date === dateStr);
-
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-
-      let title = formatDateRu(dateStr);
-      let currentInfo = '';
-      let isShift = false;
-
-      if (existing) {
-        if (existing.status === 'Б') {
-          currentInfo = 'Сейчас: 🅱️ Больничный';
-        } else if (existing.status === 'О') {
-          currentInfo = 'Сейчас: 🟠 Отпуск';
-        } else if (existing.start && existing.end) {
-          currentInfo = 'Сейчас: ' + existing.start + '–' + existing.end;
-          isShift = true;
-        }
-      }
-
-      const defaultStart = (existing && existing.start) ? existing.start : '09:00';
-      const defaultEnd = (existing && existing.end) ? existing.end : '18:00';
-
-      let html = '<div class="popup">';
-      html += '<div class="popup-title">' + title + '</div>';
-      if (currentInfo) {
-        html += '<div class="popup-info">' + currentInfo + '</div>';
-      } else {
-        html += '<div class="popup-info">Нет смены</div>';
-      }
-
-      // Время + Сохранить
-      html += '<div class="time-fields">';
-      html += '<div><label>С</label><select id="editStart">' + buildTimeOptions(defaultStart) + '</select></div>';
-      html += '<div><label>До</label><select id="editEnd">' + buildTimeOptions(defaultEnd) + '</select></div>';
-      html += '</div>';
-      html += '<button class="popup-btn" id="saveEditShift">💾 Сохранить смену</button>';
-
-      // Б/О
-      html += '<button class="popup-btn" id="setSick" style="background:rgba(148,163,184,0.9);color:#333;">🅱️ Больничный</button>';
-      html += '<button class="popup-btn" id="setVacation" style="background:rgba(56,189,248,0.9);color:#075985;">🟠 Отпуск</button>';
-
-      // Удалить
-      if (existing) {
-        html += '<button class="popup-btn danger" id="deleteShift">🗑 Удалить</button>';
-      }
-
-      html += '<button class="popup-btn secondary" id="closeEditPopup">Отмена</button>';
-      html += '</div>';
-
-      overlay.innerHTML = html;
-      document.body.appendChild(overlay);
-
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeEditPopup').addEventListener('click', () => overlay.remove());
-
-      // Сохранить смену
-      document.getElementById('saveEditShift').addEventListener('click', async () => {
-        const start = document.getElementById('editStart').value;
-        const end = document.getElementById('editEnd').value;
-        if (start >= end) {
-          showToast('Ошибка', 'Конец должен быть позже начала', true);
-          return;
-        }
-        await saveShiftChange(currentEditPhone, dateStr, start, end, '');
-        overlay.remove();
-      });
-
-      // Больничный
-      document.getElementById('setSick').addEventListener('click', async () => {
-        await saveShiftChange(currentEditPhone, dateStr, '', '', 'Б');
-        overlay.remove();
-      });
-
-      // Отпуск
-      document.getElementById('setVacation').addEventListener('click', async () => {
-        await saveShiftChange(currentEditPhone, dateStr, '', '', 'О');
-        overlay.remove();
-      });
-
-      // Удалить
-      const deleteBtn = document.getElementById('deleteShift');
-      if (deleteBtn) {
-        deleteBtn.addEventListener('click', async () => {
-          await saveShiftChange(currentEditPhone, dateStr, '', '', 'DELETE');
-          overlay.remove();
-        });
-      }
-    }
-
-    // ============================================
-    // СОХРАНЕНИЕ ИЗМЕНЕНИЯ В ТАБЛИЦУ
-    // ============================================
-    async function saveShiftChange(phone, date, start, end, status) {
-      try {
-        if (!tg || !tg.initData) {
-          showToast('Ошибка', 'Нет initData', true);
-          return;
-        }
-
-        await fetch(WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            action: 'update_shift',
-            initData: tg.initData,
-            phone: phone,
-            date: date,
-            start_time: start,
-            end_time: end,
-            status: status
-          })
-        });
-
-        // Обновляем локальные данные сразу (оптимистично)
-        const idx = allShifts.findIndex(s => s.phone === phone && s.date === date);
-
-        if (status === 'DELETE') {
-          if (idx >= 0) allShifts.splice(idx, 1);
-          showToast('Удалено', formatDateRu(date) + ' · смена снята');
-        } else if (status === 'Б' || status === 'О') {
-          const newShift = { phone, date, start: '', end: '', status: status };
-          if (idx >= 0) allShifts[idx] = newShift; else allShifts.push(newShift);
-          showToast('Сохранено', formatDateRu(date) + ' · ' + (status === 'Б' ? 'больничный' : 'отпуск'));
-        } else {
-          const newShift = { phone, date, start, end, status: '' };
-          if (idx >= 0) allShifts[idx] = newShift; else allShifts.push(newShift);
-          showToast('Сохранено!', formatDateRu(date) + ' · ' + start + '–' + end);
-        }
-
-          // Сохраняем в кэш
-        saveCache();
-
-        // Пересобираем ВСЕ календари
-        renderEditCalendar();
-        renderCalendar();
-        renderAdminCalendar();
-        renderHeader();
-        renderBanner();
-      } catch (e) {
-        showToast('Ошибка', 'Не удалось сохранить', true);
-        console.error(e);
-      }
-    }
-
     function renderEditCalendar() {
       if (!currentEditPhone) return;
 
@@ -1771,7 +1652,7 @@
           } else {
             div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
           }
-                    div.addEventListener('click', () => showEditShiftPopup(cell.date));
+          div.addEventListener('click', () => showEditShiftPopup(cell.date));
         } else {
           div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
         }
@@ -1780,7 +1661,152 @@
     }
 
     // ============================================
-    // ОТКРЫТЬ КАЛЕНДАРЬ СОТРУДНИКА
+    // ПОПАП РЕДАКТИРОВАНИЯ СМЕНЫ
+    // ============================================
+    function showEditShiftPopup(dateStr) {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const existing = allShifts.find(s => s.phone === currentEditPhone && s.date === dateStr);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      const title = formatDateRu(dateStr);
+      let currentInfo = '';
+
+      if (existing) {
+        if (existing.status === 'Б') {
+          currentInfo = 'Сейчас: 🅱️ Больничный';
+        } else if (existing.status === 'О') {
+          currentInfo = 'Сейчас: 🟠 Отпуск';
+        } else if (existing.start && existing.end) {
+          currentInfo = 'Сейчас: ' + existing.start + '–' + existing.end;
+        }
+      }
+
+      const defaultStart = (existing && existing.start) ? existing.start : '09:00';
+      const defaultEnd = (existing && existing.end) ? existing.end : '18:00';
+
+      let html = '<div class="popup">';
+      html += '<div class="popup-title">' + title + '</div>';
+      html += '<div class="popup-info">' + (currentInfo || 'Нет смены') + '</div>';
+
+      html += '<div class="time-fields">';
+      html += '<div><label>С</label><select id="editStart">' + buildTimeOptions(defaultStart) + '</select></div>';
+      html += '<div><label>До</label><select id="editEnd">' + buildTimeOptions(defaultEnd) + '</select></div>';
+      html += '</div>';
+      html += '<button class="popup-btn" id="saveEditShift">💾 Сохранить смену</button>';
+
+      html += '<button class="popup-btn" id="setSick" style="background:rgba(148,163,184,0.9);color:#333;">🅱️ Больничный</button>';
+      html += '<button class="popup-btn" id="setVacation" style="background:rgba(56,189,248,0.9);color:#075985;">🟠 Отпуск</button>';
+
+      if (existing) {
+        html += '<button class="popup-btn danger" id="deleteShift">🗑 Удалить</button>';
+      }
+
+      html += '<button class="popup-btn secondary" id="closeEditPopup">Отмена</button>';
+      html += '</div>';
+
+      overlay.innerHTML = html;
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeEditPopup').addEventListener('click', () => overlay.remove());
+
+      document.getElementById('saveEditShift').addEventListener('click', async () => {
+        const start = document.getElementById('editStart').value;
+        const end = document.getElementById('editEnd').value;
+        if (start >= end) {
+          showToast('Ошибка', 'Конец должен быть позже начала', true);
+          return;
+        }
+        const ok = await saveShiftChange(currentEditPhone, dateStr, start, end, '');
+        if (ok) overlay.remove();
+      });
+
+      document.getElementById('setSick').addEventListener('click', async () => {
+        const ok = await saveShiftChange(currentEditPhone, dateStr, '', '', 'Б');
+        if (ok) overlay.remove();
+      });
+
+      document.getElementById('setVacation').addEventListener('click', async () => {
+        const ok = await saveShiftChange(currentEditPhone, dateStr, '', '', 'О');
+        if (ok) overlay.remove();
+      });
+
+      const deleteBtn = document.getElementById('deleteShift');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', async () => {
+          const ok = await saveShiftChange(currentEditPhone, dateStr, '', '', 'DELETE');
+          if (ok) overlay.remove();
+        });
+      }
+    }
+
+    // ============================================
+    // СОХРАНЕНИЕ ИЗМЕНЕНИЯ (через сервер, с проверкой ответа)
+    // ============================================
+    async function saveShiftChange(phone, date, start, end, status) {
+      if (!tg || !tg.initData) {
+        showToast('Ошибка', 'Нет initData', true);
+        return false;
+      }
+      if (!isValidIsoDate(date)) {
+        showToast('Ошибка', 'Некорректная дата', true);
+        return false;
+      }
+
+      let serverOk = false;
+      try {
+        const resp = await postToServer({
+          action: 'update_shift',
+          initData: tg.initData,
+          phone: phone,
+          date: date,
+          start_time: start,
+          end_time: end,
+          status: status
+        });
+        serverOk = !!(resp && resp.ok);
+        if (!serverOk) {
+          console.warn('Сервер отказал:', resp);
+        }
+      } catch (e) {
+        console.error('Ошибка сети при сохранении:', e);
+        showToast('Ошибка', 'Сервер недоступен, попробуйте ещё раз', true);
+        return false;
+      }
+
+      if (!serverOk) {
+        showToast('Ошибка', 'Не удалось сохранить', true);
+        return false;
+      }
+
+      // Обновляем локальные данные ТОЛЬКО после успешного ответа сервера
+      allShifts = allShifts.filter(s => !(s.phone === phone && s.date === date));
+
+      if (status === 'DELETE') {
+        showToast('Удалено', formatDateRu(date) + ' · смена снята');
+      } else if (status === 'Б' || status === 'О') {
+        allShifts.push({ phone, date, start: '', end: '', status });
+        showToast('Сохранено', formatDateRu(date) + ' · ' + (status === 'Б' ? 'больничный' : 'отпуск'));
+      } else {
+        allShifts.push({ phone, date, start, end, status: '' });
+        showToast('Сохранено!', formatDateRu(date) + ' · ' + start + '–' + end);
+      }
+
+      saveCache();
+      renderEditCalendar();
+      renderCalendar();
+      renderAdminCalendar();
+      renderHeader();
+      renderBanner();
+      return true;
+    }
+
+    // ============================================
+    // ОТКРЫТЬ / ЗАКРЫТЬ КАЛЕНДАРЬ СОТРУДНИКА
     // ============================================
     function openEmployeeCalendar(phone, name) {
       currentEditPhone = phone;
@@ -1795,9 +1821,6 @@
       renderEditCalendar();
     }
 
-    // ============================================
-    // ЗАКРЫТЬ КАЛЕНДАРЬ → ВЕРНУТЬСЯ К СПИСКУ
-    // ============================================
     function closeEmployeeCalendar() {
       currentEditPhone = null;
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1807,7 +1830,6 @@
     }
 
     function renderEmployeesList() {
-            const __marker_sy_2026__ = 'soboleva-yu-marker-7f3b9c2a';
       const list = document.getElementById('employeesList');
       list.innerHTML = '';
 
@@ -1823,9 +1845,7 @@
         const item = document.createElement('div');
         item.className = 'employee-item';
         item.innerHTML = '<div class="employee-name">' + name + '</div><div class="employee-arrow">›</div>';
-        item.addEventListener('click', () => {
-                  openEmployeeCalendar(phone, name);
-        });
+        item.addEventListener('click', () => openEmployeeCalendar(phone, name));
         list.appendChild(item);
       });
     }
@@ -1875,11 +1895,14 @@
       } else if (shift.status === 'О') {
         title = '🌴 Отпуск';
         info = 'Дата: ' + formatDateRu(shift.date);
-      } else {
+      } else if (shift.start && shift.end) {
         const night = isNightShift(shift.start, shift.end);
         title = '🟢 Смена' + (night ? ' ☾' : '');
         info = formatDateRu(shift.date) + '<br>' + shift.start + ' – ' + shift.end;
         showCalendar = true;
+      } else {
+        title = 'Смена';
+        info = formatDateRu(shift.date);
       }
 
       let buttonsHtml = '';
@@ -1930,13 +1953,16 @@
       return html;
     }
 
+    // ============================================
+    // ДОСТУПНОСТЬ — СОХРАНЕНИЕ/УДАЛЕНИЕ
+    // ============================================
     function showAvailabilityPopup(dateStr, existing) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
-      const defaultStart = existing ? existing.start : '10:00';
-      const defaultEnd = existing ? existing.end : '18:00';
+      const defaultStart = existing && existing.start ? existing.start : '10:00';
+      const defaultEnd = existing && existing.end ? existing.end : '18:00';
 
       let buttonsHtml = '<button class="popup-btn" id="saveAvail">Сохранить</button>';
       if (existing) {
@@ -1962,26 +1988,32 @@
         const start = document.getElementById('availStart').value;
         const end = document.getElementById('availEnd').value;
         if (start >= end) { showToast('Ошибка', 'Конец должен быть позже начала', true); return; }
+
         try {
-          await fetch(WEB_APP_URL, {
-            method: 'POST', mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ phone: userPhone, date: dateStr, start_time: start, end_time: end })
+          await postToServer({
+            phone: userPhone,
+            date: dateStr,
+            start_time: start,
+            end_time: end
           });
-          const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
-          if (idx >= 0) {
-            allAvailability[idx].start = start;
-            allAvailability[idx].end = end;
-          } else {
-            allAvailability.push({ phone: userPhone, date: dateStr, start, end });
-          }
-          overlay.remove();
-          renderAvailabilityCalendar();
-          renderAdminCalendar();
-          showToast('Сохранено!', formatDateRu(dateStr) + ' · ' + start + '–' + end);
         } catch (e) {
-          showToast('Ошибка', 'Не удалось сохранить', true);
+          console.error(e);
+          showToast('Ошибка', 'Сервер недоступен', true);
+          return;
         }
+
+        const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
+        if (idx >= 0) {
+          allAvailability[idx].start = start;
+          allAvailability[idx].end = end;
+        } else {
+          allAvailability.push({ phone: userPhone, date: dateStr, start, end });
+        }
+        saveCache();
+        overlay.remove();
+        renderAvailabilityCalendar();
+        renderAdminCalendar();
+        showToast('Сохранено!', formatDateRu(dateStr) + ' · ' + start + '–' + end);
       });
 
       if (existing) {
@@ -1991,22 +2023,26 @@
             deleteBtn.textContent = 'Удаляем…';
             deleteBtn.disabled = true;
             try {
-              await fetch(WEB_APP_URL, {
-                method: 'POST', mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({ phone: userPhone, date: dateStr, start_time: '', end_time: '' })
+              await postToServer({
+                phone: userPhone,
+                date: dateStr,
+                start_time: '',
+                end_time: ''
               });
-              const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
-              if (idx >= 0) allAvailability.splice(idx, 1);
-              overlay.remove();
-              renderAvailabilityCalendar();
-              renderAdminCalendar();
-              showToast('Удалено', formatDateRu(dateStr) + ' · отметка снята');
             } catch (e) {
+              console.error(e);
               showToast('Ошибка', 'Не удалось удалить', true);
               deleteBtn.textContent = 'Удалить отметку';
               deleteBtn.disabled = false;
+              return;
             }
+            const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
+            if (idx >= 0) allAvailability.splice(idx, 1);
+            saveCache();
+            overlay.remove();
+            renderAvailabilityCalendar();
+            renderAdminCalendar();
+            showToast('Удалено', formatDateRu(dateStr) + ' · отметка снята');
           });
         }
       }
@@ -2085,7 +2121,7 @@
     }
 
     // ============================================
-    // ПЕРЕКЛЮЧЕНИЕ НА СПИСОК СОТРУДНИКОВ И ОБРАТНО
+    // ПЕРЕКЛЮЧЕНИЕ СПИСКА СОТРУДНИКОВ
     // ============================================
     function openEditEmployees() {
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -2117,8 +2153,8 @@
         shareBtn.addEventListener('click', () => {
           tg.requestContact((ok, event) => {
             if (!ok) return;
-            const phone = event?.responseUnsafe?.contact?.phone_number
-              || tg.initDataUnsafe?.contact?.phone_number;
+            const phone = (event && event.responseUnsafe && event.responseUnsafe.contact && event.responseUnsafe.contact.phone_number)
+              || (tg.initDataUnsafe && tg.initDataUnsafe.contact && tg.initDataUnsafe.contact.phone_number);
             if (phone) {
               const normalized = normalizePhone(phone);
               savePhone(normalized);
@@ -2163,7 +2199,6 @@
       document.getElementById('tabEditEmployees').classList.remove('active');
       document.getElementById('pageSubtitle').style.display = 'none';
 
-      // Кнопки админки — один раз
       const editBtn = document.getElementById('editScheduleBtn');
       if (editBtn) editBtn.addEventListener('click', openEditEmployees);
 
@@ -2172,7 +2207,7 @@
 
       const helpBtn = document.getElementById('helpBtn');
       if (helpBtn) helpBtn.addEventListener('click', showHelp);
-            // Кнопки календаря редактирования
+
       const calBackBtn = document.getElementById('editCalendarBackBtn');
       if (calBackBtn) calBackBtn.addEventListener('click', closeEmployeeCalendar);
 
@@ -2197,15 +2232,12 @@
         animateMonth('daysEdit', 'fade-only');
       });
 
-
-      // Показываем вкладку админа для админов
       if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
         document.getElementById('tabAdminBtn').style.display = 'none';
       }
 
-      // Регистрируем tg_id
       registerTelegramId();
 
       try {
@@ -2223,7 +2255,7 @@
         saveCache();
 
         const myShifts = allShifts.filter(s => s.phone === userPhone);
-        if (myShifts.length === 0) {
+        if (myShifts.length === 0 && allAvailability.filter(a => a.phone === userPhone).length === 0) {
           const wrap = document.getElementById('tabSchedule');
           wrap.innerHTML = '<div class="not-found">По номеру <b>' + userPhone + '</b> смены не найдены.<br>Обратись к руководителю, чтобы проверить номер в системе.</div>' +
             '<div style="text-align:center;margin-top:16px;"><a href="#" id="resetPhone" style="color:#10B981;font-size:13px;">Ввести другой номер</a></div>';
@@ -2276,7 +2308,7 @@
     });
 
     // ============================================
-    // КНОПКИ НАВИГАЦИИ ПО МЕСЯЦАМ
+    // НАВИГАЦИЯ ПО МЕСЯЦАМ
     // ============================================
     document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
@@ -2354,16 +2386,6 @@
     } else {
       showPhoneForm();
     }
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.childNodes.forEach(node => {
-        if (node.nodeType === 3 && node.textContent.trim() === '}') {
-          node.remove();
-        }
-      });
-    });
   </script>
 </body>
 </html>

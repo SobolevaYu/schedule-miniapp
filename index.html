@@ -1761,7 +1761,11 @@
     // ============================================
     // СОХРАНЕНИЕ ИЗМЕНЕНИЯ (через сервер, с проверкой ответа)
     // ============================================
-    async function saveShiftChange(phone, date, start, end, status) {
+        async function saveShiftChange(phone, date, start, end, status) {
+      if (!ADMIN_PHONES.includes(userPhone)) {
+        showToast('Отказ', 'У вас нет доступа', true);
+        return false;
+      }
       if (!tg || !tg.initData) {
         showToast('Ошибка', 'Нет initData', true);
         return false;
@@ -2140,7 +2144,11 @@
     // ============================================
     // ПЕРЕКЛЮЧЕНИЕ СПИСКА СОТРУДНИКОВ
     // ============================================
-    function openEditEmployees() {
+       function openEditEmployees() {
+      if (!ADMIN_PHONES.includes(userPhone)) {
+        showToast('Отказ', 'У вас нет доступа', true);
+        return;
+      }
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       document.getElementById('tabEditEmployees').classList.add('active');
       document.getElementById('pageSubtitle').style.display = 'none';

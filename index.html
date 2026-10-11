@@ -2577,18 +2577,10 @@
       }
       return true;
     }
-
     function shouldPlayEntrySoundToday() {
+      // Звук играет при каждом входе — проверяем только, не отключил ли его пользователь
       if (!isEntrySoundEnabled()) return false;
-      try {
-        const last = parseInt(localStorage.getItem(ENTRY_SOUND_LAST) || '0', 10);
-        if (!last) return true;
-        const diff = Date.now() - last;
-        // Не чаще, чем раз в 20 часов
-        return diff > 20 * 60 * 60 * 1000;
-      } catch (e) {
-        return true;
-      }
+      return true;
     }
 
     function markEntrySoundPlayed() {

@@ -970,16 +970,18 @@
     @keyframes splashTitleIn {
       to { opacity: 1; transform: translateY(0); }
     }
-    .splash-sub {
+        .splash-sub {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
-      letter-spacing: 0.3px;
+      letter-spacing: 0;
       color: var(--tg-theme-hint-color, #64748B);
-      margin: 0 0 34px 0;
+      margin: 0 0 38px 0;
       opacity: 0;
       transform: translateY(4px);
       animation: splashSubIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
+      text-align: center;
+    }
     }
     @media (prefers-color-scheme: dark) {
       .splash-sub { color: var(--tg-theme-hint-color, #94A3B8); }
@@ -2622,37 +2624,100 @@
         try {
           const now = ctx.currentTime;
 
+          // Мастер
           const master = ctx.createGain();
-          master.gain.value = 0;
+          master.gain.value = 0.0001;
           master.connect(ctx.destination);
 
-          // Мягкий «взлёт»: тихо → мягкий пик → плавное затухание
-          master.gain.setValueAtTime(0, now);
-          master.gain.linearRampToValueAtTime(0.10, now + 0.08);
-          master.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+          // Реверб: мягкий, короткий хвост
+          let reverbSend = null;
+          let convolver = null;
+          try {
+            convolver = ctx.createConvolver();
+            const rate = ctx.sampleRate;
+            const length = Math.floor(rate * 1.6);
+            const impulse = ctx.createBuffer(2, length, rate);
+            for (let ch = 0; ch < 2; ch++) {
+              const data = impulse.getChannelData(ch);
+              for (let i = 0; i < length; i++) {
+                const t = i / length;
+                // Быстрое затухание — «мягкая комната»
+                const decay = Math.pow(1 - t, 4.0);
+                data[i] = (Math.random() * 2 - 1) * decay;
+              }
+            }
+            convolver.buffer = impulse;
+            reverbSend = ctx.createGain();
+            reverbSend.gain.value = 0.28;
+            convolver.connect(reverbSend);
+            reverbSend.connect(master);
+          } catch (e) {
+            reverbSend = null;
+          }
 
-          // Трезвучие A-мажор: A4, C#5, E5 — тёплое, не писклявое
-          const freqs = [440.00, 554.37, 659.25];
-          freqs.forEach((f, i) => {
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.value = f;
-            osc.connect(master);
-            const startAt = now + i * 0.045; // лёгкая арпеджия
-            osc.start(startAt);
-            osc.stop(now + 0.85);
+          // Три слоя «капельки»: низкая основа, средний «бульк», высокий «блик»
+          const layers = [
+            { freq: 220.00, gain: 0.55, dur: 0.75, mod: 1.5 },  // A3 — низкий удар
+            { freq: 660.00, gain: 0.42, dur: 0.95, mod: 2.5 },  // E5 — «бульк»
+            { freq: 1320.00, gain: 0.15, dur: 0.55, mod: 3.5 }  // E6 — лёгкий «блик»
+          ];
+
+          layers.forEach((layer, index) => {
+            // Лёгкий FM для «живости» — не чистая синусоида
+            const carrier = ctx.createOscillator();
+            carrier.type = 'sine';
+            carrier.frequency.value = layer.freq;
+
+            const modulator = ctx.createOscillator();
+            modulator.type = 'sine';
+            modulator.frequency.value = layer.freq * layer.mod;
+
+            const modGain = ctx.createGain();
+            modGain.gain.value = layer.freq * 0.35;
+
+            modulator.connect(modGain);
+            modGain.connect(carrier.frequency);
+
+            // Огибающая слоя — экспоненциальная атака и затухание
+            const noteGain = ctx.createGain();
+            noteGain.gain.value = 0.0001;
+            carrier.connect(noteGain);
+            noteGain.connect(master);
+            if (reverbSend && convolver) noteGain.connect(convolver);
+
+            // Каждый слой чуть позже — «капля раскрывается»
+            const start = now + index * 0.015;
+            const attack = start + 0.012;
+            const end = start + layer.dur;
+
+            noteGain.gain.setValueAtTime(0.0001, start);
+            noteGain.gain.exponentialRampToValueAtTime(layer.gain, attack);
+            noteGain.gain.exponentialRampToValueAtTime(0.0001, end);
+
+            // Лёгкий дрейф частоты — «капля дрожит»
+            carrier.frequency.setValueAtTime(layer.freq, start);
+            carrier.frequency.linearRampToValueAtTime(layer.freq * 0.994, end);
+
+            carrier.start(start);
+            carrier.stop(end + 0.05);
+            modulator.start(start);
+            modulator.stop(end + 0.05);
           });
 
-          // Закрываем контекст после отзвука — избегаем утечки
+          // Мастер-огибающая: быстрый вход, мягкое затухание
+          master.gain.setValueAtTime(0.0001, now);
+          master.gain.exponentialRampToValueAtTime(0.12, now + 0.015);
+          master.gain.exponentialRampToValueAtTime(0.0001, now + 1.3);
+
           setTimeout(() => {
             try { ctx.close(); } catch (e) {}
-          }, 1100);
+          }, 1800);
+
         } catch (e) {
           try { ctx.close(); } catch (e2) {}
         }
       };
 
-      // iOS Safari может держать контекст в suspended
       if (ctx.state === 'suspended' && ctx.resume) {
         ctx.resume().then(play).catch(() => {
           try { ctx.close(); } catch (e) {}
@@ -2660,7 +2725,7 @@
       } else {
         play();
       }
-    }
+    }}
 
     function initSplashSoundToggle() {
       const btn = document.getElementById('splashSoundToggle');

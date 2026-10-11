@@ -12,12 +12,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-   <title>Turno</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&display=swap" rel="stylesheet">
-
-
+  <title>Turno</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -877,16 +872,13 @@
     @media (prefers-color-scheme: dark) {
       .help-block-text { color: var(--tg-theme-hint-color, #94A3B8); }
     }
-     /* ============================================
+
+    /* ============================================
        SPLASH — TURNO SIGNATURE
-       Единый стиль: system-шрифт, один акцент, свечение.
        ============================================ */
-        #splash {
+    #splash {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       z-index: 99999;
       isolation: isolate;
       display: flex;
@@ -905,7 +897,6 @@
       pointer-events: none;
     }
 
-    /* --- Монограмма + свечение --- */
     .splash-mark {
       position: relative;
       width: 120px;
@@ -951,11 +942,7 @@
       0%, 100% { transform: scale(1);    }
       50%      { transform: scale(1.05); }
     }
-    .splash-monogram svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+    .splash-monogram svg { width: 100%; height: 100%; display: block; }
     .splash-monogram .mono-fill {
       fill: #0F172A;
       transition: fill 0.3s ease;
@@ -964,7 +951,6 @@
       .splash-monogram .mono-fill { fill: #F1F5F9; }
     }
 
-    /* --- Название --- */
     .splash-title {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 34px;
@@ -983,7 +969,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Полоса загрузки --- */
     .splash-bar {
       width: 120px;
       height: 3px;
@@ -1018,7 +1003,6 @@
       transition: width 0.35s ease-out, transform 0.35s ease-out;
     }
 
-    /* --- Экран ошибки --- */
     .splash-error {
       display: none;
       flex-direction: column;
@@ -1049,16 +1033,12 @@
 
     .splash-error-icon { font-size: 40px; line-height: 1; }
     .splash-error-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #DC2626;
-      margin: 0;
+      font-size: 17px; font-weight: 700;
+      color: #DC2626; margin: 0;
     }
     .splash-error-text {
-      font-size: 14px;
-      color: #64748B;
-      line-height: 1.5;
-      margin: 0;
+      font-size: 14px; color: #64748B;
+      line-height: 1.5; margin: 0;
     }
     @media (prefers-color-scheme: dark) {
       .splash-error-text { color: #94A3B8; }
@@ -1066,12 +1046,8 @@
     .splash-retry {
       padding: 12px 24px;
       background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
+      color: white; border: none; border-radius: 12px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
       box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
       font-family: inherit;
       transition: transform 0.15s ease;
@@ -1080,7 +1056,7 @@
   </style>
 </head>
 <body>
-    <div id="splash">
+  <div id="splash">
     <div class="splash-mark">
       <div class="splash-glow"></div>
       <div class="splash-monogram">
@@ -1116,6 +1092,8 @@
       <p class="splash-error-text">Проверьте интернет и попробуйте снова</p>
       <button class="splash-retry" onclick="location.reload()">Попробовать снова</button>
     </div>
+  </div>
+
   <div class="bg-blobs" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-3"></div>
@@ -1280,12 +1258,6 @@
   </div>
 
   <script>
-    // Уникальная функция-маркер. Служебная, не используется.
-    // Автор: Soboleva Yu. | ID: 7f3b9c2a-2026-10-10
-    function __sysCheckMarker_SobolevaYu() {
-      return 'SobolevaYu-2026-7f3b9c2a';
-    }
-
     // ============================================
     // КОНСТАНТЫ
     // ============================================
@@ -1349,8 +1321,6 @@
 
     function pad2(x) { return String(x).padStart(2, '0'); }
 
-    // Безопасная проверка: ночная ли смена.
-    // Если данные битые/пустые — возвращает false, не падает.
     function isNightShift(startStr, endStr) {
       if (!startStr || !endStr) return false;
       const startParts = String(startStr).split(':');
@@ -1367,7 +1337,6 @@
       return E > 22 * 60 || S < 6 * 60;
     }
 
-    // Проверяет, что строка — валидная дата YYYY-MM-DD
     function isValidIsoDate(s) {
       if (!s || typeof s !== 'string') return false;
       return /^\d{4}-\d{2}-\d{2}$/.test(s);
@@ -1425,29 +1394,20 @@
     // ============================================
     // ЗАГРУЗКА ДАННЫХ (gviz)
     // ============================================
-    // Google отдаёт ячейки как объекты {v: значение, f: форматированное}.
-    // Мы НЕ полагаемся на .f — потому что для строковых значений он пустой.
-    // Приводим сами к нужному виду.
-
     function gvizToIsoDate(cell) {
       if (!cell) return '';
-
-      // Дата в формате "Date(2026,9,17)" — месяц с нуля
       if (typeof cell.v === 'string') {
         const m = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
         if (m) {
           return m[1] + '-' + pad2(parseInt(m[2], 10) + 1) + '-' + pad2(m[3]);
         }
       }
-
       const candidates = [cell.f, cell.v];
       for (let i = 0; i < candidates.length; i++) {
         const s = String(candidates[i] || '').trim();
         if (!s) continue;
-
         let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
         if (m) return m[1] + '-' + pad2(m[2]) + '-' + pad2(m[3]);
-
         m = s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
         if (m) return m[3] + '-' + pad2(m[2]) + '-' + pad2(m[1]);
       }
@@ -1456,13 +1416,10 @@
 
     function gvizToTime(cell) {
       if (!cell) return '';
-
-      // Время как "Date(1899,11,30,9,0,0)" — часы и минуты на позициях 4 и 5
       if (typeof cell.v === 'string') {
         const m = cell.v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+)/);
         if (m) return pad2(m[4]) + ':' + pad2(m[5]);
       }
-
       const candidates = [cell.f, cell.v];
       for (let i = 0; i < candidates.length; i++) {
         const s = String(candidates[i] || '').trim();
@@ -1546,11 +1503,9 @@
     }
 
     // ============================================
-    // ЗАПИСЬ НА СЕРВЕР (Apps Script)
+    // ЗАПИСЬ НА СЕРВЕР
     // ============================================
-    // ВАЖНО: не используем mode: 'no-cors' — нам нужен ответ сервера,
-    // чтобы понять, сохранилось ли на самом деле.
-          async function postToServer(payload) {
+    async function postToServer(payload) {
       let res;
       try {
         res = await fetch(WEB_APP_URL, {
@@ -1561,20 +1516,16 @@
       } catch (e) {
         throw new Error('Сеть: ' + (e.message || 'неизвестно'));
       }
-
       const text = await res.text();
-
       if (!res.ok) {
         throw new Error('HTTP ' + res.status + ': ' + text.substring(0, 150));
       }
-
       let data;
       try {
         data = JSON.parse(text);
       } catch (e) {
         throw new Error('Не JSON: ' + text.substring(0, 150));
       }
-
       return data;
     }
 
@@ -1868,7 +1819,7 @@
     }
 
     // ============================================
-    // РЕНДЕР КАЛЕНДАРЯ РЕДАКТИРОВАНИЯ (СМЕНЫ СОТРУДНИКА)
+    // РЕНДЕР КАЛЕНДАРЯ РЕДАКТИРОВАНИЯ
     // ============================================
     function renderEditCalendar() {
       if (!currentEditPhone) return;
@@ -2000,9 +1951,9 @@
     }
 
     // ============================================
-    // СОХРАНЕНИЕ ИЗМЕНЕНИЯ (через сервер, с проверкой ответа)
+    // СОХРАНЕНИЕ ИЗМЕНЕНИЯ
     // ============================================
-        async function saveShiftChange(phone, date, start, end, status) {
+    async function saveShiftChange(phone, date, start, end, status) {
       if (!ADMIN_PHONES.includes(userPhone)) {
         showToast('Отказ', 'У вас нет доступа', true);
         return false;
@@ -2015,7 +1966,8 @@
         showToast('Ошибка', 'Некорректная дата', true);
         return false;
       }
-           let serverOk = false;
+
+      let serverOk = false;
       let resp = null;
       try {
         const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
@@ -2045,7 +1997,6 @@
         return false;
       }
 
-      // Обновляем локальные данные ТОЛЬКО после успешного ответа сервера
       allShifts = allShifts.filter(s => !(s.phone === phone && s.date === date));
 
       if (status === 'DELETE') {
@@ -2066,6 +2017,7 @@
       renderBanner();
       return true;
     }
+
     // ============================================
     // ОТКРЫТЬ / ЗАКРЫТЬ КАЛЕНДАРЬ СОТРУДНИКА
     // ============================================
@@ -2214,9 +2166,6 @@
       return html;
     }
 
-    // ============================================
-    // ДОСТУПНОСТЬ — СОХРАНЕНИЕ/УДАЛЕНИЕ
-    // ============================================
     function showAvailabilityPopup(dateStr, existing) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
@@ -2310,7 +2259,7 @@
     }
 
     // ============================================
-    // ПОСТРОЕНИЕ ССЫЛОК И УВЕДОМЛЕНИЙ
+    // ССЫЛКИ И УВЕДОМЛЕНИЯ
     // ============================================
     function buildGoogleCalendarUrl(shift) {
       const [y, m, d] = shift.date.split('-');
@@ -2384,7 +2333,7 @@
     // ============================================
     // ПЕРЕКЛЮЧЕНИЕ СПИСКА СОТРУДНИКОВ
     // ============================================
-       function openEditEmployees() {
+    function openEditEmployees() {
       if (!ADMIN_PHONES.includes(userPhone)) {
         showToast('Отказ', 'У вас нет доступа', true);
         return;
@@ -2524,7 +2473,7 @@
           const wrap = document.getElementById('tabSchedule');
           wrap.innerHTML = '<div class="not-found">По номеру <b>' + userPhone + '</b> смены не найдены.<br>Обратись к руководителю, чтобы проверить номер в системе.</div>' +
             '<div style="text-align:center;margin-top:16px;"><a href="#" id="resetPhone" style="color:#10B981;font-size:13px;">Ввести другой номер</a></div>';
-                    document.getElementById('resetPhone').addEventListener('click', e => {
+          document.getElementById('resetPhone').addEventListener('click', e => {
             e.preventDefault();
             localStorage.removeItem(STORAGE_KEY);
             location.reload();
@@ -2533,7 +2482,7 @@
           return;
         }
 
-               document.getElementById('calendarWrap').style.display = 'block';
+        document.getElementById('calendarWrap').style.display = 'block';
         renderHeader();
         renderBanner();
         renderCalendar();
@@ -2545,6 +2494,43 @@
 
       ensureSplashMinTime().then(hideSplash);
     }
+
+    // ============================================
+    // SPLASH — TURNO SIGNATURE
+    // ============================================
+    let __splashStartTime = Date.now();
+    let __splashHidden = false;
+    let __splashErrorTimer = null;
+
+    function hideSplash() {
+      if (__splashHidden) return;
+      __splashHidden = true;
+      if (__splashErrorTimer) clearTimeout(__splashErrorTimer);
+
+      const el = document.getElementById('splash');
+      if (!el) return;
+
+      el.classList.add('ready');
+
+      setTimeout(() => {
+        el.classList.add('hide');
+        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+      }, 350);
+    }
+
+    function armSplashErrorTimer() {
+      if (__splashErrorTimer) clearTimeout(__splashErrorTimer);
+      __splashErrorTimer = setTimeout(() => {
+        if (__splashHidden) return;
+        const el = document.getElementById('splash');
+        if (el) el.classList.add('timed-out');
+      }, 10000);
+    }
+
+    function ensureSplashMinTime() {
+      const elapsed = Date.now() - __splashStartTime;
+      const wait = Math.max(0, 1600 - elapsed);
+      return new Promise(r => setTimeout(r, wait));
     }
 
     // ============================================
@@ -2648,60 +2634,9 @@
     // ============================================
     // СТАРТ
     // ============================================
-       // ============================================
-    // SPLASH — TURNO SIGNATURE
-    // ============================================
-    let __splashStartTime = Date.now();
-    let __splashHidden = false;
-    let __splashErrorTimer = null;
-
-    function markSplashReady() {
-      const el = document.getElementById('splash');
-      if (el) el.classList.add('ready');
-    }
-
-    function hideSplash() {
-      if (__splashHidden) return;
-      __splashHidden = true;
-      if (__splashErrorTimer) clearTimeout(__splashErrorTimer);
-
-      const el = document.getElementById('splash');
-      if (!el) return;
-
-      el.classList.add('ready');
-
-      setTimeout(() => {
-        el.classList.add('hide');
-        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
-      }, 350);
-    }
-
-    function armSplashErrorTimer() {
-      if (__splashErrorTimer) clearTimeout(__splashErrorTimer);
-      __splashErrorTimer = setTimeout(() => {
-        if (__splashHidden) return;
-        const el = document.getElementById('splash');
-        if (el) el.classList.add('timed-out');
-      }, 10000);
-    }
-
-    function ensureSplashMinTime() {
-      const elapsed = Date.now() - __splashStartTime;
-      const wait = Math.max(0, 1600 - elapsed);
-      return new Promise(r => setTimeout(r, wait));
-    }
-
     __splashStartTime = Date.now();
     armSplashErrorTimer();
 
-    const saved = getSavedPhone();
-    if (saved) {
-      userPhone = normalizePhone(saved);
-      initApp();
-    } else {
-      showPhoneForm();
-      ensureSplashMinTime().then(hideSplash);
-    }
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

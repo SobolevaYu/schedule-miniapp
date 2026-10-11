@@ -12,7 +12,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-   <title>Turno — ритм команды</title>
+   <title>Turno</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bad+Script&display=swap" rel="stylesheet">
@@ -877,7 +877,10 @@
     @media (prefers-color-scheme: dark) {
       .help-block-text { color: var(--tg-theme-hint-color, #94A3B8); }
     }
-        /* ============ SPLASH-ЭКРАН ЗАГРУЗКИ ============ */
+     /* ============================================
+       SPLASH — TURNO SIGNATURE
+       Единый стиль: system-шрифт, один акцент, свечение.
+       ============================================ */
     #splash {
       position: fixed;
       inset: 0;
@@ -886,84 +889,132 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 22px;
-      background: linear-gradient(160deg, #ECFDF5 0%, #F0FDF4 40%, #FFFFFF 100%);
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      padding: 48px 24px;
+      background: var(--tg-theme-bg-color, #F5F7FA);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @media (prefers-color-scheme: dark) {
-      #splash {
-        background: linear-gradient(160deg, #064E3B 0%, #0F172A 60%, #0F172A 100%);
-      }
+      #splash { background: var(--tg-theme-bg-color, #0F172A); }
     }
     #splash.hide {
       opacity: 0;
-      visibility: hidden;
       pointer-events: none;
     }
 
-    .splash-logo {
-      width: 130px;
-      height: 130px;
-      border-radius: 30px;
-      object-fit: cover;
-      box-shadow: 0 12px 40px rgba(16, 185, 129, 0.35);
-      animation: splashPulse 2.2s ease-in-out infinite;
-    }
-    @keyframes splashPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 12px 40px rgba(16, 185, 129, 0.35); }
-      50%      { transform: scale(1.06); box-shadow: 0 18px 55px rgba(16, 185, 129, 0.55); }
-    }
-
-        .splash-title {
-      font-family: 'Bad Script', cursive;
-      font-size: 68px;
-      font-weight: 400;
-      line-height: 1.1;
-      margin: 0;
-      padding: 0 20px;
-      letter-spacing: 2px;
-      color: #059669;
-      min-height: 76px;
-      text-align: center;
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-title { color: #6EE7B7; }
-    }
-
-        .splash-sub {
-      font-family: 'Bad Script', cursive;
-      font-size: 30px;
-      font-weight: 400;
-      line-height: 1.1;
-      margin: -12px 0 0 0;
-      color: #10B981;
-      letter-spacing: 0.5px;
-      min-height: 34px;
-      text-align: center;
-      padding: 0 20px;
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-sub { color: #34D399; }
-    }
-
-    .splash-cursor {
-      display: inline-block;
-      width: 3px;
-      height: 0.85em;
-      background: currentColor;
-      vertical-align: -0.1em;
-      margin-left: 3px;
-      animation: splashCursorBlink 0.7s steps(1) infinite;
-    }
-    @keyframes splashCursorBlink {
-      0%, 49%   { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-    .splash-done .splash-cursor {
-      animation: none;
+    /* --- Монограмма + свечение --- */
+    .splash-mark {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
       opacity: 0;
+      animation: splashFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+    }
+    @keyframes splashFadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
+    .splash-glow {
+      position: absolute;
+      inset: -40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center,
+        rgba(16, 185, 129, 0.55) 0%,
+        rgba(16, 185, 129, 0.15) 45%,
+        rgba(16, 185, 129, 0) 70%);
+      filter: blur(28px);
+      -webkit-filter: blur(28px);
+      animation: splashGlow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes splashGlow {
+      0%, 100% { transform: scale(1);    opacity: 0.75; }
+      50%      { transform: scale(1.15); opacity: 1;    }
+    }
+
+    .splash-monogram {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      animation: splashMonogram 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      will-change: transform;
+    }
+    @keyframes splashMonogram {
+      0%, 100% { transform: scale(1);    }
+      50%      { transform: scale(1.05); }
+    }
+    .splash-monogram svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .splash-monogram .mono-fill {
+      fill: #0F172A;
+      transition: fill 0.3s ease;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-monogram .mono-fill { fill: #F1F5F9; }
+    }
+
+    /* --- Название --- */
+    .splash-title {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      color: var(--tg-theme-text-color, #0F172A);
+      margin: 0 0 44px 0;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: splashTitleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-title { color: var(--tg-theme-text-color, #F1F5F9); }
+    }
+    @keyframes splashTitleIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Полоса загрузки --- */
+    .splash-bar {
+      width: 120px;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(148, 163, 184, 0.22);
+      overflow: hidden;
+      opacity: 0;
+      animation: splashBarIn 0.5s ease-out 0.55s forwards;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-bar { background: rgba(148, 163, 184, 0.18); }
+    }
+    @keyframes splashBarIn {
+      to { opacity: 1; }
+    }
+    .splash-bar-fill {
+      width: 40%;
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
+      animation: splashBarSlide 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      will-change: transform;
+    }
+    @keyframes splashBarSlide {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+    #splash.ready .splash-bar-fill {
+      animation: none;
+      transform: translateX(0);
+      width: 100%;
+      transition: width 0.35s ease-out, transform 0.35s ease-out;
+    }
+
+    /* --- Экран ошибки --- */
     .splash-error {
       display: none;
       flex-direction: column;
@@ -975,21 +1026,22 @@
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      box-shadow: 0 12px 40px rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      box-shadow: 0 12px 40px rgba(239, 68, 68, 0.12);
       text-align: center;
       max-width: 340px;
+      animation: splashFadeIn 0.4s ease-out;
     }
     @media (prefers-color-scheme: dark) {
       .splash-error {
-        background: rgba(15, 23, 42, 0.9);
-        border-color: rgba(239, 68, 68, 0.4);
+        background: rgba(30, 41, 59, 0.9);
+        border-color: rgba(239, 68, 68, 0.35);
       }
     }
     #splash.timed-out .splash-error { display: flex; }
-    #splash.timed-out .splash-logo,
+    #splash.timed-out .splash-mark,
     #splash.timed-out .splash-title,
-    #splash.timed-out .splash-sub { display: none; }
+    #splash.timed-out .splash-bar { display: none; }
 
     .splash-error-icon { font-size: 40px; line-height: 1; }
     .splash-error-title {
@@ -997,14 +1049,12 @@
       font-weight: 700;
       color: #DC2626;
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     .splash-error-text {
       font-size: 14px;
       color: #64748B;
       line-height: 1.5;
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     @media (prefers-color-scheme: dark) {
       .splash-error-text { color: #94A3B8; }
@@ -1018,24 +1068,50 @@
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
       font-family: inherit;
+      transition: transform 0.15s ease;
     }
     .splash-retry:active { transform: scale(0.97); }
   </style>
 </head>
 <body>
     <div id="splash">
-    <img src="logo.jpg" alt="" class="splash-logo" />
-    <h1 class="splash-title" id="splashTitle"></h1>
-    <p class="splash-sub" id="splashSub"></p>
+    <div class="splash-mark">
+      <div class="splash-glow"></div>
+      <div class="splash-monogram">
+        <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="mono-fill" d="
+            M 14 22
+            L 74 22
+            L 74 32
+            L 49 32
+            L 49 66
+            Q 49 74 57 74
+            L 60 74
+            L 60 82
+            L 52 82
+            Q 39 82 39 68
+            L 39 32
+            L 14 32
+            Z
+          "/>
+        </svg>
+      </div>
+    </div>
+
+    <h1 class="splash-title">Turno</h1>
+
+    <div class="splash-bar">
+      <div class="splash-bar-fill"></div>
+    </div>
+
     <div class="splash-error">
       <div class="splash-error-icon">📡</div>
       <h3 class="splash-error-title">Не удалось загрузить</h3>
       <p class="splash-error-text">Проверьте интернет и попробуйте снова</p>
       <button class="splash-retry" onclick="location.reload()">Попробовать снова</button>
     </div>
-  </div>
   <div class="bg-blobs" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-3"></div>
@@ -1986,7 +2062,6 @@
       renderBanner();
       return true;
     }
-
     // ============================================
     // ОТКРЫТЬ / ЗАКРЫТЬ КАЛЕНДАРЬ СОТРУДНИКА
     // ============================================
@@ -2568,51 +2643,32 @@
     // ============================================
     // СТАРТ
     // ============================================
-      // ============================================
-    // SPLASH-ЭКРАН ЗАГРУЗКИ
+       // ============================================
+    // SPLASH — TURNO SIGNATURE
     // ============================================
     let __splashStartTime = Date.now();
     let __splashHidden = false;
     let __splashErrorTimer = null;
 
-    function typeText(id, text, speedMs) {
-      return new Promise(resolve => {
-        const el = document.getElementById(id);
-        if (!el) { resolve(); return; }
-        const cursor = '<span class="splash-cursor"></span>';
-        el.innerHTML = cursor;
-        let i = 0;
-        const interval = setInterval(() => {
-          i++;
-          el.innerHTML = text.substring(0, i) + cursor;
-          if (i >= text.length) {
-            clearInterval(interval);
-            el.innerHTML = text + cursor;
-            resolve();
-          }
-        }, speedMs);
-      });
-    }
-
-    function runSplashTyping() {
-      typeText('splashTitle', 'TURNO', 130)
-        .then(() => new Promise(r => setTimeout(r, 200)))
-        .then(() => typeText('splashSub', 'ритм команды', 70))
-        .then(() => new Promise(r => setTimeout(r, 350)))
-        .then(() => {
-          const splash = document.getElementById('splash');
-          if (splash) splash.classList.add('splash-done');
-        });
+    function markSplashReady() {
+      const el = document.getElementById('splash');
+      if (el) el.classList.add('ready');
     }
 
     function hideSplash() {
       if (__splashHidden) return;
       __splashHidden = true;
       if (__splashErrorTimer) clearTimeout(__splashErrorTimer);
+
       const el = document.getElementById('splash');
       if (!el) return;
-      el.classList.add('hide');
-      setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 650);
+
+      el.classList.add('ready');
+
+      setTimeout(() => {
+        el.classList.add('hide');
+        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+      }, 350);
     }
 
     function armSplashErrorTimer() {
@@ -2621,19 +2677,26 @@
         if (__splashHidden) return;
         const el = document.getElementById('splash');
         if (el) el.classList.add('timed-out');
-      }, 8000);
+      }, 10000);
     }
 
     function ensureSplashMinTime() {
       const elapsed = Date.now() - __splashStartTime;
-      const wait = Math.max(0, 1800 - elapsed);
+      const wait = Math.max(0, 1600 - elapsed);
       return new Promise(r => setTimeout(r, wait));
     }
 
     __splashStartTime = Date.now();
     armSplashErrorTimer();
-    runSplashTyping();
 
+    const saved = getSavedPhone();
+    if (saved) {
+      userPhone = normalizePhone(saved);
+      initApp();
+    } else {
+      showPhoneForm();
+      ensureSplashMinTime().then(hideSplash);
+    }
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);

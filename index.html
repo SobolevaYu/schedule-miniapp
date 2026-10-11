@@ -887,7 +887,7 @@
       justify-content: center;
       padding: 48px 24px;
       background: #F5F7FA;
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.6, 1);
     }
     @media (prefers-color-scheme: dark) {
       #splash { background: #0F172A; }
@@ -912,7 +912,6 @@
       from { opacity: 0; transform: scale(0.92); }
       to   { opacity: 1; transform: scale(1); }
     }
-
     .splash-glow {
       position: absolute;
       inset: -40px;
@@ -923,24 +922,28 @@
         rgba(16, 185, 129, 0) 70%);
       filter: blur(28px);
       -webkit-filter: blur(28px);
-      animation: splashGlow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation: splashGlow 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
       will-change: transform, opacity;
     }
     @keyframes splashGlow {
-      0%, 100% { transform: scale(1);    opacity: 0.75; }
-      50%      { transform: scale(1.15); opacity: 1;    }
+      0%   { transform: scale(1);     opacity: 0.6;  }
+      42%  { transform: scale(1.08);  opacity: 0.85; }
+      72%  { transform: scale(0.99);  opacity: 0.55; }
+      100% { transform: scale(1);     opacity: 0.6;  }
     }
 
-    .splash-monogram {
+        .splash-monogram {
       position: relative;
       width: 88px;
       height: 88px;
-      animation: splashMonogram 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation: splashMonogram 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
       will-change: transform;
     }
     @keyframes splashMonogram {
-      0%, 100% { transform: scale(1);    }
-      50%      { transform: scale(1.05); }
+      0%   { transform: scale(1);      }
+      42%  { transform: scale(1.015);  }
+      72%  { transform: scale(0.998);  }
+      100% { transform: scale(1);      }
     }
     .splash-monogram svg { width: 100%; height: 100%; display: block; }
     .splash-monogram .mono-fill {
@@ -950,16 +953,16 @@
     @media (prefers-color-scheme: dark) {
       .splash-monogram .mono-fill { fill: #F1F5F9; }
     }
-    .splash-title {
+        .splash-title {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 34px;
       font-weight: 700;
       letter-spacing: -0.6px;
       color: var(--tg-theme-text-color, #0F172A);
-      margin: 0 0 10px 0;
+      margin: 0 0 12px 0;
       opacity: 0;
-      transform: translateY(8px);
-      animation: splashTitleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+      transform: translateY(4px);
+      animation: splashTitleIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
     }
     @media (prefers-color-scheme: dark) {
       .splash-title { color: var(--tg-theme-text-color, #F1F5F9); }
@@ -967,17 +970,16 @@
     @keyframes splashTitleIn {
       to { opacity: 1; transform: translateY(0); }
     }
-
     .splash-sub {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0.3px;
       color: var(--tg-theme-hint-color, #64748B);
-      margin: 0 0 32px 0;
+      margin: 0 0 34px 0;
       opacity: 0;
-      transform: translateY(6px);
-      animation: splashSubIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+      transform: translateY(4px);
+      animation: splashSubIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
     }
     @media (prefers-color-scheme: dark) {
       .splash-sub { color: var(--tg-theme-hint-color, #94A3B8); }
@@ -1007,23 +1009,25 @@
     @keyframes splashBarIn {
       to { opacity: 1; }
     }
-    .splash-bar-fill {
-      width: 40%;
+       .splash-bar-fill {
+      width: 100%;
       height: 100%;
       border-radius: 2px;
-      background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
-      animation: splashBarSlide 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-      will-change: transform;
+      background: linear-gradient(90deg, rgba(16,185,129,0.15) 0%, #10B981 50%, rgba(16,185,129,0.15) 100%);
+      transform-origin: center;
+      animation: splashBarBreathe 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      will-change: transform, opacity;
     }
-    @keyframes splashBarSlide {
-      0%   { transform: translateX(-100%); }
-      100% { transform: translateX(350%); }
+    @keyframes splashBarBreathe {
+      0%   { transform: scaleX(0.15); opacity: 0.55; }
+      50%  { transform: scaleX(1);    opacity: 1;    }
+      100% { transform: scaleX(0.15); opacity: 0.55; }
     }
     #splash.ready .splash-bar-fill {
       animation: none;
-      transform: translateX(0);
-      width: 100%;
-      transition: width 0.35s ease-out, transform 0.35s ease-out;
+      transform: scaleX(1);
+      opacity: 1;
+      transition: transform 0.4s ease-out, opacity 0.4s ease-out;
     }
 
     .splash-error {

@@ -881,20 +881,24 @@
        SPLASH — TURNO SIGNATURE
        Единый стиль: system-шрифт, один акцент, свечение.
        ============================================ */
-    #splash {
+        #splash {
       position: fixed;
-      inset: 0;
-      z-index: 9999;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 99999;
+      isolation: isolate;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 48px 24px;
-      background: var(--tg-theme-bg-color, #F5F7FA);
+      background: #F5F7FA;
       transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @media (prefers-color-scheme: dark) {
-      #splash { background: var(--tg-theme-bg-color, #0F172A); }
+      #splash { background: #0F172A; }
     }
     #splash.hide {
       opacity: 0;

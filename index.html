@@ -1309,17 +1309,31 @@
     // ============================================
     // ВАЖНО: не используем mode: 'no-cors' — нам нужен ответ сервера,
     // чтобы понять, сохранилось ли на самом деле.
-       async function postToServer(payload) {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'data=' + encodeURIComponent(JSON.stringify(payload))
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+          async function postToServer(payload) {
+      let res;
+      try {
+        res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'data=' + encodeURIComponent(JSON.stringify(payload))
+        });
+      } catch (e) {
+        throw new Error('Сеть: ' + (e.message || 'неизвестно'));
+      }
+
       const text = await res.text();
+
+      if (!res.ok) {
+        throw new Error('HTTP ' + res.status + ': ' + text.substring(0, 150));
+      }
+
       let data;
-      try { data = JSON.parse(text); }
-      catch (e) { throw new Error('Сервер вернул не JSON: ' + text.substring(0, 200)); }
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error('Не JSON: ' + text.substring(0, 150));
+      }
+
       return data;
     }
 
@@ -1756,10 +1770,10 @@
         showToast('Ошибка', 'Некорректная дата', true);
         return false;
       }
-
       let serverOk = false;
+      let resp = null;
       try {
-        const resp = await postToServer({
+        resp = await postToServer({
           action: 'update_shift',
           initData: tg.initData,
           phone: phone,
@@ -1774,12 +1788,12 @@
         }
       } catch (e) {
         console.error('Ошибка сети при сохранении:', e);
-        showToast('Ошибка', 'Сервер недоступен, попробуйте ещё раз', true);
+        showToast('Ошибка', String(e.message || e).substring(0, 80), true);
         return false;
       }
 
       if (!serverOk) {
-        showToast('Ошибка', 'Не удалось сохранить', true);
+        showToast('Ошибка', 'Отказ: ' + JSON.stringify(resp || {}).substring(0, 70), true);
         return false;
       }
 

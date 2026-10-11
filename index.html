@@ -950,17 +950,40 @@
     @media (prefers-color-scheme: dark) {
       .splash-monogram .mono-fill { fill: #F1F5F9; }
     }
-
     .splash-title {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 34px;
       font-weight: 700;
       letter-spacing: -0.6px;
       color: var(--tg-theme-text-color, #0F172A);
-      margin: 0 0 44px 0;
+      margin: 0 0 10px 0;
       opacity: 0;
       transform: translateY(8px);
       animation: splashTitleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-title { color: var(--tg-theme-text-color, #F1F5F9); }
+    }
+    @keyframes splashTitleIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .splash-sub {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      color: var(--tg-theme-hint-color, #64748B);
+      margin: 0 0 32px 0;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: splashSubIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-sub { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    @keyframes splashSubIn {
+      to { opacity: 1; transform: translateY(0); }
     }
     @media (prefers-color-scheme: dark) {
       .splash-title { color: var(--tg-theme-text-color, #F1F5F9); }
@@ -1053,10 +1076,44 @@
       transition: transform 0.15s ease;
     }
     .splash-retry:active { transform: scale(0.97); }
+        .splash-sound-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.15);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 15px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      opacity: 0.55;
+      transition: opacity 0.2s ease, transform 0.15s ease, background 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .splash-sound-toggle:hover { opacity: 0.9; }
+    .splash-sound-toggle:active {
+      transform: scale(0.9);
+      background: rgba(148, 163, 184, 0.28);
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-sound-toggle {
+        background: rgba(241, 245, 249, 0.08);
+        border-color: rgba(241, 245, 249, 0.15);
+      }
+    }
   </style>
 </head>
 <body>
-  <div id="splash">
+   <div id="splash">
+    <button class="splash-sound-toggle" id="splashSoundToggle" aria-label="Отключить звук">🔊</button>
     <div class="splash-mark">
       <div class="splash-glow"></div>
       <div class="splash-monogram">
@@ -1079,8 +1136,8 @@
         </svg>
       </div>
     </div>
-
     <h1 class="splash-title">Turno</h1>
+    <p class="splash-sub">Ритм команды</p>
 
     <div class="splash-bar">
       <div class="splash-bar-fill"></div>
@@ -2501,6 +2558,129 @@
     let __splashStartTime = Date.now();
     let __splashHidden = false;
     let __splashErrorTimer = null;
+        // ============================================
+    // ЗВУК ВХОДА — мягкий, раз в сутки, с уважением к системе
+    // ============================================
+    const ENTRY_SOUND_KEY = 'turno_entry_sound';
+    const ENTRY_SOUND_LAST = 'turno_entry_sound_last';
+    const ENTRY_SOUND_DISABLED = 'turno_entry_sound_disabled';
+
+    function isEntrySoundEnabled() {
+      if (localStorage.getItem(ENTRY_SOUND_DISABLED) === '1') return false;
+      // Уважение к системной настройке «уменьшить движение»
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return false;
+      }
+      return true;
+    }
+
+    function shouldPlayEntrySoundToday() {
+      if (!isEntrySoundEnabled()) return false;
+      try {
+        const last = parseInt(localStorage.getItem(ENTRY_SOUND_LAST) || '0', 10);
+        if (!last) return true;
+        const diff = Date.now() - last;
+        // Не чаще, чем раз в 20 часов
+        return diff > 20 * 60 * 60 * 1000;
+      } catch (e) {
+        return true;
+      }
+    }
+
+    function markEntrySoundPlayed() {
+      try {
+        localStorage.setItem(ENTRY_SOUND_LAST, String(Date.now()));
+      } catch (e) {}
+    }
+
+    function setEntrySoundEnabled(enabled) {
+      try {
+        if (enabled) {
+          localStorage.removeItem(ENTRY_SOUND_DISABLED);
+        } else {
+          localStorage.setItem(ENTRY_SOUND_DISABLED, '1');
+        }
+      } catch (e) {}
+      const btn = document.getElementById('splashSoundToggle');
+      if (btn) {
+        btn.textContent = enabled ? '🔊' : '🔇';
+        btn.setAttribute('aria-label', enabled ? 'Отключить звук' : 'Включить звук');
+      }
+    }
+
+    function playEntrySound() {
+      if (!shouldPlayEntrySoundToday()) return;
+      markEntrySoundPlayed();
+
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+
+      let ctx;
+      try {
+        ctx = new AudioCtx();
+      } catch (e) {
+        return;
+      }
+
+      const play = () => {
+        try {
+          const now = ctx.currentTime;
+
+          const master = ctx.createGain();
+          master.gain.value = 0;
+          master.connect(ctx.destination);
+
+          // Мягкий «взлёт»: тихо → мягкий пик → плавное затухание
+          master.gain.setValueAtTime(0, now);
+          master.gain.linearRampToValueAtTime(0.10, now + 0.08);
+          master.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+
+          // Трезвучие A-мажор: A4, C#5, E5 — тёплое, не писклявое
+          const freqs = [440.00, 554.37, 659.25];
+          freqs.forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.value = f;
+            osc.connect(master);
+            const startAt = now + i * 0.045; // лёгкая арпеджия
+            osc.start(startAt);
+            osc.stop(now + 0.85);
+          });
+
+          // Закрываем контекст после отзвука — избегаем утечки
+          setTimeout(() => {
+            try { ctx.close(); } catch (e) {}
+          }, 1100);
+        } catch (e) {
+          try { ctx.close(); } catch (e2) {}
+        }
+      };
+
+      // iOS Safari может держать контекст в suspended
+      if (ctx.state === 'suspended' && ctx.resume) {
+        ctx.resume().then(play).catch(() => {
+          try { ctx.close(); } catch (e) {}
+        });
+      } else {
+        play();
+      }
+    }
+
+    function initSplashSoundToggle() {
+      const btn = document.getElementById('splashSoundToggle');
+      if (!btn) return;
+      btn.textContent = isEntrySoundEnabled() ? '🔊' : '🔇';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const nowEnabled = !isEntrySoundEnabled();
+        setEntrySoundEnabled(nowEnabled);
+        if (nowEnabled) {
+          // Пользователь включил звук — сыграем демо-звук
+          try { localStorage.removeItem(ENTRY_SOUND_LAST); } catch (e) {}
+          playEntrySound();
+        }
+      });
+    }
 
     function hideSplash() {
       if (__splashHidden) return;
@@ -2634,8 +2814,10 @@
     // ============================================
     // СТАРТ
     // ============================================
-    __splashStartTime = Date.now();
+      __splashStartTime = Date.now();
     armSplashErrorTimer();
+    initSplashSoundToggle();
+    playEntrySound();
 
     const saved = getSavedPhone();
     if (saved) {

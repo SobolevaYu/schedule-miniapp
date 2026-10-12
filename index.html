@@ -2365,7 +2365,18 @@
           const phone = normalizePhone(row.c[0] && row.c[0].v || '');
           const name = String((row.c[1] && row.c[1].v) || '').trim();
           const icsUrl = String((row.c[2] && row.c[2].v) || '').trim();
-          if (phone) {
+
+          // Читаем колонку D — active. Если FALSE — не показываем в списке.
+          const activeCell = row.c[3];
+          let isActive = true;
+          if (activeCell) {
+            const v = activeCell.v;
+            if (v === false || v === 'FALSE' || v === 'false' || v === 0) {
+              isActive = false;
+            }
+          }
+
+          if (phone && isActive) {
             if (name) employeesMap[phone] = name;
             if (icsUrl) employeesIcsMap[phone] = icsUrl;
           }
@@ -2374,7 +2385,6 @@
         console.error('Не удалось загрузить сотрудников:', e);
       }
     }
-
     async function postToServer(payload) {
       let res;
       try {

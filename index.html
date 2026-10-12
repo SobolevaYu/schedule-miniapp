@@ -3756,7 +3756,22 @@
           telegram_id: tgId,
           phone: phone
         });
-        return !!(resp && resp.ok);
+
+        const ok = !!(resp && resp.ok);
+
+        if (ok) {
+          // Перечитываем справочник сотрудников, чтобы уволенный
+          // пропал из списка «Редактировать расписание»
+          try {
+            await loadEmployees();
+            saveCache();
+            renderEmployeesList();
+          } catch (e) {
+            console.warn('Не удалось перезагрузить сотрудников после архивации:', e);
+          }
+        }
+
+        return ok;
       } catch (e) {
         return false;
       }
@@ -3772,7 +3787,22 @@
           telegram_id: tgId,
           phone: phone
         });
-        return !!(resp && resp.ok);
+
+        const ok = !!(resp && resp.ok);
+
+        if (ok) {
+          // Перечитываем справочник — вернувшийся сотрудник
+          // снова появится в списке «Редактировать расписание»
+          try {
+            await loadEmployees();
+            saveCache();
+            renderEmployeesList();
+          } catch (e) {
+            console.warn('Не удалось перезагрузить сотрудников после возврата:', e);
+          }
+        }
+
+        return ok;
       } catch (e) {
         return false;
       }

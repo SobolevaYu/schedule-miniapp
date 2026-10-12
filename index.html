@@ -15,9 +15,6 @@
   <title>Turno</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    /* ============================================
-       ДИЗАЙН-ТОКЕНЫ
-       ============================================ */
     :root {
       --brand: #10B981;
       --brand-dark: #059669;
@@ -1102,10 +1099,7 @@
     }
 
     /* ============================================
-       SPLASH — TURNO SIGNATURE
-       Единая типографическая композиция.
-       Никаких монограмм. Только название,
-       линия и подпись.
+       SPLASH — GLASSMORPHISM SIGNATURE
        ============================================ */
     #splash {
       position: fixed;
@@ -1113,81 +1107,91 @@
       z-index: 99999;
       isolation: isolate;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: var(--space-6);
       padding-top: calc(var(--space-6) + env(safe-area-inset-top, 0px));
       padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
       overflow: hidden;
-      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.6, 1);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.6, 1);
     }
     #splash.hide {
       opacity: 0;
       pointer-events: none;
     }
 
-    /* --- Фон: светлая тема --- */
     .splash-bg {
       position: absolute;
       inset: 0;
       z-index: 0;
       background:
         radial-gradient(ellipse 70% 55% at 50% 45%,
-          rgba(16, 185, 129, 0.10) 0%,
+          rgba(16, 185, 129, 0.12) 0%,
           rgba(16, 185, 129, 0.03) 40%,
           rgba(16, 185, 129, 0) 70%),
-        radial-gradient(ellipse 120% 90% at 50% 50%,
-          #FFFFFF 0%,
-          #F5F7FA 60%,
-          #EEF2F7 100%);
+        linear-gradient(180deg, #FFFFFF 0%, #F5F7FA 60%, #EEF2F7 100%);
     }
     @media (prefers-color-scheme: dark) {
       .splash-bg {
         background:
           radial-gradient(ellipse 70% 55% at 50% 45%,
-            rgba(16, 185, 129, 0.18) 0%,
-            rgba(16, 185, 129, 0.05) 40%,
+            rgba(16, 185, 129, 0.20) 0%,
+            rgba(16, 185, 129, 0.06) 40%,
             rgba(16, 185, 129, 0) 70%),
-          radial-gradient(ellipse 120% 90% at 50% 50%,
-            #0F172A 0%,
-            #0A0F1A 60%,
-            #05080E 100%);
+          linear-gradient(180deg, #0F172A 0%, #0A0F1A 60%, #05080E 100%);
       }
     }
 
-    /* --- Основная колонна --- */
-    .splash-inner {
+    .splash-card {
       position: relative;
       z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      max-width: 360px;
+      padding: 40px 32px 36px 32px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow:
+        0 8px 32px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      opacity: 0;
+      transform: translateY(6px);
+      animation: splashCardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-card {
+        background: rgba(30, 41, 59, 0.35);
+        border-color: rgba(148, 163, 184, 0.15);
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+    }
+    @keyframes splashCardIn {
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Название --- */
     .splash-wordmark {
       position: relative;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 64px;
+      font-size: 60px;
       font-weight: 700;
       line-height: 1;
       letter-spacing: -3px;
       margin: 0;
       display: inline-block;
-      padding: 8px 4px 12px 4px;
+      padding: 4px 4px 8px 4px;
       background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #10B981 100%);
       background-size: 200% 100%;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      opacity: 0;
-      transform: translateY(4px);
-      animation: splashWordmarkIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+      filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
     }
     @media (prefers-color-scheme: dark) {
       .splash-wordmark {
@@ -1196,65 +1200,59 @@
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.12));
       }
     }
-    @keyframes splashWordmarkIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
 
-    /* --- Луч света по слову --- */
     .splash-shine {
       position: absolute;
-      top: -20%;
-      left: -40%;
-      width: 40%;
-      height: 140%;
+      top: -30%;
+      left: -50%;
+      width: 60%;
+      height: 160%;
       background: linear-gradient(90deg,
         rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.55) 50%,
+        rgba(255, 255, 255, 0.45) 50%,
         rgba(255, 255, 255, 0) 100%);
-      transform: skewX(-20deg);
+      transform: skewX(-22deg);
       pointer-events: none;
-      mix-blend-mode: overlay;
-      animation: splashShine 4s cubic-bezier(0.4, 0, 0.6, 1) 1.2s infinite;
       opacity: 0;
+      animation: splashShine 5s cubic-bezier(0.4, 0, 0.6, 1) 1.6s infinite;
     }
     @keyframes splashShine {
-      0%   { left: -40%; opacity: 0; }
-      10%  { opacity: 1; }
-      35%  { left: 110%; opacity: 1; }
-      36%  { opacity: 0; }
-      100% { left: 110%; opacity: 0; }
+      0%   { left: -50%; opacity: 0; }
+      8%   { opacity: 0.9; }
+      30%  { left: 120%; opacity: 0.9; }
+      31%  { opacity: 0; }
+      100% { left: 120%; opacity: 0; }
     }
 
-    /* --- Линия под названием --- */
     .splash-divider {
-      width: 0;
+      width: 56px;
       height: 1px;
-      margin: 20px 0 20px 0;
+      margin: 18px 0 16px 0;
       background: linear-gradient(90deg,
         rgba(16, 185, 129, 0) 0%,
-        rgba(16, 185, 129, 0.5) 50%,
+        rgba(16, 185, 129, 0.55) 50%,
         rgba(16, 185, 129, 0) 100%);
-      animation: splashDivider 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.9s forwards;
+      opacity: 0;
+      animation: splashDividerIn 0.6s ease-out 0.6s forwards;
     }
-    @keyframes splashDivider {
-      from { width: 0; }
-      to   { width: 72px; }
+    @keyframes splashDividerIn {
+      to { opacity: 1; }
     }
 
-    /* --- Подпись --- */
     .splash-sub {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
-      letter-spacing: 2px;
+      letter-spacing: 2.5px;
       text-transform: lowercase;
       color: var(--tg-theme-hint-color, #64748B);
       margin: 0;
       opacity: 0;
-      transform: translateY(4px);
-      animation: splashSubIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+      transform: translateY(3px);
+      animation: splashSubIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
       text-align: center;
     }
     @media (prefers-color-scheme: dark) {
@@ -1264,8 +1262,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Ошибка загрузки --- */
     .splash-error {
+      position: relative;
+      z-index: 2;
       display: none;
       flex-direction: column;
       align-items: center;
@@ -1279,7 +1278,6 @@
       box-shadow: 0 12px 40px rgba(239, 68, 68, 0.10);
       text-align: center;
       max-width: 340px;
-      z-index: 2;
     }
     @media (prefers-color-scheme: dark) {
       .splash-error {
@@ -1287,7 +1285,7 @@
         border-color: rgba(239, 68, 68, 0.32);
       }
     }
-    #splash.timed-out .splash-inner { display: none; }
+    #splash.timed-out .splash-card { display: none; }
     #splash.timed-out .splash-error { display: flex; }
 
     .splash-error-icon {
@@ -1322,22 +1320,14 @@
       font-size: 15px; font-weight: 600; cursor: pointer;
       box-shadow: 0 6px 18px rgba(16, 185, 129, 0.28);
       font-family: inherit;
-      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      transition: transform 0.15s ease;
     }
-    .splash-retry:active {
-      transform: scale(0.97);
-      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15);
-    }
+    .splash-retry:active { transform: scale(0.97); }
 
     @media (prefers-reduced-motion: reduce) {
       .splash-shine { display: none; }
       #splash { transition-duration: 0.3s; }
-      .splash-wordmark,
-      .splash-divider,
-      .splash-sub {
-        animation-duration: 0.3s !important;
-        animation-delay: 0s !important;
-      }
+      .splash-card { animation-duration: 0.3s !important; animation-delay: 0s !important; }
     }
 
     /* ============================================
@@ -1705,7 +1695,7 @@
   <div id="splash">
     <div class="splash-bg" aria-hidden="true"></div>
 
-    <div class="splash-inner">
+    <div class="splash-card">
       <h1 class="splash-wordmark">
         Turno
         <span class="splash-shine" aria-hidden="true"></span>
@@ -1996,7 +1986,8 @@
       Админ
     </div>
   </div>
-    <script>
+
+  <script>
     // ============================================
     // КОНСТАНТЫ
     // ============================================
@@ -2006,8 +1997,7 @@
     const SHEET_NAME = 'Смены';
     const SHEET_AVAILABILITY = 'Доступность';
     const STORAGE_KEY = 'user_phone';
-    const WEB_APP_URL = '
-https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';
     const ADMIN_PHONES = ['+79879286721', '+79102490096'];
 
     const ICONS = {
@@ -3699,7 +3689,6 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
     let __splashHidden = false;
     let __splashErrorTimer = null;
 
-    const ENTRY_SOUND_LAST = 'turno_entry_sound_last';
     const ENTRY_SOUND_DISABLED = 'turno_entry_sound_disabled';
 
     function isEntrySoundEnabled() {
@@ -3712,19 +3701,12 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
       return true;
     }
 
-    function shouldPlayEntrySoundToday() {
-      return isEntrySoundEnabled();
-    }
-
     function markEntrySoundPlayed() {
-      try {
-        localStorage.setItem(ENTRY_SOUND_LAST, String(Date.now()));
-      } catch (e) {}
+      // no-op, оставлено для совместимости
     }
 
     function updateSoundToggleUI() {
       const enabled = isEntrySoundEnabled();
-
       const headerBtn = document.getElementById('soundToggleBtn');
       if (headerBtn) {
         headerBtn.classList.toggle('muted', !enabled);
@@ -3744,7 +3726,7 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
     }
 
     function playEntrySound() {
-      if (!shouldPlayEntrySoundToday()) return;
+      if (!isEntrySoundEnabled()) return;
       markEntrySoundPlayed();
 
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -3855,10 +3837,6 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
       }
     }
 
-    function initSoundToggles() {
-      updateSoundToggleUI();
-    }
-
     function hideSplash() {
       if (__splashHidden) return;
       __splashHidden = true;
@@ -3869,8 +3847,8 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
 
       setTimeout(() => {
         el.classList.add('hide');
-        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 800);
-      }, 300);
+        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 700);
+      }, 200);
     }
 
     function armSplashErrorTimer() {
@@ -3884,8 +3862,15 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
 
     function ensureSplashMinTime() {
       const elapsed = Date.now() - __splashStartTime;
-      const wait = Math.max(0, 2800 - elapsed);
+      const wait = Math.max(0, 2500 - elapsed);
       return new Promise(r => setTimeout(r, wait));
+    }
+
+    function forceSplashTimeout() {
+      // Страховка: если что-то упало — принудительно скрыть splash через 5 секунд
+      setTimeout(() => {
+        hideSplash();
+      }, 5000);
     }
 
     document.querySelectorAll('.tab').forEach(tab => {
@@ -4012,14 +3997,17 @@ https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfK
     // ============================================
     __splashStartTime = Date.now();
     armSplashErrorTimer();
-    initSoundToggles();
-
-    setTimeout(playEntrySound, 150);
+    updateSoundToggleUI();
+    forceSplashTimeout();   // ← страховка: hideSplash сработает через 5 сек в любом случае
+    playEntrySound();
 
     const saved = getSavedPhone();
     if (saved) {
       userPhone = normalizePhone(saved);
-      initApp();
+      initApp().catch((e) => {
+        console.error('initApp упал:', e);
+        hideSplash();
+      });
     } else {
       showPhoneForm();
       ensureSplashMinTime().then(hideSplash);

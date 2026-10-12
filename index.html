@@ -3988,7 +3988,7 @@
       updateSoundToggleUI();
     }
 
-    function playEntrySound() {
+        function playEntrySound() {
       if (!isEntrySoundEnabled()) return;
       markEntrySoundPlayed();
 
@@ -4002,9 +4002,15 @@
         return;
       }
 
+      // Смещение звука относительно момента вызова.
+      // 0.6 s = момент, когда луч света начинает движение (см. CSS .splash-shine).
+      // Мелодия длится 2.0 s → заканчивается ровно в момент остановки луча.
+      const START_OFFSET = 0.6;
+      const DURATION = 2.0;
+
       const play = () => {
         try {
-          const now = ctx.currentTime;
+          const base = ctx.currentTime + START_OFFSET;
 
           const master = ctx.createGain();
           master.gain.value = 0.0001;
@@ -4015,32 +4021,40 @@
           try {
             convolver = ctx.createConvolver();
             const rate = ctx.sampleRate;
-            const length = Math.floor(rate * 2.2);
+            const length = Math.floor(rate * 0.9);
             const impulse = ctx.createBuffer(2, length, rate);
             for (let ch = 0; ch < 2; ch++) {
               const data = impulse.getChannelData(ch);
               for (let i = 0; i < length; i++) {
                 const t = i / length;
-                const decay = Math.pow(1 - t, 3.5);
+                const decay = Math.pow(1 - t, 3.0);
                 data[i] = (Math.random() * 2 - 1) * decay;
               }
             }
             convolver.buffer = impulse;
             reverbSend = ctx.createGain();
-            reverbSend.gain.value = 0.30;
+            reverbSend.gain.value = 0.22;
             convolver.connect(reverbSend);
             reverbSend.connect(master);
           } catch (e) {
             reverbSend = null;
           }
 
+          // --- Мелодия Turno ---
+          // Характер: как заставка Netflix — короткий подвод, мощный акцент,
+          // долгий гармонический хвост. A-мажор, узнаваемый «якорь» — A4.
+          //   E4  — мягкая подводка (квинта)
+          //   A4  — главный удар (тоника)
+          //   A5  — октава сверху, «воздух»
+          //   C#5 — мажорная терция, теплый финал
           const layers = [
-            { freq: 220.00, gain: 0.55, dur: 1.6, mod: 1.5 },
-            { freq: 660.00, gain: 0.42, dur: 2.0, mod: 2.5 },
-            { freq: 1320.00, gain: 0.15, dur: 1.2, mod: 3.5 }
+            { freq: 329.63, start: 0.00, gain: 0.30, dur: 0.90, mod: 1.6 }, // E4
+            { freq: 440.00, start: 0.28, gain: 0.55, dur: 1.30, mod: 2.0 }, // A4 — акцент
+            { freq: 880.00, start: 0.34, gain: 0.22, dur: 1.50, mod: 2.4 }, // A5
+            { freq: 554.37, start: 0.50, gain: 0.18, dur: 1.40, mod: 2.2 }  // C#5
           ];
 
-          layers.forEach((layer, index) => {
+          layers.forEach((layer) => {
             const carrier = ctx.createOscillator();
             carrier.type = 'sine';
             carrier.frequency.value = layer.freq;
@@ -4050,7 +4064,7 @@
             modulator.frequency.value = layer.freq * layer.mod;
 
             const modGain = ctx.createGain();
-            modGain.gain.value = layer.freq * 0.35;
+            modGain.gain.value = layer.freq * 0.30;
 
             modulator.connect(modGain);
             modGain.connect(carrier.frequency);
@@ -4061,7 +4075,7 @@
             noteGain.connect(master);
             if (reverbSend && convolver) noteGain.connect(convolver);
 
-            const start = now + index * 0.02;
+            const start = base + layer.start;
             const attack = start + 0.014;
             const end = start + layer.dur;
 
@@ -4070,7 +4084,7 @@
             noteGain.gain.exponentialRampToValueAtTime(0.0001, end);
 
             carrier.frequency.setValueAtTime(layer.freq, start);
-            carrier.frequency.linearRampToValueAtTime(layer.freq * 0.994, end);
+            carrier.frequency.linearRampToValueAtTime(layer.freq * 0.996, end);
 
             carrier.start(start);
             carrier.stop(end + 0.05);
@@ -4078,13 +4092,15 @@
             modulator.stop(end + 0.05);
           });
 
-          master.gain.setValueAtTime(0.0001, now);
-          master.gain.exponentialRampToValueAtTime(0.12, now + 0.015);
-          master.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+          // Мастер-гейн: пик 0.12, держим 1.2 s от начала мелодии, гасим к 2.0 s.
+          master.gain.setValueAtTime(0.0001, base);
+          master.gain.exponentialRampToValueAtTime(0.12, base + 0.015);
+          master.gain.setValueAtTime(0.12, base + 1.2);
+          master.gain.exponentialRampToValueAtTime(0.0001, base + DURATION);
 
           setTimeout(() => {
             try { ctx.close(); } catch (e) {}
-          }, 3400);
+          }, (START_OFFSET + DURATION + 0.4) * 1000);
 
         } catch (e) {
           try { ctx.close(); } catch (e2) {}
@@ -4263,12 +4279,14 @@
     updateSoundToggleUI();
     forceSplashTimeout();
 
-        // СИНХРОНИЗАЦИЯ ЗВУКА И ЛУЧА СВЕТА
+    // ============================================
+    // СИНХРОНИЗАЦИЯ ЗВУКА И ЛУЧА СВЕТА
     // Луч света стартует через 0.6s и идёт 2.0s (см. .splash-shine в CSS).
-    // Его пик (центр слова Turno) — примерно на 1.7s от начала splash.
-    // Проверено вручную: при 1700 мс «клик» приходится ровно на момент,
-    // когда луч проходит через слово. Не менять без причины.
-    setTimeout(playEntrySound, 1700);
+    // Звук вызывается сразу и внутри playEntrySound сам смещает мелодию
+    // на 0.6s через AudioContext.currentTime — так получаем точную синхронизацию
+    // без дрожания setTimeout. Мелодия длится 2.0s и заканчивается ровно
+    // в момент, когда луч заканчивает движение (0.6 + 2.0 = 2.6s от старта splash).
+    playEntrySound();
 
     const saved = getSavedPhone();
     if (saved) {

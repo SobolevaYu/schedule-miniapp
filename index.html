@@ -4111,7 +4111,7 @@
 
     function ensureSplashMinTime() {
       const elapsed = Date.now() - __splashStartTime;
-      const wait = Math.max(0, 2500 - elapsed);
+      const wait = Math.max(0, 3000 - elapsed);
       return new Promise(r => setTimeout(r, wait));
     }
 
@@ -4247,8 +4247,11 @@
     __splashStartTime = Date.now();
     armSplashErrorTimer();
     updateSoundToggleUI();
-    forceSplashTimeout();   // ← страховка: hideSplash сработает через 5 сек в любом случае
-    playEntrySound();
+    forceSplashTimeout();
+
+    // Звук стартует ровно тогда, когда появляется Turno (0.25 сек после старта splash)
+    // Это синхронизирует удар «капли» с первым видимым элементом на экране
+    setTimeout(playEntrySound, 250);
 
     const saved = getSavedPhone();
     if (saved) {

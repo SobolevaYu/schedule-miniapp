@@ -2289,7 +2289,14 @@
       if (s && s[0] !== '+') s = '+' + s;
       return s;
     }
-
+    function getTgInitData() {
+      try {
+        if (tg && typeof tg.initData === 'string' && tg.initData.length > 0) {
+          return tg.initData;
+        }
+      } catch (e) {}
+      return '';
+    }
     function getSavedPhone() { return localStorage.getItem(STORAGE_KEY); }
     function savePhone(p) { localStorage.setItem(STORAGE_KEY, p); }
 
@@ -2942,6 +2949,7 @@
         resp = await postToServer({
           action: 'update_shift',
           telegram_id: tgId,
+          initData: getTgInitData(),
           phone: phone,
           date: date,
           start_time: start,
@@ -3500,7 +3508,8 @@
           : '';
         const resp = await postToServer({
           action: 'list_employees',
-          telegram_id: tgId
+          telegram_id: tgId,
+          initData: getTgInitData()
         });
 
         if (!resp || !resp.ok) {
@@ -3847,6 +3856,7 @@
         const resp = await postToServer({
           action: 'add_employee',
           telegram_id: tgId,
+          initData: getTgInitData(),
           name: name,
           phone: phone
         });
@@ -3864,6 +3874,7 @@
         const resp = await postToServer({
           action: 'update_employee',
           telegram_id: tgId,
+          initData: getTgInitData(),
           old_phone: oldPhone,
           name: name,
           phone: newPhone
@@ -3882,6 +3893,7 @@
         const resp = await postToServer({
           action: 'deactivate_employee',
           telegram_id: tgId,
+          initData: getTgInitData(),
           phone: phone
         });
 
@@ -3911,6 +3923,7 @@
         const resp = await postToServer({
           action: 'activate_employee',
           telegram_id: tgId,
+          initData: getTgInitData(),
           phone: phone
         });
 
@@ -4250,9 +4263,11 @@
     updateSoundToggleUI();
     forceSplashTimeout();
 
-    // Луч света стартует через 0.6s и идёт 2.0s.
-    // Его пик (центр слова) — на 1.6s от начала splash.
-    // Запускаем звук в этот же момент: 1600 мс.
+        // СИНХРОНИЗАЦИЯ ЗВУКА И ЛУЧА СВЕТА
+    // Луч света стартует через 0.6s и идёт 2.0s (см. .splash-shine в CSS).
+    // Его пик (центр слова Turno) — примерно на 1.7s от начала splash.
+    // Проверено вручную: при 1700 мс «клик» приходится ровно на момент,
+    // когда луч проходит через слово. Не менять без причины.
     setTimeout(playEntrySound, 1700);
 
     const saved = getSavedPhone();

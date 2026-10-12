@@ -19,46 +19,39 @@
        ДИЗАЙН-ТОКЕНЫ
        ============================================ */
     :root {
-      /* Палитра */
       --brand: #10B981;
       --brand-dark: #059669;
       --brand-light: #34D399;
 
-      /* Смена — зелёная */
       --shift-bg-light: linear-gradient(160deg, rgba(16, 185, 129, 0.22) 0%, rgba(16, 185, 129, 0.10) 100%);
       --shift-bg-dark: linear-gradient(160deg, rgba(16, 185, 129, 0.32) 0%, rgba(16, 185, 129, 0.18) 100%);
       --shift-border: rgba(16, 185, 129, 0.45);
       --shift-text-light: #064E3B;
       --shift-text-dark: #6EE7B7;
 
-      /* Больничный — тёплый беж */
       --sick-bg-light: linear-gradient(160deg, rgba(200, 180, 160, 0.22) 0%, rgba(200, 180, 160, 0.10) 100%);
       --sick-bg-dark: linear-gradient(160deg, rgba(200, 180, 160, 0.28) 0%, rgba(200, 180, 160, 0.16) 100%);
       --sick-border: rgba(180, 160, 140, 0.50);
       --sick-text-light: #6B5A48;
       --sick-text-dark: #D4C4B0;
 
-      /* Отпуск — лаванда */
       --vac-bg-light: linear-gradient(160deg, rgba(139, 130, 255, 0.20) 0%, rgba(139, 130, 255, 0.08) 100%);
       --vac-bg-dark: linear-gradient(160deg, rgba(139, 130, 255, 0.28) 0%, rgba(139, 130, 255, 0.14) 100%);
       --vac-border: rgba(139, 130, 255, 0.45);
       --vac-text-light: #4C3FB8;
       --vac-text-dark: #B0A6FF;
 
-      /* Доступность — тёплый жёлтый */
       --avail-bg-light: linear-gradient(160deg, rgba(250, 204, 21, 0.28) 0%, rgba(250, 204, 21, 0.12) 100%);
       --avail-bg-dark: linear-gradient(160deg, rgba(250, 204, 21, 0.32) 0%, rgba(250, 204, 21, 0.16) 100%);
       --avail-border: rgba(250, 204, 21, 0.65);
       --avail-text-light: #78350F;
       --avail-text-dark: #FDE68A;
 
-      /* Фоновые пятна */
       --blob-1-light: rgba(16, 185, 129, 0.22);
       --blob-3-light: rgba(99, 102, 241, 0.14);
       --blob-1-dark: rgba(16, 185, 129, 0.18);
       --blob-3-dark: rgba(99, 102, 241, 0.12);
 
-      /* Пространство */
       --space-1: 4px;
       --space-2: 8px;
       --space-3: 12px;
@@ -68,7 +61,6 @@
       --space-7: 32px;
       --space-8: 40px;
 
-      /* Радиусы */
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
@@ -76,24 +68,18 @@
       --radius-2xl: 24px;
       --radius-pill: 999px;
 
-      /* Тени */
       --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
       --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
       --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.10);
 
-      /* Градиенты */
       --grad-primary: linear-gradient(135deg, #10B981 0%, #059669 100%);
       --grad-surface-light: linear-gradient(160deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.50) 100%);
       --grad-surface-dark: linear-gradient(160deg, rgba(30,41,59,0.60) 0%, rgba(30,41,59,0.45) 100%);
 
-      /* Splash */
       --splash-bg-light: #F5F7FA;
       --splash-bg-dark: #0F172A;
     }
 
-    /* ============================================
-       ГЛОБАЛЬНО
-       ============================================ */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { overflow-x: hidden; max-width: 100%; }
 
@@ -115,9 +101,6 @@
       body { color: var(--tg-theme-text-color, #F1F5F9); }
     }
 
-    /* ============================================
-       ФОНОВЫЕ ПЯТНА
-       ============================================ */
     .bg-blobs {
       position: fixed; inset: 0;
       overflow: hidden; pointer-events: none;
@@ -159,9 +142,6 @@
       80% { transform: translate(20px, -20px) scale(0.9); }
     }
 
-    /* ============================================
-       ШАПКА
-       ============================================ */
     .header { margin-bottom: var(--space-7); }
     .header-row {
       display: flex; align-items: center;
@@ -193,9 +173,7 @@
       -webkit-tap-highlight-color: transparent;
       box-shadow: var(--shadow-sm);
     }
-    .header-icon-btn:hover {
-      background: rgba(16, 185, 129, 0.18);
-    }
+    .header-icon-btn:hover { background: rgba(16, 185, 129, 0.18); }
     .header-icon-btn:active {
       transform: scale(0.9);
       box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.10);
@@ -286,9 +264,6 @@
       .subtitle { color: var(--tg-theme-hint-color, #94A3B8); }
     }
 
-    /* ============================================
-       ФОРМА ТЕЛЕФОНА
-       ============================================ */
     .phone-form {
       background: var(--grad-surface-light);
       backdrop-filter: blur(16px);
@@ -356,9 +331,6 @@
       }
     }
 
-    /* ============================================
-       НАВИГАЦИЯ МЕСЯЦА
-       ============================================ */
     .month-header {
       display: flex; justify-content: space-between;
       align-items: center; margin-bottom: var(--space-3); gap: var(--space-2);
@@ -411,9 +383,6 @@
       background: rgba(16, 185, 129, 0.20);
     }
 
-    /* ============================================
-       КАЛЕНДАРЬ
-       ============================================ */
     .calendar {
       background: var(--grad-surface-light);
       backdrop-filter: blur(16px) saturate(180%);
@@ -502,7 +471,6 @@
     @keyframes slideFromLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
     @keyframes fadeOnly { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Сегодня — мягкая обводка + ореол + лёгкий градиент */
     .day.today {
       box-shadow: inset 0 0 0 1.5px var(--brand), 0 0 0 4px rgba(16, 185, 129, 0.10);
       background: linear-gradient(180deg,
@@ -520,7 +488,6 @@
       }
     }
 
-    /* Смена — градиент */
     .day.shift {
       background: var(--shift-bg-light);
       border-color: var(--shift-border);
@@ -533,7 +500,6 @@
       }
     }
 
-    /* Больничный — тёплый беж */
     .day.sick {
       background: var(--sick-bg-light);
       border-color: var(--sick-border);
@@ -546,7 +512,6 @@
       }
     }
 
-    /* Отпуск — лаванда */
     .day.vacation {
       background: var(--vac-bg-light);
       border-color: var(--vac-border);
@@ -559,7 +524,6 @@
       }
     }
 
-    /* Доступность */
     .day.available,
     .day.has-people {
       background: var(--avail-bg-light);
@@ -603,7 +567,6 @@
       }
     }
 
-    /* Легенда */
     .legend {
       margin-top: var(--space-3);
       display: flex; flex-wrap: wrap;
@@ -637,9 +600,6 @@
       stroke-linejoin: round;
     }
 
-    /* ============================================
-       ЗАГРУЗКА / ОШИБКИ
-       ============================================ */
     .loading {
       color: var(--tg-theme-hint-color, #64748B);
       font-size: 14px; text-align: center;
@@ -663,9 +623,6 @@
       }
     }
 
-    /* ============================================
-       БАННЕР «ЗАВТРА»
-       ============================================ */
     .banner {
       border-radius: var(--radius-lg);
       padding: var(--space-3) var(--space-4);
@@ -706,9 +663,6 @@
       .banner.vacation { color: #B0A6FF; }
     }
 
-    /* ============================================
-       ПОПАПЫ
-       ============================================ */
     .popup-overlay {
       position: fixed; inset: 0;
       background: rgba(15, 23, 42, 0.5);
@@ -819,9 +773,6 @@
       }
     }
 
-    /* ============================================
-       ТАБЫ
-       ============================================ */
     .tabs {
       position: fixed; bottom: var(--space-2);
       left: var(--space-3); right: var(--space-3);
@@ -884,9 +835,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ============================================
-       ИНФО-БЛОКИ
-       ============================================ */
     .info-block {
       background: rgba(16, 185, 129, 0.06);
       border: 1px solid rgba(16, 185, 129, 0.16);
@@ -925,9 +873,6 @@
       .admin-list-time { color: var(--tg-theme-hint-color, #94A3B8); }
     }
 
-    /* ============================================
-       ТОСТ
-       ============================================ */
     .toast {
       position: fixed; top: var(--space-4); left: 50%;
       transform: translateX(-50%) translateY(-120%);
@@ -993,9 +938,6 @@
       background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
     }
 
-    /* ============================================
-       РЕДАКТОР
-       ============================================ */
     .edit-header {
       display: flex; align-items: center;
       gap: var(--space-3); margin-bottom: var(--space-4);
@@ -1124,9 +1066,6 @@
       stroke-linejoin: round;
     }
 
-    /* ============================================
-       СПРАВКА
-       ============================================ */
     .help-block {
       margin-bottom: var(--space-4);
       padding-bottom: var(--space-4);
@@ -1165,9 +1104,6 @@
       .help-block-text { color: var(--tg-theme-hint-color, #94A3B8); }
     }
 
-    /* ============================================
-       SPLASH
-       ============================================ */
     #splash {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -1482,6 +1418,366 @@
         animation-delay: 0s !important;
       }
     }
+
+    /* ============================================
+       МОДУЛЬ «СОТРУДНИКИ»
+       ============================================ */
+    .employees-search { margin-bottom: var(--space-3); }
+    .employees-search input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.6);
+      color: var(--tg-theme-text-color, #0F172A);
+      font-family: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .employees-search input:focus {
+      outline: none;
+      border-color: var(--brand);
+      background: rgba(255, 255, 255, 0.85);
+    }
+    @media (prefers-color-scheme: dark) {
+      .employees-search input {
+        background: rgba(15, 23, 42, 0.5);
+        color: var(--tg-theme-text-color, #F1F5F9);
+        border-color: rgba(148, 163, 184, 0.15);
+      }
+      .employees-search input:focus { background: rgba(15, 23, 42, 0.7); }
+    }
+
+    .employee-admin-item {
+      display: flex; align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--grad-surface-light);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.2s ease;
+    }
+    .employee-admin-item:active {
+      transform: scale(0.98);
+      background: rgba(16, 185, 129, 0.10);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.10);
+    }
+    @media (prefers-color-scheme: dark) {
+      .employee-admin-item {
+        background: var(--grad-surface-dark);
+        border-color: rgba(148, 163, 184, 0.15);
+      }
+      .employee-admin-item:active { background: rgba(16, 185, 129, 0.15); }
+    }
+
+    .employee-avatar {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+    }
+    .employee-avatar.inactive {
+      background: linear-gradient(135deg, #94A3B8 0%, #CBD5E1 100%);
+      box-shadow: none;
+    }
+
+    .employee-admin-info { flex: 1; min-width: 0; }
+    .employee-admin-name {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .employee-admin-meta {
+      font-size: 12px;
+      color: var(--tg-theme-hint-color, #64748B);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      line-height: 1.3;
+    }
+    @media (prefers-color-scheme: dark) {
+      .employee-admin-meta { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+
+    .employee-status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .employee-status-dot.online {
+      background: #10B981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+    .employee-status-dot.offline { background: #94A3B8; }
+    .employee-status-dot.inactive { background: #CBD5E1; }
+
+    .employee-admin-arrow {
+      width: 18px; height: 18px;
+      color: var(--tg-theme-hint-color, #94A3B8);
+      flex-shrink: 0;
+    }
+    .employee-admin-arrow svg {
+      width: 100%; height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .archive-section {
+      margin-top: var(--space-5);
+      border-top: 1px solid rgba(148, 163, 184, 0.15);
+      padding-top: var(--space-3);
+    }
+    .archive-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-1);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--tg-theme-hint-color, #64748B);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      text-align: left;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .archive-toggle:active { opacity: 0.7; }
+    @media (prefers-color-scheme: dark) {
+      .archive-toggle { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    .archive-count {
+      background: rgba(148, 163, 184, 0.2);
+      padding: 1px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .archive-chevron {
+      width: 14px; height: 14px;
+      margin-left: auto;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s ease;
+    }
+    .archive-chevron.open { transform: rotate(180deg); }
+    .archive-list { margin-top: var(--space-2); }
+
+    .employee-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .employee-card-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-5) var(--space-4);
+      border-radius: var(--radius-xl);
+      background: var(--grad-surface-light);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    @media (prefers-color-scheme: dark) {
+      .employee-card-header {
+        background: var(--grad-surface-dark);
+        border-color: rgba(148, 163, 184, 0.15);
+      }
+    }
+    .employee-card-header .employee-avatar {
+      width: 64px; height: 64px;
+      font-size: 24px;
+    }
+    .employee-card-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .employee-card-phone {
+      font-size: 14px;
+      color: var(--tg-theme-hint-color, #64748B);
+      font-weight: 500;
+    }
+    @media (prefers-color-scheme: dark) {
+      .employee-card-phone { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+
+    .employee-card-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 6px var(--space-3);
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .employee-card-status.active {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+    }
+    .employee-card-status.inactive {
+      background: rgba(148, 163, 184, 0.18);
+      color: #64748B;
+    }
+    @media (prefers-color-scheme: dark) {
+      .employee-card-status.active { color: #6EE7B7; }
+      .employee-card-status.inactive { color: #94A3B8; }
+    }
+
+    .employee-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .employee-card-action-btn {
+      width: 100%;
+      padding: 14px var(--space-4);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      text-align: center;
+    }
+    .employee-card-action-btn:active { transform: scale(0.98); }
+    .employee-card-action-btn svg {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .employee-card-action-btn.primary {
+      background: var(--grad-primary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+    }
+    .employee-card-action-btn.primary:active {
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15);
+    }
+
+    .employee-card-action-btn.secondary {
+      background: transparent;
+      color: var(--brand);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+    }
+    .employee-card-action-btn.secondary:active { background: rgba(16, 185, 129, 0.08); }
+
+    .employee-card-action-btn.danger {
+      background: transparent;
+      color: #DC2626;
+      border: 1px solid rgba(239, 68, 68, 0.28);
+    }
+    .employee-card-action-btn.danger:active { background: rgba(239, 68, 68, 0.08); }
+
+    .form-field { margin-bottom: var(--space-4); }
+    .form-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--tg-theme-hint-color, #64748B);
+      margin-bottom: var(--space-2);
+    }
+    @media (prefers-color-scheme: dark) {
+      .form-field label { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
+    .form-field input {
+      width: 100%;
+      padding: 14px var(--space-4);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--tg-theme-text-color, #0F172A);
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+    .form-field input:focus { outline: none; border-color: var(--brand); }
+    @media (prefers-color-scheme: dark) {
+      .form-field input {
+        background: rgba(15, 23, 42, 0.6);
+        color: var(--tg-theme-text-color, #F1F5F9);
+        border-color: rgba(148, 163, 184, 0.2);
+      }
+    }
+    .form-error {
+      color: #DC2626;
+      font-size: 13px;
+      margin-top: var(--space-2);
+      min-height: 18px;
+      line-height: 1.3;
+    }
+
+    .invite-preview {
+      padding: var(--space-4);
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--tg-theme-hint-color, #475569);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    @media (prefers-color-scheme: dark) {
+      .invite-preview {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.2);
+        color: var(--tg-theme-hint-color, #94A3B8);
+      }
+    }
+
+    .search-empty {
+      text-align: center;
+      padding: var(--space-6) var(--space-4);
+      color: var(--tg-theme-hint-color, #64748B);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    @media (prefers-color-scheme: dark) {
+      .search-empty { color: var(--tg-theme-hint-color, #94A3B8); }
+    }
   </style>
 </head>
 <body>
@@ -1654,6 +1950,18 @@
       Нажми на день — увидишь, кто может выйти на подработку.
     </div>
 
+    <button class="admin-action-btn" id="employeesAdminBtn">
+      <span class="admin-action-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </span>
+      Сотрудники
+    </button>
+
     <button class="admin-action-btn" id="editScheduleBtn">
       <span class="admin-action-icon">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1731,6 +2039,53 @@
     </div>
   </div>
 
+  <div class="tab-content" id="tabEmployeesAdmin">
+    <div class="edit-header">
+      <button class="edit-back" id="employeesAdminBackBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <div class="edit-title">Сотрудники</div>
+      <button class="header-icon-btn" id="addEmployeeBtn" aria-label="Добавить сотрудника">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="employees-search">
+      <input type="text" id="employeesSearchInput" placeholder="Поиск по имени или телефону" />
+    </div>
+
+    <div id="employeesAdminList" class="employees-list"></div>
+
+    <div id="employeesArchiveSection" class="archive-section" style="display:none">
+      <button class="archive-toggle" id="archiveToggleBtn">
+        <span>Архив</span>
+        <span class="archive-count" id="archiveCount">0</span>
+        <svg class="archive-chevron" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <div id="employeesArchiveList" class="employees-list archive-list" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tabEmployeeCardAdmin">
+    <div class="edit-header">
+      <button class="edit-back" id="employeeCardBackBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <div class="edit-title" id="employeeCardTitle">Сотрудник</div>
+    </div>
+
+    <div class="employee-card-body" id="employeeCardBody"></div>
+  </div>
+
   <div class="tabs" id="tabsBar" style="display:none">
     <div class="tab active" data-tab="schedule">
       <span class="tab-icon">
@@ -1775,7 +2130,6 @@
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';
     const ADMIN_PHONES = ['+79879286721', '+79102490096'];
 
-    // SVG-иконки для рендера
     const ICONS = {
       bell: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
       sick: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12h6"/><path d="M12 9v6"/><circle cx="12" cy="12" r="10"/></svg>',
@@ -1791,9 +2145,6 @@
       arrowRight: '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>'
     };
 
-    // ============================================
-    // СОСТОЯНИЕ
-    // ============================================
     const tg = window.Telegram?.WebApp;
     let userPhone = null;
     let currentMonth = new Date();
@@ -1811,9 +2162,6 @@
       tg.expand();
     }
 
-    // ============================================
-    // УТИЛИТЫ
-    // ============================================
     function normalizePhone(p) {
       if (!p) return '';
       let s = String(p).trim();
@@ -1863,9 +2211,16 @@
       return /^\d{4}-\d{2}-\d{2}$/.test(s);
     }
 
-    // ============================================
-    // КЭШ
-    // ============================================
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     const CACHE_KEYS = {
       shifts: 'cache_shifts',
       availability: 'cache_availability',
@@ -1912,9 +2267,6 @@
       }
     }
 
-    // ============================================
-    // ЗАГРУЗКА ДАННЫХ (gviz)
-    // ============================================
     function gvizToIsoDate(cell) {
       if (!cell) return '';
       if (typeof cell.v === 'string') {
@@ -2013,7 +2365,18 @@
           const phone = normalizePhone(row.c[0] && row.c[0].v || '');
           const name = String((row.c[1] && row.c[1].v) || '').trim();
           const icsUrl = String((row.c[2] && row.c[2].v) || '').trim();
-          if (phone) {
+
+          // Читаем колонку D — active. Если FALSE — не показываем в списке.
+          const activeCell = row.c[3];
+          let isActive = true;
+          if (activeCell) {
+            const v = activeCell.v;
+            if (v === false || v === 'FALSE' || v === 'false' || v === 0) {
+              isActive = false;
+            }
+          }
+
+          if (phone && isActive) {
             if (name) employeesMap[phone] = name;
             if (icsUrl) employeesIcsMap[phone] = icsUrl;
           }
@@ -2022,10 +2385,6 @@
         console.error('Не удалось загрузить сотрудников:', e);
       }
     }
-
-    // ============================================
-    // ЗАПИСЬ НА СЕРВЕР
-    // ============================================
     async function postToServer(payload) {
       let res;
       try {
@@ -2050,9 +2409,6 @@
       return data;
     }
 
-    // ============================================
-    // РЕГИСТРАЦИЯ TG_ID
-    // ============================================
     async function registerTelegramId() {
       try {
         if (!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user || !tg.initDataUnsafe.user.id) return;
@@ -2081,9 +2437,6 @@
       }
     }
 
-    // ============================================
-    // КАЛЕНДАРЬ — ЯЧЕЙКИ МЕСЯЦА
-    // ============================================
     function buildMonthCells(year, month) {
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
@@ -2118,9 +2471,6 @@
       setTimeout(() => el.classList.remove(direction), 320);
     }
 
-    // ============================================
-    // РЕНДЕР HEADER
-    // ============================================
     function renderHeader() {
       const now = new Date();
       const hour = now.getHours();
@@ -2170,9 +2520,6 @@
       todayEl.style.display = 'flex';
     }
 
-    // ============================================
-    // РЕНДЕР БАННЕРА «ЗАВТРА»
-    // ============================================
     function renderBanner() {
       const banner = document.getElementById('banner');
       const tomorrow = new Date();
@@ -2200,9 +2547,6 @@
       }
     }
 
-    // ============================================
-    // СВАЙПЫ
-    // ============================================
     function attachSwipe(containerId, onSwipeLeft, onSwipeRight) {
       const el = document.getElementById(containerId);
       if (!el) return;
@@ -2226,9 +2570,6 @@
       }, { passive: true });
     }
 
-    // ============================================
-    // РЕНДЕР КАЛЕНДАРЯ (СМЕНЫ)
-    // ============================================
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
@@ -2272,9 +2613,6 @@
       });
     }
 
-    // ============================================
-    // РЕНДЕР КАЛЕНДАРЯ (ДОСТУПНОСТЬ)
-    // ============================================
     function renderAvailabilityCalendar() {
       const year = currentMonthAvail.getFullYear();
       const month = currentMonthAvail.getMonth();
@@ -2305,9 +2643,6 @@
       });
     }
 
-    // ============================================
-    // РЕНДЕР КАЛЕНДАРЯ (АДМИН — ДОСТУПНОСТЬ)
-    // ============================================
     function renderAdminCalendar() {
       const year = currentMonthAdmin.getFullYear();
       const month = currentMonthAdmin.getMonth();
@@ -2338,9 +2673,6 @@
       });
     }
 
-    // ============================================
-    // РЕНДЕР КАЛЕНДАРЯ РЕДАКТИРОВАНИЯ
-    // ============================================
     function renderEditCalendar() {
       if (!currentEditPhone) return;
 
@@ -2386,9 +2718,6 @@
       });
     }
 
-    // ============================================
-    // ПОПАП РЕДАКТИРОВАНИЯ СМЕНЫ
-    // ============================================
     function showEditShiftPopup(dateStr) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
@@ -2470,9 +2799,6 @@
       }
     }
 
-    // ============================================
-    // СОХРАНЕНИЕ ИЗМЕНЕНИЯ
-    // ============================================
     async function saveShiftChange(phone, date, start, end, status) {
       if (!ADMIN_PHONES.includes(userPhone)) {
         showToast('Отказ', 'У вас нет доступа', true);
@@ -2538,9 +2864,6 @@
       return true;
     }
 
-    // ============================================
-    // ОТКРЫТЬ / ЗАКРЫТЬ КАЛЕНДАРЬ СОТРУДНИКА
-    // ============================================
     function openEmployeeCalendar(phone, name) {
       currentEditPhone = phone;
       currentMonthEdit = new Date();
@@ -2577,15 +2900,12 @@
       entries.forEach(([phone, name]) => {
         const item = document.createElement('div');
         item.className = 'employee-item';
-        item.innerHTML = '<div class="employee-name">' + name + '</div><div class="employee-arrow">' + ICONS.arrowRight + '</div>';
+        item.innerHTML = '<div class="employee-name">' + escapeHtml(name) + '</div><div class="employee-arrow">' + ICONS.arrowRight + '</div>';
         item.addEventListener('click', () => openEmployeeCalendar(phone, name));
         list.appendChild(item);
       });
     }
 
-    // ============================================
-    // ПОПАПЫ
-    // ============================================
     function showAdminDayPopup(dateStr) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
@@ -2599,7 +2919,7 @@
         listHtml = '<div style="color:#999;font-size:14px;">—</div>';
       } else {
         people.forEach(p => {
-          listHtml += '<div class="admin-list-item"><span class="admin-list-name">' + getNameForPhone(p.phone) + '</span><span class="admin-list-time">' + p.start + '–' + p.end + '</span></div>';
+          listHtml += '<div class="admin-list-item"><span class="admin-list-name">' + escapeHtml(getNameForPhone(p.phone)) + '</span><span class="admin-list-time">' + p.start + '–' + p.end + '</span></div>';
         });
       }
 
@@ -2778,9 +3098,6 @@
       }
     }
 
-    // ============================================
-    // ССЫЛКИ И УВЕДОМЛЕНИЯ
-    // ============================================
     function buildGoogleCalendarUrl(shift) {
       const [y, m, d] = shift.date.split('-');
       const [sh, sm] = shift.start.split(':');
@@ -2813,8 +3130,8 @@
         (isError ? ICONS.error : ICONS.check) +
         '</svg></div>' +
         '<div class="toast-text">' +
-          '<div class="toast-title">' + title + '</div>' +
-          (subtitle ? '<div class="toast-sub">' + subtitle + '</div>' : '') +
+          '<div class="toast-title">' + escapeHtml(title) + '</div>' +
+          (subtitle ? '<div class="toast-sub">' + escapeHtml(subtitle) + '</div>' : '') +
         '</div>';
 
       document.body.appendChild(toast);
@@ -2848,9 +3165,6 @@
       document.getElementById('closeHelpBtn').addEventListener('click', () => overlay.remove());
     }
 
-    // ============================================
-    // ПЕРЕКЛЮЧЕНИЕ СПИСКА СОТРУДНИКОВ
-    // ============================================
     function openEditEmployees() {
       if (!ADMIN_PHONES.includes(userPhone)) {
         showToast('Отказ', 'У вас нет доступа', true);
@@ -2869,9 +3183,6 @@
       document.getElementById('pageSubtitle').style.display = 'block';
     }
 
-    // ============================================
-    // ФОРМА ТЕЛЕФОНА
-    // ============================================
     function showPhoneForm() {
       document.getElementById('phoneForm').style.display = 'block';
       document.getElementById('tabsBar').style.display = 'none';
@@ -2919,9 +3230,6 @@
       });
     }
 
-    // ============================================
-    // ИНИЦИАЛИЗАЦИЯ
-    // ============================================
     async function initApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').style.display = 'flex';
@@ -2971,6 +3279,10 @@
         animateMonth('daysEdit', 'fade-only');
       });
 
+      // ---- Кнопка "Сотрудники" в админке ----
+      const empAdminBtn = document.getElementById('employeesAdminBtn');
+      if (empAdminBtn) empAdminBtn.addEventListener('click', openEmployeesAdmin);
+
       if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
@@ -2996,7 +3308,7 @@
         const myShifts = allShifts.filter(s => s.phone === userPhone);
         if (myShifts.length === 0 && allAvailability.filter(a => a.phone === userPhone).length === 0) {
           const wrap = document.getElementById('tabSchedule');
-          wrap.innerHTML = '<div class="not-found">По номеру <b>' + userPhone + '</b> смены не найдены.<br>Обратись к руководителю, чтобы проверить номер в системе.</div>' +
+          wrap.innerHTML = '<div class="not-found">По номеру <b>' + escapeHtml(userPhone) + '</b> смены не найдены.<br>Обратись к руководителю, чтобы проверить номер в системе.</div>' +
             '<div style="text-align:center;margin-top:16px;"><a href="#" id="resetPhone" style="color:#10B981;font-size:13px;">Ввести другой номер</a></div>';
           document.getElementById('resetPhone').addEventListener('click', e => {
             e.preventDefault();
@@ -3014,10 +3326,496 @@
         renderAvailabilityCalendar();
         renderAdminCalendar();
       } catch (e) {
-        document.getElementById('tabSchedule').innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
+        document.getElementById('tabSchedule').innerHTML = '<div class="error">Ошибка: ' + escapeHtml(e.message) + '</div>';
       }
 
       ensureSplashMinTime().then(hideSplash);
+    }
+
+    // ============================================
+    // МОДУЛЬ «СОТРУДНИКИ»
+    // ============================================
+    const EMPLOYEE_INVITE_TEXT =
+      'Привет! Это приложение для контроля расписания твоих смен.\n\n' +
+      'Открой бота, нажми «Моё расписание», поделись номером телефона — и увидишь свои смены.\n\n' +
+      'https://t.me/miniwfm_bot';
+
+    let __employeesCache = [];
+    let __employeesSearchQuery = '';
+    let __employeesArchiveOpen = false;
+    let __currentEmployeePhone = null;
+
+    function openEmployeesAdmin() {
+      if (!ADMIN_PHONES.includes(userPhone)) {
+        showToast('Отказ', 'У вас нет доступа', true);
+        return;
+      }
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabEmployeesAdmin').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'none';
+
+      const searchInput = document.getElementById('employeesSearchInput');
+      searchInput.value = '';
+      __employeesSearchQuery = '';
+      __employeesArchiveOpen = false;
+
+      loadEmployeesAdmin();
+    }
+
+    function closeEmployeesAdmin() {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabAdmin').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'block';
+      document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+    }
+
+    async function loadEmployeesAdmin() {
+      const listContainer = document.getElementById('employeesAdminList');
+      const archiveSection = document.getElementById('employeesArchiveSection');
+      listContainer.innerHTML = '<div class="search-empty">Загружаем…</div>';
+      archiveSection.style.display = 'none';
+
+      try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
+        const resp = await postToServer({
+          action: 'list_employees',
+          telegram_id: tgId
+        });
+
+        if (!resp || !resp.ok) {
+          const errText = (resp && resp.error) || 'ошибка';
+          if (errText === 'not_admin' || errText === 'no_telegram_id' || errText === 'not_found') {
+            listContainer.innerHTML = '<div class="search-empty">Отказано в доступе</div>';
+          } else {
+            listContainer.innerHTML = '<div class="search-empty">Не удалось загрузить: ' + escapeHtml(errText) + '</div>';
+          }
+          return;
+        }
+
+        __employeesCache = resp.employees || [];
+        renderEmployeesAdminList();
+      } catch (e) {
+        console.error(e);
+        listContainer.innerHTML = '<div class="search-empty">Не удалось загрузить: ' + escapeHtml(String(e.message || e).substring(0, 80)) + '</div>';
+      }
+    }
+
+    function renderEmployeesAdminList() {
+      const listContainer = document.getElementById('employeesAdminList');
+      const archiveSection = document.getElementById('employeesArchiveSection');
+      const archiveList = document.getElementById('employeesArchiveList');
+      const archiveCount = document.getElementById('archiveCount');
+      const archiveToggle = document.getElementById('archiveToggleBtn');
+
+      const q = (__employeesSearchQuery || '').trim().toLowerCase();
+      const filtered = __employeesCache.filter(e => {
+        if (!q) return true;
+        const name = (e.name || '').toLowerCase();
+        const phoneDigits = String(e.phone || '').replace(/[^0-9]/g, '');
+        const qDigits = q.replace(/[^0-9]/g, '');
+        return name.indexOf(q) !== -1 || (qDigits && phoneDigits.indexOf(qDigits) !== -1);
+      });
+
+      const active = filtered.filter(e => e.active === true);
+      const inactive = filtered.filter(e => e.active !== true);
+
+      listContainer.innerHTML = '';
+      if (active.length === 0) {
+        listContainer.innerHTML = '<div class="search-empty">' + (q ? 'Никого не найдено' : 'Список пуст') + '</div>';
+      } else {
+        active.forEach(emp => listContainer.appendChild(buildEmployeeAdminItem(emp)));
+      }
+
+      if (inactive.length === 0) {
+        archiveSection.style.display = 'none';
+      } else {
+        archiveSection.style.display = 'block';
+        archiveCount.textContent = inactive.length;
+
+        archiveList.innerHTML = '';
+        inactive.forEach(emp => archiveList.appendChild(buildEmployeeAdminItem(emp)));
+
+        const chevron = archiveToggle.querySelector('.archive-chevron');
+        if (__employeesArchiveOpen) {
+          archiveList.style.display = 'block';
+          if (chevron) chevron.classList.add('open');
+        } else {
+          archiveList.style.display = 'none';
+          if (chevron) chevron.classList.remove('open');
+        }
+      }
+    }
+
+    function buildEmployeeAdminItem(emp) {
+      const div = document.createElement('div');
+      div.className = 'employee-admin-item';
+
+      const initial = (emp.name || '?').trim().charAt(0).toUpperCase();
+      const isActive = emp.active === true;
+      const dotClass = !isActive ? 'inactive' : (emp.hasTg ? 'online' : 'offline');
+      const statusText = !isActive ? 'В архиве' : (emp.hasTg ? 'Telegram подключён' : 'Нет Telegram');
+      const cleanPhone = String(emp.phone || '').trim();
+
+      div.innerHTML =
+        '<div class="employee-avatar' + (isActive ? '' : ' inactive') + '">' + escapeHtml(initial) + '</div>' +
+        '<div class="employee-admin-info">' +
+          '<div class="employee-admin-name">' + escapeHtml(emp.name || '') + '</div>' +
+          '<div class="employee-admin-meta">' +
+            '<span class="employee-status-dot ' + dotClass + '"></span>' +
+            '<span>' + escapeHtml(cleanPhone) + '</span>' +
+            '<span>·</span>' +
+            '<span>' + escapeHtml(statusText) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="employee-admin-arrow">' + ICONS.arrowRight + '</div>';
+
+      div.addEventListener('click', () => openEmployeeCardAdmin(cleanPhone));
+      return div;
+    }
+
+    function openEmployeeCardAdmin(phone) {
+      const phoneNorm = String(phone).replace(/[^0-9]/g, '');
+      const emp = __employeesCache.find(e =>
+        String(e.phone).replace(/[^0-9]/g, '') === phoneNorm
+      );
+      if (!emp) return;
+
+      __currentEmployeePhone = emp.phone;
+
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabEmployeeCardAdmin').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'none';
+
+      renderEmployeeCardAdmin(emp);
+    }
+
+    function renderEmployeeCardAdmin(emp) {
+      const title = document.getElementById('employeeCardTitle');
+      const body = document.getElementById('employeeCardBody');
+
+      title.textContent = emp.name || 'Сотрудник';
+
+      const isActive = emp.active === true;
+      const initial = (emp.name || '?').trim().charAt(0).toUpperCase();
+      const cleanPhone = String(emp.phone || '').trim();
+      const statusClass = isActive ? 'active' : 'inactive';
+      const statusText = isActive
+        ? (emp.hasTg ? 'Активен · Telegram подключён' : 'Активен · Нет Telegram')
+        : 'В архиве';
+
+      let html = '';
+      html += '<div class="employee-card-header">';
+      html += '<div class="employee-avatar' + (isActive ? '' : ' inactive') + '">' + escapeHtml(initial) + '</div>';
+      html += '<div class="employee-card-name">' + escapeHtml(emp.name || '') + '</div>';
+      html += '<div class="employee-card-phone">' + escapeHtml(cleanPhone) + '</div>';
+      html += '<div class="employee-card-status ' + statusClass + '">' + escapeHtml(statusText) + '</div>';
+      html += '</div>';
+
+      html += '<div class="employee-card-actions">';
+
+      html += '<button class="employee-card-action-btn primary" id="empEditBtn">';
+      html += '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+      html += 'Редактировать';
+      html += '</button>';
+
+      html += '<button class="employee-card-action-btn secondary" id="empInviteBtn">';
+      html += '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+      html += 'Приглашение для сотрудника';
+      html += '</button>';
+
+      if (isActive) {
+        html += '<button class="employee-card-action-btn danger" id="empArchiveBtn">';
+        html += '<svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>';
+        html += 'В архив';
+        html += '</button>';
+      } else {
+        html += '<button class="employee-card-action-btn secondary" id="empRestoreBtn">';
+        html += '<svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>';
+        html += 'Вернуть из архива';
+        html += '</button>';
+      }
+
+      html += '<button class="employee-card-action-btn secondary" id="empCloseCardBtn">Закрыть</button>';
+      html += '</div>';
+
+      body.innerHTML = html;
+
+      document.getElementById('empEditBtn').addEventListener('click', () => showEmployeeFormAdmin(emp));
+      document.getElementById('empInviteBtn').addEventListener('click', () => showInviteModalAdmin(emp));
+      document.getElementById('empCloseCardBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tabEmployeesAdmin').classList.add('active');
+      });
+
+      const archiveBtn = document.getElementById('empArchiveBtn');
+      if (archiveBtn) {
+        archiveBtn.addEventListener('click', async () => {
+          const confirmed = confirm('Переместить сотрудника в архив? Его смены останутся, но он скроется из списка.');
+          if (!confirmed) return;
+          const ok = await deactivateEmployeeServer(emp.phone);
+          if (ok) {
+            showToast('В архиве', emp.name + ' перемещён в архив');
+            openEmployeesAdmin();
+          }
+        });
+      }
+
+      const restoreBtn = document.getElementById('empRestoreBtn');
+      if (restoreBtn) {
+        restoreBtn.addEventListener('click', async () => {
+          const ok = await activateEmployeeServer(emp.phone);
+          if (ok) {
+            showToast('Восстановлен', emp.name + ' возвращён в активные');
+            openEmployeesAdmin();
+          }
+        });
+      }
+    }
+
+    function showEmployeeFormAdmin(existingEmp) {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const isEdit = !!existingEmp;
+      const titleText = isEdit ? 'Редактировать' : 'Новый сотрудник';
+      const btnText = isEdit ? 'Сохранить' : 'Добавить';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      const nameVal = isEdit ? escapeHtml(existingEmp.name || '') : '';
+      const phoneVal = isEdit ? escapeHtml(existingEmp.phone || '') : '+7';
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">' + titleText + '</div>' +
+        '<div class="popup-info">Введи имя и телефон сотрудника</div>' +
+        '<div class="form-field">' +
+          '<label for="empFormName">Имя</label>' +
+          '<input type="text" id="empFormName" placeholder="Соболева Юлия" value="' + nameVal + '" />' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label for="empFormPhone">Телефон</label>' +
+          '<input type="tel" id="empFormPhone" placeholder="+79879286721" value="' + phoneVal + '" />' +
+        '</div>' +
+        '<div class="form-error" id="empFormError"></div>' +
+        '<button class="popup-btn" id="empFormSubmit">' + btnText + '</button>' +
+        '<button class="popup-btn secondary" id="empFormCancel">Отмена</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('empFormCancel').addEventListener('click', () => overlay.remove());
+
+      document.getElementById('empFormSubmit').addEventListener('click', async () => {
+        const nameInput = document.getElementById('empFormName');
+        const phoneInput = document.getElementById('empFormPhone');
+        const errorEl = document.getElementById('empFormError');
+
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+
+        errorEl.textContent = '';
+
+        if (!name) {
+          errorEl.textContent = 'Введи имя';
+          return;
+        }
+
+        const phoneDigits = phone.replace(/[^0-9]/g, '');
+        if (phoneDigits.length < 10) {
+          errorEl.textContent = 'Телефон должен содержать минимум 10 цифр';
+          return;
+        }
+
+        const btn = document.getElementById('empFormSubmit');
+        btn.disabled = true;
+        btn.textContent = 'Сохраняем…';
+
+        let result;
+        if (isEdit) {
+          result = await updateEmployeeServer(existingEmp.phone, name, phone);
+        } else {
+          result = await addEmployeeServer(name, phone);
+        }
+
+        if (result && result.ok) {
+          overlay.remove();
+          if (isEdit) {
+            showToast('Сохранено', name);
+          } else {
+            showToast('Добавлен', name);
+          }
+          // Обновляем и список, и общий словарь сотрудников
+          await loadEmployees();
+          saveCache();
+          renderEmployeesList();
+          openEmployeesAdmin();
+        } else {
+          btn.disabled = false;
+          btn.textContent = btnText;
+          const err = (result && result.error) || 'ошибка';
+          errorEl.textContent = 'Ошибка: ' + err;
+        }
+      });
+    }
+
+    function showInviteModalAdmin(emp) {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">Приглашение</div>' +
+        '<div class="popup-info">Скопируй текст и отправь сотруднику — например, в WhatsApp или СМС.</div>' +
+        '<div class="invite-preview">' + escapeHtml(EMPLOYEE_INVITE_TEXT) + '</div>' +
+        '<button class="popup-btn" id="inviteCopyBtn" style="margin-top:16px;">Скопировать текст</button>' +
+        '<button class="popup-btn secondary" id="inviteCloseBtn">Закрыть</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('inviteCloseBtn').addEventListener('click', () => overlay.remove());
+
+      document.getElementById('inviteCopyBtn').addEventListener('click', async () => {
+        const ok = await copyToClipboard(EMPLOYEE_INVITE_TEXT);
+        if (ok) {
+          showToast('Скопировано', 'Отправь сотруднику');
+        } else {
+          showToast('Не удалось', 'Скопируй вручную', true);
+        }
+      });
+    }
+
+    function copyToClipboard(text) {
+      return new Promise((resolve) => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text)
+            .then(() => resolve(true))
+            .catch(() => resolve(fallbackCopy(text)));
+        } else {
+          resolve(fallbackCopy(text));
+        }
+      });
+    }
+
+    function fallbackCopy(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function addEmployeeServer(name, phone) {
+      try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
+        const resp = await postToServer({
+          action: 'add_employee',
+          telegram_id: tgId,
+          name: name,
+          phone: phone
+        });
+        return resp;
+      } catch (e) {
+        return { ok: false, error: String(e.message || e).substring(0, 60) };
+      }
+    }
+
+    async function updateEmployeeServer(oldPhone, name, newPhone) {
+      try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
+        const resp = await postToServer({
+          action: 'update_employee',
+          telegram_id: tgId,
+          old_phone: oldPhone,
+          name: name,
+          phone: newPhone
+        });
+        return resp;
+      } catch (e) {
+        return { ok: false, error: String(e.message || e).substring(0, 60) };
+      }
+    }
+
+    async function deactivateEmployeeServer(phone) {
+      try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
+        const resp = await postToServer({
+          action: 'deactivate_employee',
+          telegram_id: tgId,
+          phone: phone
+        });
+
+        const ok = !!(resp && resp.ok);
+
+        if (ok) {
+          // Перечитываем справочник сотрудников, чтобы уволенный
+          // пропал из списка «Редактировать расписание»
+          try {
+            await loadEmployees();
+            saveCache();
+            renderEmployeesList();
+          } catch (e) {
+            console.warn('Не удалось перезагрузить сотрудников после архивации:', e);
+          }
+        }
+
+        return ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function activateEmployeeServer(phone) {
+      try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
+        const resp = await postToServer({
+          action: 'activate_employee',
+          telegram_id: tgId,
+          phone: phone
+        });
+
+        const ok = !!(resp && resp.ok);
+
+        if (ok) {
+          // Перечитываем справочник — вернувшийся сотрудник
+          // снова появится в списке «Редактировать расписание»
+          try {
+            await loadEmployees();
+            saveCache();
+            renderEmployeesList();
+          } catch (e) {
+            console.warn('Не удалось перезагрузить сотрудников после возврата:', e);
+          }
+        }
+
+        return ok;
+      } catch (e) {
+        return false;
+      }
     }
 
     // ============================================
@@ -3027,9 +3825,6 @@
     let __splashHidden = false;
     let __splashErrorTimer = null;
 
-    // ============================================
-    // ЗВУК ВХОДА
-    // ============================================
     const ENTRY_SOUND_LAST = 'turno_entry_sound_last';
     const ENTRY_SOUND_DISABLED = 'turno_entry_sound_disabled';
 
@@ -3237,9 +4032,6 @@
       return new Promise(r => setTimeout(r, wait));
     }
 
-    // ============================================
-    // ТАБЫ (СНИЗУ)
-    // ============================================
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const target = tab.dataset.tab;
@@ -3266,9 +4058,6 @@
       });
     });
 
-    // ============================================
-    // НАВИГАЦИЯ ПО МЕСЯЦАМ
-    // ============================================
     document.getElementById('prevMonth').addEventListener('click', () => {
       currentMonth.setMonth(currentMonth.getMonth() - 1);
       renderCalendar();
@@ -3317,9 +4106,6 @@
       animateMonth('daysAdmin', 'fade-only');
     });
 
-    // ============================================
-    // СВАЙПЫ
-    // ============================================
     attachSwipe('days',
       () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); animateMonth('days', 'slide-left'); },
       () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); animateMonth('days', 'slide-right'); }
@@ -3334,6 +4120,37 @@
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-left'); },
       () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-right'); }
     );
+
+    // ---- Кнопки модуля «Сотрудники» ----
+    const employeesAdminBackBtn = document.getElementById('employeesAdminBackBtn');
+    if (employeesAdminBackBtn) employeesAdminBackBtn.addEventListener('click', closeEmployeesAdmin);
+
+    const addEmployeeBtn = document.getElementById('addEmployeeBtn');
+    if (addEmployeeBtn) addEmployeeBtn.addEventListener('click', () => showEmployeeFormAdmin(null));
+
+    const employeesSearchInput = document.getElementById('employeesSearchInput');
+    if (employeesSearchInput) {
+      employeesSearchInput.addEventListener('input', (e) => {
+        __employeesSearchQuery = e.target.value || '';
+        renderEmployeesAdminList();
+      });
+    }
+
+    const archiveToggleBtn = document.getElementById('archiveToggleBtn');
+    if (archiveToggleBtn) {
+      archiveToggleBtn.addEventListener('click', () => {
+        __employeesArchiveOpen = !__employeesArchiveOpen;
+        renderEmployeesAdminList();
+      });
+    }
+
+    const employeeCardBackBtn = document.getElementById('employeeCardBackBtn');
+    if (employeeCardBackBtn) {
+      employeeCardBackBtn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tabEmployeesAdmin').classList.add('active');
+      });
+    }
 
     // ============================================
     // СТАРТ

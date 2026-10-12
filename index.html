@@ -1099,223 +1099,7 @@
     }
 
     /* ============================================
-       SPLASH — GLASSMORPHISM SIGNATURE
-       ============================================ */
-    #splash {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 99999;
-      isolation: isolate;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-6);
-      padding-top: calc(var(--space-6) + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
-      overflow: hidden;
-      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.6, 1);
-    }
-    #splash.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .splash-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 70% 55% at 50% 45%,
-          rgba(16, 185, 129, 0.12) 0%,
-          rgba(16, 185, 129, 0.03) 40%,
-          rgba(16, 185, 129, 0) 70%),
-        linear-gradient(180deg, #FFFFFF 0%, #F5F7FA 60%, #EEF2F7 100%);
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-bg {
-        background:
-          radial-gradient(ellipse 70% 55% at 50% 45%,
-            rgba(16, 185, 129, 0.20) 0%,
-            rgba(16, 185, 129, 0.06) 40%,
-            rgba(16, 185, 129, 0) 70%),
-          linear-gradient(180deg, #0F172A 0%, #0A0F1A 60%, #05080E 100%);
-      }
-    }
-
-    .splash-card {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 32px 36px 32px;
-      border-radius: 28px;
-      background: rgba(255, 255, 255, 0.35);
-      backdrop-filter: blur(40px) saturate(180%);
-      -webkit-backdrop-filter: blur(40px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.55);
-      box-shadow:
-        0 8px 32px rgba(15, 23, 42, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7);
-      opacity: 0;
-      transform: translateY(6px);
-      animation: splashCardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-card {
-        background: rgba(30, 41, 59, 0.35);
-        border-color: rgba(148, 163, 184, 0.15);
-        box-shadow:
-          0 8px 32px rgba(0, 0, 0, 0.35),
-          inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      }
-    }
-    @keyframes splashCardIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .splash-wordmark {
-      position: relative;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -3px;
-      margin: 0;
-      display: inline-block;
-      padding: 4px 4px 8px 4px;
-      background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #10B981 100%);
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-wordmark {
-        background: linear-gradient(135deg, #34D399 0%, #6EE7B7 50%, #34D399 100%);
-        background-size: 200% 100%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.12));
-      }
-    }
-
-    .splash-shine {
-      position: absolute;
-      top: -30%;
-      left: -50%;
-      width: 60%;
-      height: 160%;
-      background: linear-gradient(90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.45) 50%,
-        rgba(255, 255, 255, 0) 100%);
-      transform: skewX(-22deg);
-      pointer-events: none;
-      opacity: 0;
-      animation: splashShine 5s cubic-bezier(0.4, 0, 0.6, 1) 1.6s infinite;
-    }
-    @keyframes splashShine {
-      0%   { left: -50%; opacity: 0; }
-      8%   { opacity: 0.9; }
-      30%  { left: 120%; opacity: 0.9; }
-      31%  { opacity: 0; }
-      100% { left: 120%; opacity: 0; }
-    }
-
-    .splash-divider {
-      width: 56px;
-      height: 1px;
-      margin: 18px 0 16px 0;
-      background: linear-gradient(90deg,
-        rgba(16, 185, 129, 0) 0%,
-        rgba(16, 185, 129, 0.55) 50%,
-        rgba(16, 185, 129, 0) 100%);
-      opacity: 0;
-      animation: splashDividerIn 0.6s ease-out 0.6s forwards;
-    }
-    @keyframes splashDividerIn {
-      to { opacity: 1; }
-    }
-
-    .splash-sub {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 2.5px;
-      text-transform: lowercase;
-      color: var(--tg-theme-hint-color, #64748B);
-      margin: 0;
-      opacity: 0;
-      transform: translateY(3px);
-      animation: splashSubIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
-      text-align: center;
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-sub { color: var(--tg-theme-hint-color, #94A3B8); }
-    }
-    @keyframes splashSubIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .splash-error {
-      position: relative;
-      z-index: 2;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-4);
-      padding: var(--space-7) var(--space-5);
-      border-radius: var(--radius-xl);
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid rgba(239, 68, 68, 0.22);
-      box-shadow: 0 12px 40px rgba(239, 68, 68, 0.10);
-      text-align: center;
-      max-width: 340px;
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-error {
-        background: rgba(30, 41, 59, 0.85);
-        border-color: rgba(239, 68, 68, 0.32);
-      }
-    }
-    #splash.timed-out .splash-card { display: none; }
-    #splash.timed-out .splash-error { display: flex; }
-
-    .splash-error-icon {
-      width: 48px; height: 48px;
-      color: #EF4444;
-    }
-    .splash-error-icon svg {
-      width: 100%; height: 100%;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .splash-error-title {
-      font-size: 17px; font-weight: 700;
-      color: #DC2626; margin: 0;
-      letter-spacing: -0.2px;
-    }
-    .splash-error-text {
-      font-size: 14px; color: #64748B;
-      line-height: 1.5; margin: 0;
-    }
-    @media (prefers-color-scheme: dark) {
-      .splash-error-text { color: #94A3B8; }
-    }
-    /* ============================================
        SPLASH — LIQUID GLASS SIGNATURE
-       Никаких карточек, никаких кругов.
-       Только текст + две плывущие полосы.
        ============================================ */
     #splash {
       position: fixed;
@@ -1457,16 +1241,16 @@
         rgba(255, 255, 255, 0) 100%);
       transform: skewX(-22deg);
       pointer-events: none;
-      opacity: 0;
-      /* Один проход за 2.0 секунды, старт на 0.6s после начала splash */
-      animation: splashShine 2s cubic-bezier(0.55, 0.05, 0.45, 0.95) 0.6s 1 forwards;
+      /* Луч идёт равномерно, без промежуточных точек в keyframes,
+         без ease-функции — строго линейное движение.
+         Старт синхронно с мелодией (0.6s), длительность = длине мелодии (2.0s).
+         Края луча скрыты горизонтальным градиентом, отдельная opacity-анимация
+         не нужна — луч полностью виден на всём пути. */
+      animation: splashShine 2s linear 0.6s 1 forwards;
     }
     @keyframes splashShine {
-      0%   { left: -60%; opacity: 0; }
-      10%  { opacity: 1; }
-      50%  { left: 30%; opacity: 1; }     /* центр слова — здесь «клик» */
-      90%  { opacity: 1; }
-      100% { left: 130%; opacity: 0; }
+      from { left: -60%; }
+      to   { left: 130%; }
     }
 
     /* --- Тонкая линия под названием --- */
@@ -1571,12 +1355,10 @@
       transform: scale(0.97);
       box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15);
     }
-    .splash-retry:active { transform: scale(0.97); }
 
     @media (prefers-reduced-motion: reduce) {
       .splash-shine { display: none; }
       #splash { transition-duration: 0.3s; }
-      .splash-card { animation-duration: 0.3s !important; animation-delay: 0s !important; }
     }
 
     /* ============================================
@@ -2238,10 +2020,11 @@
   </div>
 
   <script>
-        // Момент старта splash — нужен для синхронизации звука с лучом света.
+    // Момент старта splash — нужен для синхронизации звука с лучом света.
     // Записывается как можно раньше, до любого async / DOM-манипуляций,
     // чтобы не потерять миллисекунды на парсинг и инициализацию Telegram.
     const __SPLASH_T0 = Date.now();
+
     // ============================================
     // КОНСТАНТЫ
     // ============================================
@@ -3952,7 +3735,6 @@
     // ============================================
     // SPLASH — ЛОГИКА
     // ============================================
-  
     let __splashHidden = false;
     let __splashErrorTimer = null;
 
@@ -3992,7 +3774,7 @@
       updateSoundToggleUI();
     }
 
-        function playEntrySound() {
+    function playEntrySound() {
       if (!isEntrySoundEnabled()) return;
       markEntrySoundPlayed();
 
@@ -4006,11 +3788,9 @@
         return;
       }
 
-      // Смещение звука относительно момента вызова.
-      // 0.6 s = момент, когда луч света начинает движение (см. CSS .splash-shine).
-      // Мелодия длится 2.0 s → заканчивается ровно в момент остановки луча.
-            // Целевой момент старта звука от начала splash — 600 мс,
+      // Целевой момент старта звука от начала splash — 600 мс,
       // ровно тогда, когда луч начинает движение (CSS: animation-delay 0.6s).
+      // Мелодия длится 2.0 s → заканчивается ровно в момент остановки луча.
       const TARGET_OFFSET = 0.6;
       const DURATION = 2.0;
 
@@ -4058,7 +3838,7 @@
           //   E4  — мягкая подводка (квинта)
           //   A4  — главный удар (тоника)
           //   A5  — октава сверху, «воздух»
-          //   C#5 — мажорная терция, теплый финал
+          //   C#5 — мажорная терция, тёплый финал
           const layers = [
             { freq: 329.63, start: 0.00, gain: 0.30, dur: 0.90, mod: 1.6 }, // E4
             { freq: 440.00, start: 0.28, gain: 0.55, dur: 1.30, mod: 2.0 }, // A4 — акцент
@@ -4293,10 +4073,10 @@
     // ============================================
     // СИНХРОНИЗАЦИЯ ЗВУКА И ЛУЧА СВЕТА
     // Луч света стартует через 0.6s и идёт 2.0s (см. .splash-shine в CSS).
-    // Звук вызывается сразу и внутри playEntrySound сам смещает мелодию
-    // на 0.6s через AudioContext.currentTime — так получаем точную синхронизацию
-    // без дрожания setTimeout. Мелодия длится 2.0s и заканчивается ровно
-    // в момент, когда луч заканчивает движение (0.6 + 2.0 = 2.6s от старта splash).
+    // Звук вызывается сразу, а внутри playEntrySound сам компенсирует задержку
+    // JS-инициализации через __SPLASH_T0 → мелодия стартует ровно в 0.6s от
+    // начала splash и заканчивается в 2.6s — синхронно с уходом луча.
+    // ============================================
     playEntrySound();
 
     const saved = getSavedPhone();

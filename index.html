@@ -1448,23 +1448,24 @@
     .splash-shine {
       position: absolute;
       top: -30%;
-      left: -50%;
+      left: -60%;
       width: 55%;
       height: 160%;
       background: linear-gradient(90deg,
         rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0.85) 50%,
         rgba(255, 255, 255, 0) 100%);
       transform: skewX(-22deg);
       pointer-events: none;
       opacity: 0;
-      animation: splashShine 6s cubic-bezier(0.4, 0, 0.6, 1) 2s infinite;
+      /* Один проход за 2.0 секунды, старт на 0.6s после начала splash */
+      animation: splashShine 2s cubic-bezier(0.55, 0.05, 0.45, 0.95) 0.6s 1 forwards;
     }
     @keyframes splashShine {
-      0%   { left: -50%; opacity: 0; }
-      8%   { opacity: 0.9; }
-      28%  { left: 130%; opacity: 0.9; }
-      29%  { opacity: 0; }
+      0%   { left: -60%; opacity: 0; }
+      10%  { opacity: 1; }
+      50%  { left: 30%; opacity: 1; }     /* центр слова — здесь «клик» */
+      90%  { opacity: 1; }
       100% { left: 130%; opacity: 0; }
     }
 
@@ -4111,7 +4112,7 @@
 
     function ensureSplashMinTime() {
       const elapsed = Date.now() - __splashStartTime;
-      const wait = Math.max(0, 3000 - elapsed);
+      const wait = Math.max(0, 3400 - elapsed);
       return new Promise(r => setTimeout(r, wait));
     }
 
@@ -4249,9 +4250,10 @@
     updateSoundToggleUI();
     forceSplashTimeout();
 
-    // Звук стартует ровно тогда, когда появляется Turno (0.25 сек после старта splash)
-    // Это синхронизирует удар «капли» с первым видимым элементом на экране
-    setTimeout(playEntrySound, 250);
+    // Луч света стартует через 0.6s и идёт 2.0s.
+    // Его пик (центр слова) — на 1.6s от начала splash.
+    // Запускаем звук в этот же момент: 1600 мс.
+    setTimeout(playEntrySound, 1600);
 
     const saved = getSavedPhone();
     if (saved) {

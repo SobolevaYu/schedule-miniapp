@@ -2238,6 +2238,10 @@
   </div>
 
   <script>
+        // Момент старта splash — нужен для синхронизации звука с лучом света.
+    // Записывается как можно раньше, до любого async / DOM-манипуляций,
+    // чтобы не потерять миллисекунды на парсинг и инициализацию Telegram.
+    const __SPLASH_T0 = Date.now();
     // ============================================
     // КОНСТАНТЫ
     // ============================================
@@ -3948,7 +3952,7 @@
     // ============================================
     // SPLASH — ЛОГИКА
     // ============================================
-    let __splashStartTime = Date.now();
+  
     let __splashHidden = false;
     let __splashErrorTimer = null;
 
@@ -4005,8 +4009,16 @@
       // Смещение звука относительно момента вызова.
       // 0.6 s = момент, когда луч света начинает движение (см. CSS .splash-shine).
       // Мелодия длится 2.0 s → заканчивается ровно в момент остановки луча.
-      const START_OFFSET = 0.6;
+            // Целевой момент старта звука от начала splash — 600 мс,
+      // ровно тогда, когда луч начинает движение (CSS: animation-delay 0.6s).
+      const TARGET_OFFSET = 0.6;
       const DURATION = 2.0;
+
+      // Сколько времени уже прошло с момента старта splash к моменту вызова.
+      // JS может стартовать с задержкой 100–600 мс после начала CSS-анимации,
+      // поэтому компенсируем эту задержку, а не гадаем её заранее.
+      const elapsed = (Date.now() - __SPLASH_T0) / 1000;
+      const START_OFFSET = Math.max(0, TARGET_OFFSET - elapsed);
 
       const play = () => {
         try {
@@ -4140,7 +4152,7 @@
     }
 
     function ensureSplashMinTime() {
-      const elapsed = Date.now() - __splashStartTime;
+      const elapsed = Date.now() - __SPLASH_T0;
       const wait = Math.max(0, 3400 - elapsed);
       return new Promise(r => setTimeout(r, wait));
     }
@@ -4274,7 +4286,6 @@
     // ============================================
     // СТАРТ
     // ============================================
-    __splashStartTime = Date.now();
     armSplashErrorTimer();
     updateSoundToggleUI();
     forceSplashTimeout();

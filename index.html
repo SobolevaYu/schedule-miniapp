@@ -1124,7 +1124,6 @@
       pointer-events: none;
     }
 
-    /* --- Две размытые полосы — «жидкое стекло» --- */
     .splash-blob {
       position: absolute;
       border-radius: 50%;
@@ -1181,7 +1180,6 @@
       100% { transform: translate(0, 0) scale(1); }
     }
 
-    /* --- Центральная колонна --- */
     .splash-inner {
       position: relative;
       z-index: 1;
@@ -1194,7 +1192,6 @@
       text-align: center;
     }
 
-    /* --- Название --- */
     .splash-wordmark {
       position: relative;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -1228,7 +1225,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Луч света по слову --- */
     .splash-shine {
       position: absolute;
       top: -30%;
@@ -1241,11 +1237,6 @@
         rgba(255, 255, 255, 0) 100%);
       transform: skewX(-22deg);
       pointer-events: none;
-      /* Луч идёт равномерно, без промежуточных точек в keyframes,
-         без ease-функции — строго линейное движение.
-         Старт синхронно с мелодией (0.6s), длительность = длине мелодии (2.0s).
-         Края луча скрыты горизонтальным градиентом, отдельная opacity-анимация
-         не нужна — луч полностью виден на всём пути. */
       animation: splashShine 2s linear 0.6s 1 forwards;
     }
     @keyframes splashShine {
@@ -1253,7 +1244,6 @@
       to   { left: 130%; }
     }
 
-    /* --- Тонкая линия под названием --- */
     .splash-divider {
       width: 0;
       height: 1px;
@@ -1269,7 +1259,6 @@
       to   { width: 72px; }
     }
 
-    /* --- Подпись --- */
     .splash-sub {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 12px;
@@ -1289,7 +1278,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Экран ошибки --- */
     .splash-error {
       position: relative;
       z-index: 2;
@@ -1720,6 +1708,158 @@
     @media (prefers-color-scheme: dark) {
       .search-empty { color: var(--tg-theme-hint-color, #94A3B8); }
     }
+
+    /* ============================================
+       ДОПОЛНИТЕЛЬНЫЕ СМЕНЫ
+       ============================================ */
+    .extra-banner {
+      margin-top: var(--space-3);
+      margin-bottom: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.22) 0%, rgba(250, 204, 21, 0.10) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.6);
+      color: #78350F;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .extra-banner:active { transform: scale(0.98); }
+    @media (prefers-color-scheme: dark) {
+      .extra-banner { color: #FDE68A; }
+    }
+    .extra-banner-text {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex: 1;
+      min-width: 0;
+    }
+    .extra-banner-count {
+      background: rgba(250, 204, 21, 0.5);
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .extra-card {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--grad-surface-light);
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      margin-bottom: var(--space-3);
+    }
+    @media (prefers-color-scheme: dark) {
+      .extra-card { background: var(--grad-surface-dark); }
+    }
+    .extra-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+    .extra-card-date {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--tg-theme-text-color, #0F172A);
+      line-height: 1.3;
+    }
+    .extra-card-time {
+      font-size: 14px;
+      color: var(--tg-theme-hint-color, #64748B);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .extra-card-places {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--brand);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .extra-card-places.full {
+      background: rgba(239, 68, 68, 0.12);
+      color: #DC2626;
+    }
+    .extra-card-people {
+      font-size: 12px;
+      color: var(--tg-theme-hint-color, #64748B);
+      margin-bottom: var(--space-3);
+      line-height: 1.5;
+    }
+    .extra-card-people b {
+      color: var(--tg-theme-text-color, #0F172A);
+    }
+    .extra-card-actions {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .extra-card-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: transform 0.15s ease;
+    }
+    .extra-card-btn:active { transform: scale(0.97); }
+    .extra-card-btn.primary {
+      background: var(--grad-primary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+    }
+    .extra-card-btn.primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .extra-card-btn.danger {
+      background: transparent;
+      color: #DC2626;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .extra-card-btn.secondary {
+      background: transparent;
+      color: var(--brand);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .extra-empty {
+      text-align: center;
+      padding: var(--space-5);
+      color: var(--tg-theme-hint-color, #64748B);
+      font-size: 14px;
+    }
+
+    .extra-create-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .extra-create-form .form-field { margin-bottom: 0; }
+    .extra-create-row {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .extra-create-row > * { flex: 1; }
   </style>
 </head>
 <body>
@@ -1796,6 +1936,7 @@
   <div class="tab-content active" id="tabSchedule">
     <div id="calendarWrap" style="display:none">
       <div id="banner" style="display:none"></div>
+      <div id="extraShiftsBanner" style="display:none"></div>
       <div class="month-header">
         <button class="month-nav" id="prevMonth">‹</button>
         <div class="month-title" id="monthTitle">Октябрь 2026</div>
@@ -1872,6 +2013,15 @@
         </svg>
       </span>
       Редактировать расписание
+    </button>
+
+    <button class="admin-action-btn" id="extraShiftsAdminBtn">
+      <span class="admin-action-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/>
+        </svg>
+      </span>
+      Дополнительные смены
     </button>
 
     <div class="month-header">
@@ -1975,6 +2125,25 @@
     </div>
   </div>
 
+  <div class="tab-content" id="tabExtraShiftsAdmin">
+    <div class="edit-header">
+      <button class="edit-back" id="extraShiftsBackBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <div class="edit-title">Дополнительные смены</div>
+      <button class="header-icon-btn" id="addExtraShiftBtn" aria-label="Создать доп. смену">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="extraShiftsAdminList" class="employees-list"></div>
+  </div>
+
   <div class="tab-content" id="tabEmployeeCardAdmin">
     <div class="edit-header">
       <button class="edit-back" id="employeeCardBackBtn">
@@ -2020,14 +2189,10 @@
   </div>
 
   <script>
-    // Момент старта splash — нужен для синхронизации звука с лучом света.
-    // Записывается как можно раньше, до любого async / DOM-манипуляций,
-    // чтобы не потерять миллисекунды на парсинг и инициализацию Telegram.
-    const __SPLASH_T0 = Date.now();
-
     // ============================================
     // КОНСТАНТЫ
     // ============================================
+    const __SPLASH_T0 = Date.now();
     const __AUTHOR__ = 'Soboleva Yu.';
     const __BUILD__ = '7f3b9c2a-2026-10-10';
     const SHEET_ID = '1CpWhm4KHW3pKi5BbMRo7nzAqpCkkUtYe-qmHVIVX648';
@@ -2061,8 +2226,11 @@
     let currentEditPhone = null;
     let allShifts = [];
     let allAvailability = [];
+    let allExtraShifts = [];
+    let allExtraShiftsAdmin = [];
     let employeesMap = {};
     let employeesIcsMap = {};
+    let employeesTzMap = {};
 
     if (tg) {
       tg.ready();
@@ -2103,6 +2271,155 @@
     }
 
     function pad2(x) { return String(x).padStart(2, '0'); }
+
+    // ============================================
+    // ЧАСОВЫЕ ПОЯСА
+    // ============================================
+    const SOURCE_TZ = 'Europe/Samara';
+
+    const CITY_TO_TZ = {
+      'москва':      'Europe/Moscow',
+      'питер':       'Europe/Moscow',
+      'санкт-петербург': 'Europe/Moscow',
+      'спб':         'Europe/Moscow',
+      'иваново':     'Europe/Moscow',
+      'самара':      'Europe/Samara',
+      'новосибирск': 'Asia/Novosibirsk'
+    };
+
+    function getTzOffsetMinutes(date, tz) {
+      try {
+        const dtf = new Intl.DateTimeFormat('en-US', {
+          timeZone: tz,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false
+        });
+        const parts = dtf.formatToParts(date);
+        const map = {};
+        parts.forEach(p => { map[p.type] = p.value; });
+        const localAsUtc = Date.UTC(
+          parseInt(map.year, 10),
+          parseInt(map.month, 10) - 1,
+          parseInt(map.day, 10),
+          parseInt(map.hour === '24' ? '00' : map.hour, 10),
+          parseInt(map.minute, 10),
+          parseInt(map.second, 10)
+        );
+        return Math.round((localAsUtc - date.getTime()) / 60000);
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function convertDateTime(dateStr, timeStr, fromTz, toTz) {
+      if (!dateStr || !timeStr) return null;
+      if (fromTz === toTz) return { date: dateStr, time: timeStr };
+
+      const dp = String(dateStr).split('-');
+      const tp = String(timeStr).split(':');
+      if (dp.length !== 3 || tp.length < 2) return null;
+
+      const y = parseInt(dp[0], 10);
+      const m = parseInt(dp[1], 10);
+      const d = parseInt(dp[2], 10);
+      const hh = parseInt(tp[0], 10);
+      const mm = parseInt(tp[1], 10);
+
+      const naiveUtc = Date.UTC(y, m - 1, d, hh, mm, 0);
+      const fromOffset = getTzOffsetMinutes(new Date(naiveUtc), fromTz);
+      const trueUtc = naiveUtc - fromOffset * 60000;
+      const toOffset = getTzOffsetMinutes(new Date(trueUtc), toTz);
+      const resultUtc = trueUtc + toOffset * 60000;
+
+      const res = new Date(resultUtc);
+      const ry = res.getUTCFullYear();
+      const rm = res.getUTCMonth() + 1;
+      const rd = res.getUTCDate();
+      const rh = res.getUTCHours();
+      const rmin = res.getUTCMinutes();
+
+      return {
+        date: ry + '-' + pad2(rm) + '-' + pad2(rd),
+        time: pad2(rh) + ':' + pad2(rmin)
+      };
+    }
+
+    function getTodayInTz(tz) {
+      const now = new Date();
+      const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz,
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      });
+      const parts = dtf.formatToParts(now);
+      const map = {};
+      parts.forEach(p => { map[p.type] = p.value; });
+      return map.year + '-' + map.month + '-' + map.day;
+    }
+
+    function getTomorrowInTz(tz) {
+      const now = new Date();
+      const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz,
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      });
+      const parts = dtf.formatToParts(now);
+      const map = {};
+      parts.forEach(p => { map[p.type] = p.value; });
+      const today = map.year + '-' + map.month + '-' + map.day;
+      const d = new Date(today + 'T00:00:00Z');
+      d.setUTCDate(d.getUTCDate() + 1);
+      return d.toISOString().slice(0, 10);
+    }
+
+    function getUserTimezone() {
+      if (!userPhone) return SOURCE_TZ;
+      return employeesTzMap[userPhone] || SOURCE_TZ;
+    }
+
+    function convertShiftToTz(shift, toTz) {
+      if (!shift) return shift;
+      if (shift.status === 'Б' || shift.status === 'О') {
+        if (!shift.start || !shift.end) {
+          return {
+            phone: shift.phone,
+            date: shift.date,
+            start: '',
+            end: '',
+            status: shift.status
+          };
+        }
+      }
+
+      if (!shift.start || !shift.end) return shift;
+
+      const fromTz = employeesTzMap[shift.phone] || SOURCE_TZ;
+
+      const startConv = convertDateTime(shift.date, shift.start, fromTz, toTz);
+      if (!startConv) return shift;
+
+      let endDateForConv = shift.date;
+      const sp = shift.start.split(':').map(Number);
+      const ep = shift.end.split(':').map(Number);
+      const startMin = sp[0] * 60 + sp[1];
+      const endMin = ep[0] * 60 + ep[1];
+      if (endMin <= startMin) {
+        const d = new Date(shift.date + 'T00:00:00Z');
+        d.setUTCDate(d.getUTCDate() + 1);
+        endDateForConv = d.toISOString().slice(0, 10);
+      }
+
+      const endConv = convertDateTime(endDateForConv, shift.end, fromTz, toTz);
+      if (!endConv) return shift;
+
+      return {
+        phone: shift.phone,
+        date: startConv.date,
+        start: startConv.time,
+        end: endConv.time,
+        status: ''
+      };
+    }
 
     function isNightShift(startStr, endStr) {
       if (!startStr || !endStr) return false;
@@ -2148,7 +2465,8 @@
         localStorage.setItem(CACHE_KEYS.availability, JSON.stringify(allAvailability));
         localStorage.setItem(CACHE_KEYS.employees, JSON.stringify({
           names: employeesMap,
-          ics: employeesIcsMap
+          ics: employeesIcsMap,
+          tz: employeesTzMap
         }));
         localStorage.setItem(CACHE_KEYS.time, String(Date.now()));
       } catch (e) {
@@ -2173,6 +2491,7 @@
           const emp = JSON.parse(empStr);
           employeesMap = emp.names || {};
           employeesIcsMap = emp.ics || {};
+          employeesTzMap = emp.tz || {};
         }
         return true;
       } catch (e) {
@@ -2275,6 +2594,7 @@
         const rows = json.table && json.table.rows ? json.table.rows : [];
         employeesMap = {};
         employeesIcsMap = {};
+        employeesTzMap = {};
         rows.forEach(row => {
           const phone = normalizePhone(row.c[0] && row.c[0].v || '');
           const name = String((row.c[1] && row.c[1].v) || '').trim();
@@ -2289,13 +2609,55 @@
             }
           }
 
+          const tzCell = row.c[4];
+          const tz = tzCell && tzCell.v ? String(tzCell.v).trim() : '';
+
           if (phone && isActive) {
             if (name) employeesMap[phone] = name;
             if (icsUrl) employeesIcsMap[phone] = icsUrl;
+            if (tz) employeesTzMap[phone] = tz;
           }
         });
       } catch (e) {
         console.error('Не удалось загрузить сотрудников:', e);
+      }
+    }
+
+    async function loadExtraShifts() {
+      try {
+        const resp = await postToServer({
+          action: 'list_extra_shifts',
+          phone: userPhone || ''
+        });
+        if (resp && resp.ok) {
+          allExtraShifts = resp.shifts || [];
+        } else {
+          allExtraShifts = [];
+        }
+      } catch (e) {
+        console.warn('Не удалось загрузить доп. смены:', e);
+        allExtraShifts = [];
+      }
+    }
+
+    async function loadExtraShiftsAdmin() {
+      try {
+        const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+          ? String(tg.initDataUnsafe.user.id)
+          : '';
+        const resp = await postToServer({
+          action: 'list_extra_shifts_admin',
+          telegram_id: tgId,
+          initData: getTgInitData()
+        });
+        if (resp && resp.ok) {
+          allExtraShiftsAdmin = resp.shifts || [];
+        } else {
+          allExtraShiftsAdmin = [];
+        }
+      } catch (e) {
+        console.warn('Не удалось загрузить доп. смены (админ):', e);
+        allExtraShiftsAdmin = [];
       }
     }
 
@@ -2406,10 +2768,15 @@
       document.getElementById('headerDate').textContent =
         dayNameCap + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
 
-      const todayStr = now.getFullYear() + '-' +
-        pad2(now.getMonth() + 1) + '-' + pad2(now.getDate());
+      const myTz = getUserTimezone();
+      const todayStr = getTodayInTz(myTz);
 
-      const todayShift = allShifts.find(s => s.phone === userPhone && s.date === todayStr);
+      const todayShiftRaw = allShifts.find(s => {
+        if (s.phone !== userPhone) return false;
+        const converted = convertShiftToTz(s, myTz);
+        return converted.date === todayStr;
+      });
+      const todayShift = todayShiftRaw ? convertShiftToTz(todayShiftRaw, myTz) : null;
       const todayEl = document.getElementById('headerToday');
 
       if (todayShift) {
@@ -2436,12 +2803,15 @@
 
     function renderBanner() {
       const banner = document.getElementById('banner');
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const tStr = tomorrow.getFullYear() + '-' +
-        pad2(tomorrow.getMonth() + 1) + '-' + pad2(tomorrow.getDate());
+      const myTz = getUserTimezone();
+      const tStr = getTomorrowInTz(myTz);
 
-      const shift = allShifts.find(s => s.phone === userPhone && s.date === tStr);
+      const shiftRaw = allShifts.find(s => {
+        if (s.phone !== userPhone) return false;
+        const converted = convertShiftToTz(s, myTz);
+        return converted.date === tStr;
+      });
+      const shift = shiftRaw ? convertShiftToTz(shiftRaw, myTz) : null;
       if (!shift) { banner.style.display = 'none'; return; }
 
       if (shift.status === 'Б') {
@@ -2458,6 +2828,30 @@
         banner.style.display = 'flex';
       } else {
         banner.style.display = 'none';
+      }
+    }
+
+    function renderExtraShiftsBanner() {
+      const el = document.getElementById('extraShiftsBanner');
+      if (!el) return;
+
+      if (!allExtraShifts || allExtraShifts.length === 0) {
+        el.style.display = 'none';
+        el.innerHTML = '';
+        return;
+      }
+
+      el.style.display = 'block';
+      el.innerHTML = '<div class="extra-banner" id="extraBannerClick">' +
+        '<div class="extra-banner-text">' +
+          '<span>🎯 Дополнительные смены</span>' +
+        '</div>' +
+        '<span class="extra-banner-count">' + allExtraShifts.length + '</span>' +
+        '</div>';
+
+      const banner = document.getElementById('extraBannerClick');
+      if (banner) {
+        banner.addEventListener('click', showExtraShiftsPopup);
       }
     }
 
@@ -2499,7 +2893,13 @@
         div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
 
         if (cell.date) {
-          const shift = allShifts.find(s => s.phone === userPhone && s.date === cell.date);
+          const myTz = getUserTimezone();
+          const shiftRaw = allShifts.find(s => {
+            if (s.phone !== userPhone) return false;
+            const converted = convertShiftToTz(s, myTz);
+            return converted.date === cell.date;
+          });
+          const shift = shiftRaw ? convertShiftToTz(shiftRaw, myTz) : null;
           if (shift) {
             if (shift.status === 'Б') {
               div.classList.add('sick');
@@ -2744,9 +3144,6 @@
           status: status
         });
         serverOk = !!(resp && resp.ok);
-        if (!serverOk) {
-          console.warn('Сервер отказал:', resp);
-        }
       } catch (e) {
         console.error('Ошибка сети при сохранении:', e);
         showToast('Ошибка', String(e.message || e).substring(0, 80), true);
@@ -2850,11 +3247,14 @@
       document.getElementById('closeAdminPopup').addEventListener('click', () => overlay.remove());
     }
 
-    function showShiftPopup(shift) {
+    function showShiftPopup(shiftRaw) {
       const old = document.querySelector('.popup-overlay');
       if (old) old.remove();
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
+
+      const myTz = getUserTimezone();
+      const shift = convertShiftToTz(shiftRaw, myTz);
 
       let title = '', info = '', showCalendar = false;
       if (shift.status === 'Б') {
@@ -3197,6 +3597,15 @@
       const empAdminBtn = document.getElementById('employeesAdminBtn');
       if (empAdminBtn) empAdminBtn.addEventListener('click', openEmployeesAdmin);
 
+      const extraAdminBtn = document.getElementById('extraShiftsAdminBtn');
+      if (extraAdminBtn) extraAdminBtn.addEventListener('click', openExtraShiftsAdmin);
+
+      const extraBackBtn = document.getElementById('extraShiftsBackBtn');
+      if (extraBackBtn) extraBackBtn.addEventListener('click', closeExtraShiftsAdmin);
+
+      const addExtraBtn = document.getElementById('addExtraShiftBtn');
+      if (addExtraBtn) addExtraBtn.addEventListener('click', showCreateExtraShiftForm);
+
       if (ADMIN_PHONES.includes(userPhone)) {
         document.getElementById('tabAdminBtn').style.display = 'block';
       } else {
@@ -3217,6 +3626,7 @@
         }
 
         await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
+        await loadExtraShifts();
         saveCache();
 
         const myShifts = allShifts.filter(s => s.phone === userPhone);
@@ -3239,6 +3649,7 @@
         renderCalendar();
         renderAvailabilityCalendar();
         renderAdminCalendar();
+        renderExtraShiftsBanner();
       } catch (e) {
         document.getElementById('tabSchedule').innerHTML = '<div class="error">Ошибка: ' + escapeHtml(e.message) + '</div>';
       }
@@ -3733,6 +4144,357 @@
     }
 
     // ============================================
+    // ДОПОЛНИТЕЛЬНЫЕ СМЕНЫ — UI
+    // ============================================
+    function showExtraShiftsPopup() {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      let listHtml = '';
+      if (!allExtraShifts || allExtraShifts.length === 0) {
+        listHtml = '<div class="extra-empty">Свободных доп. смен нет</div>';
+      } else {
+        allExtraShifts.forEach(sh => {
+          const myTz = getUserTimezone();
+          const conv = convertDateTime(sh.date, sh.start, SOURCE_TZ, myTz);
+          const convEnd = convertDateTime(sh.date, sh.end, SOURCE_TZ, myTz);
+
+          const dateShown = conv ? conv.date : sh.date;
+          const startShown = conv ? conv.time : sh.start;
+          const endShown = convEnd ? convEnd.time : sh.end;
+
+          const placesText = sh.free > 0
+            ? 'Свободно: ' + sh.free + ' из ' + sh.places
+            : 'Мест нет';
+          const placesClass = sh.free > 0 ? '' : ' full';
+
+          listHtml += '<div class="extra-card">';
+          listHtml += '<div class="extra-card-header">';
+          listHtml += '<div>';
+          listHtml += '<div class="extra-card-date">' + escapeHtml(formatDateRu(dateShown)) + '</div>';
+          listHtml += '<div class="extra-card-time">' + escapeHtml(startShown) + '–' + escapeHtml(endShown) + '</div>';
+          listHtml += '</div>';
+          listHtml += '<span class="extra-card-places' + placesClass + '">' + escapeHtml(placesText) + '</span>';
+          listHtml += '</div>';
+
+          if (sh.iAmIn) {
+            listHtml += '<div class="extra-card-people">✅ <b>Вы записаны</b></div>';
+            listHtml += '<div class="extra-card-actions">';
+            listHtml += '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + escapeHtml(sh.id) + '">Отменить заявку</button>';
+            listHtml += '</div>';
+          } else if (sh.free > 0) {
+            listHtml += '<div class="extra-card-actions">';
+            listHtml += '<button class="extra-card-btn primary" data-action="join" data-shift-id="' + escapeHtml(sh.id) + '">Записаться</button>';
+            listHtml += '</div>';
+          }
+
+          listHtml += '</div>';
+        });
+      }
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">Дополнительные смены</div>' +
+        '<div class="popup-info">Запишись, если можешь выйти</div>' +
+        listHtml +
+        '<button class="popup-btn secondary" id="closeExtraPopup" style="margin-top:16px;">Закрыть</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('closeExtraPopup').addEventListener('click', () => overlay.remove());
+
+      overlay.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const action = btn.getAttribute('data-action');
+          const shiftId = btn.getAttribute('data-shift-id');
+          if (action === 'join') {
+            await joinExtraShiftAction(shiftId, btn);
+          } else if (action === 'cancel') {
+            await cancelExtraShiftAction(shiftId, btn);
+          }
+        });
+      });
+    }
+
+    async function joinExtraShiftAction(shiftId, btn) {
+      if (btn) { btn.disabled = true; btn.textContent = 'Записываем…'; }
+
+      try {
+        const resp = await postToServer({
+          action: 'join_extra_shift',
+          phone: userPhone,
+          name: getNameForPhone(userPhone),
+          shift_id: shiftId
+        });
+        if (resp && resp.ok) {
+          showToast('Записано', 'Вы записаны на доп. смену');
+          await loadExtraShifts();
+          document.querySelectorAll('.popup-overlay').forEach(o => o.remove());
+          renderExtraShiftsBanner();
+          showExtraShiftsPopup();
+        } else {
+          const err = (resp && resp.error) || 'ошибка';
+          showToast('Ошибка', err, true);
+          if (btn) { btn.disabled = false; btn.textContent = 'Записаться'; }
+        }
+      } catch (e) {
+        showToast('Ошибка', 'Сервер недоступен', true);
+        if (btn) { btn.disabled = false; btn.textContent = 'Записаться'; }
+      }
+    }
+
+    async function cancelExtraShiftAction(shiftId, btn) {
+      if (btn) { btn.disabled = true; btn.textContent = 'Отменяем…'; }
+
+      try {
+        const resp = await postToServer({
+          action: 'cancel_extra_shift',
+          phone: userPhone,
+          shift_id: shiftId
+        });
+        if (resp && resp.ok) {
+          showToast('Отменено', 'Заявка снята');
+          await loadExtraShifts();
+          document.querySelectorAll('.popup-overlay').forEach(o => o.remove());
+          renderExtraShiftsBanner();
+          showExtraShiftsPopup();
+        } else {
+          const err = (resp && resp.error) || 'ошибка';
+          showToast('Ошибка', err, true);
+          if (btn) { btn.disabled = false; btn.textContent = 'Отменить заявку'; }
+        }
+      } catch (e) {
+        showToast('Ошибка', 'Сервер недоступен', true);
+        if (btn) { btn.disabled = false; btn.textContent = 'Отменить заявку'; }
+      }
+    }
+
+    function openExtraShiftsAdmin() {
+      if (!ADMIN_PHONES.includes(userPhone)) {
+        showToast('Отказ', 'У вас нет доступа', true);
+        return;
+      }
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabExtraShiftsAdmin').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'none';
+      loadExtraShiftsAdmin().then(renderExtraShiftsAdminList);
+    }
+
+    function closeExtraShiftsAdmin() {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tabAdmin').classList.add('active');
+      document.getElementById('pageSubtitle').style.display = 'block';
+      document.getElementById('pageSubtitle').textContent = 'Кто может выйти';
+    }
+
+    function renderExtraShiftsAdminList() {
+      const list = document.getElementById('extraShiftsAdminList');
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (!allExtraShiftsAdmin || allExtraShiftsAdmin.length === 0) {
+        list.innerHTML = '<div class="extra-empty">Пока нет доп. смен. Нажми «+», чтобы создать.</div>';
+        return;
+      }
+
+      const sorted = allExtraShiftsAdmin.slice().sort((a, b) => {
+        const sa = a.status === 'deleted' ? 1 : 0;
+        const sb = b.status === 'deleted' ? 1 : 0;
+        if (sa !== sb) return sa - sb;
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+        return a.start.localeCompare(b.start);
+      });
+
+      sorted.forEach(sh => {
+        const isDeleted = sh.status === 'deleted';
+        const placesText = sh.taken + ' из ' + sh.places;
+        const placesClass = sh.taken >= sh.places ? ' full' : '';
+
+        const card = document.createElement('div');
+        card.className = 'extra-card';
+        card.style.opacity = isDeleted ? '0.5' : '1';
+
+        let peopleHtml = '';
+        if (sh.people && sh.people.length > 0) {
+          peopleHtml = '<div class="extra-card-people">Записались: <b>' +
+            sh.people.map(p => escapeHtml(p.name || p.phone)).join(', ') +
+            '</b></div>';
+        } else {
+          peopleHtml = '<div class="extra-card-people">Пока никто не записался</div>';
+        }
+
+        let html = '';
+        html += '<div class="extra-card-header">';
+        html += '<div>';
+        html += '<div class="extra-card-date">' + escapeHtml(formatDateRu(sh.date)) + '</div>';
+        html += '<div class="extra-card-time">' + escapeHtml(sh.start) + '–' + escapeHtml(sh.end) + '</div>';
+        html += '</div>';
+        html += '<span class="extra-card-places' + placesClass + '">' + escapeHtml(placesText) + '</span>';
+        html += '</div>';
+
+        if (isDeleted) {
+          html += '<div class="extra-card-people">❌ Удалена</div>';
+        } else {
+          html += peopleHtml;
+          html += '<div class="extra-card-actions">';
+          html += '<button class="extra-card-btn danger" data-delete-id="' + escapeHtml(sh.id) + '">Удалить смену</button>';
+          html += '</div>';
+        }
+
+        card.innerHTML = html;
+        list.appendChild(card);
+      });
+
+      list.querySelectorAll('[data-delete-id]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const shiftId = btn.getAttribute('data-delete-id');
+          if (!confirm('Удалить доп. смену? Заявки останутся в таблице, но смена перестанет отображаться у сотрудников.')) return;
+
+          btn.disabled = true;
+          btn.textContent = 'Удаляем…';
+
+          try {
+            const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+              ? String(tg.initDataUnsafe.user.id)
+              : '';
+            const resp = await postToServer({
+              action: 'delete_extra_shift',
+              telegram_id: tgId,
+              initData: getTgInitData(),
+              shift_id: shiftId
+            });
+            if (resp && resp.ok) {
+              showToast('Удалено', 'Доп. смена скрыта');
+              await loadExtraShiftsAdmin();
+              renderExtraShiftsAdminList();
+            } else {
+              const err = (resp && resp.error) || 'ошибка';
+              showToast('Ошибка', err, true);
+              btn.disabled = false;
+              btn.textContent = 'Удалить смену';
+            }
+          } catch (e) {
+            showToast('Ошибка', 'Сервер недоступен', true);
+            btn.disabled = false;
+            btn.textContent = 'Удалить смену';
+          }
+        });
+      });
+    }
+
+    function showCreateExtraShiftForm() {
+      const old = document.querySelector('.popup-overlay');
+      if (old) old.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+
+      overlay.innerHTML = '<div class="popup">' +
+        '<div class="popup-title">Новая доп. смена</div>' +
+        '<div class="popup-info">Смена появится у всех сотрудников</div>' +
+        '<div class="extra-create-form">' +
+          '<div class="form-field">' +
+            '<label for="extraDate">Дата</label>' +
+            '<input type="date" id="extraDate" />' +
+          '</div>' +
+          '<div class="extra-create-row">' +
+            '<div class="form-field">' +
+              '<label for="extraStart">С</label>' +
+              '<select id="extraStart">' + buildTimeOptions('09:00') + '</select>' +
+            '</div>' +
+            '<div class="form-field">' +
+              '<label for="extraEnd">До</label>' +
+              '<select id="extraEnd">' + buildTimeOptions('18:00') + '</select>' +
+            '</div>' +
+          '</div>' +
+          '<div class="form-field">' +
+            '<label for="extraPlaces">Количество мест</label>' +
+            '<input type="number" id="extraPlaces" min="1" max="100" value="1" />' +
+          '</div>' +
+        '</div>' +
+        '<div class="form-error" id="extraFormError"></div>' +
+        '<button class="popup-btn" id="extraCreateSubmit">Создать и разослать</button>' +
+        '<button class="popup-btn secondary" id="extraCreateCancel">Отмена</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('extraCreateCancel').addEventListener('click', () => overlay.remove());
+
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('extraDate').value =
+        tomorrow.getFullYear() + '-' + pad2(tomorrow.getMonth() + 1) + '-' + pad2(tomorrow.getDate());
+
+      document.getElementById('extraCreateSubmit').addEventListener('click', async () => {
+        const dateVal = document.getElementById('extraDate').value;
+        const startVal = document.getElementById('extraStart').value;
+        const endVal = document.getElementById('extraEnd').value;
+        const placesVal = document.getElementById('extraPlaces').value;
+        const errEl = document.getElementById('extraFormError');
+
+        errEl.textContent = '';
+
+        if (!dateVal) {
+          errEl.textContent = 'Укажи дату';
+          return;
+        }
+        if (startVal >= endVal) {
+          errEl.textContent = 'Конец должен быть позже начала';
+          return;
+        }
+        const placesNum = parseInt(placesVal, 10);
+        if (isNaN(placesNum) || placesNum < 1) {
+          errEl.textContent = 'Мест должно быть минимум 1';
+          return;
+        }
+
+        const btn = document.getElementById('extraCreateSubmit');
+        btn.disabled = true;
+        btn.textContent = 'Создаём…';
+
+        try {
+          const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+            ? String(tg.initDataUnsafe.user.id)
+            : '';
+          const resp = await postToServer({
+            action: 'create_extra_shift',
+            telegram_id: tgId,
+            initData: getTgInitData(),
+            date: dateVal,
+            start_time: startVal,
+            end_time: endVal,
+            places: placesNum
+          });
+
+          if (resp && resp.ok) {
+            overlay.remove();
+            showToast('Создано', 'Смена разослана сотрудникам');
+            await loadExtraShiftsAdmin();
+            renderExtraShiftsAdminList();
+          } else {
+            const err = (resp && resp.error) || 'ошибка';
+            if (err === 'duplicate') {
+              errEl.textContent = 'Такая доп. смена уже есть';
+            } else {
+              errEl.textContent = 'Ошибка: ' + err;
+            }
+            btn.disabled = false;
+            btn.textContent = 'Создать и разослать';
+          }
+        } catch (e) {
+          errEl.textContent = 'Сервер недоступен';
+          btn.disabled = false;
+          btn.textContent = 'Создать и разослать';
+        }
+      });
+    }
+
+    // ============================================
     // SPLASH — ЛОГИКА
     // ============================================
     let __splashHidden = false;
@@ -3750,9 +4512,7 @@
       return true;
     }
 
-    function markEntrySoundPlayed() {
-      // no-op, оставлено для совместимости
-    }
+    function markEntrySoundPlayed() {}
 
     function updateSoundToggleUI() {
       const enabled = isEntrySoundEnabled();
@@ -3788,15 +4548,9 @@
         return;
       }
 
-      // Целевой момент старта звука от начала splash — 600 мс,
-      // ровно тогда, когда луч начинает движение (CSS: animation-delay 0.6s).
-      // Мелодия длится 2.0 s → заканчивается ровно в момент остановки луча.
       const TARGET_OFFSET = 0.6;
       const DURATION = 2.0;
 
-      // Сколько времени уже прошло с момента старта splash к моменту вызова.
-      // JS может стартовать с задержкой 100–600 мс после начала CSS-анимации,
-      // поэтому компенсируем эту задержку, а не гадаем её заранее.
       const elapsed = (Date.now() - __SPLASH_T0) / 1000;
       const START_OFFSET = Math.max(0, TARGET_OFFSET - elapsed);
 
@@ -3832,18 +4586,11 @@
             reverbSend = null;
           }
 
-          // --- Мелодия Turno ---
-          // Характер: как заставка Netflix — короткий подвод, мощный акцент,
-          // долгий гармонический хвост. A-мажор, узнаваемый «якорь» — A4.
-          //   E4  — мягкая подводка (квинта)
-          //   A4  — главный удар (тоника)
-          //   A5  — октава сверху, «воздух»
-          //   C#5 — мажорная терция, тёплый финал
           const layers = [
-            { freq: 329.63, start: 0.00, gain: 0.30, dur: 0.90, mod: 1.6 }, // E4
-            { freq: 440.00, start: 0.28, gain: 0.55, dur: 1.30, mod: 2.0 }, // A4 — акцент
-            { freq: 880.00, start: 0.34, gain: 0.22, dur: 1.50, mod: 2.4 }, // A5
-            { freq: 554.37, start: 0.50, gain: 0.18, dur: 1.40, mod: 2.2 }  // C#5
+            { freq: 329.63, start: 0.00, gain: 0.30, dur: 0.90, mod: 1.6 },
+            { freq: 440.00, start: 0.28, gain: 0.55, dur: 1.30, mod: 2.0 },
+            { freq: 880.00, start: 0.34, gain: 0.22, dur: 1.50, mod: 2.4 },
+            { freq: 554.37, start: 0.50, gain: 0.18, dur: 1.40, mod: 2.2 }
           ];
 
           layers.forEach((layer) => {
@@ -3884,7 +4631,6 @@
             modulator.stop(end + 0.05);
           });
 
-          // Мастер-гейн: пик 0.12, держим 1.2 s от начала мелодии, гасим к 2.0 s.
           master.gain.setValueAtTime(0.0001, base);
           master.gain.exponentialRampToValueAtTime(0.12, base + 0.015);
           master.gain.setValueAtTime(0.12, base + 1.2);
@@ -3938,7 +4684,6 @@
     }
 
     function forceSplashTimeout() {
-      // Страховка: если что-то упало — принудительно скрыть splash через 5 секунд
       setTimeout(() => {
         hideSplash();
       }, 5000);
@@ -3957,6 +4702,7 @@
           renderCalendar();
           renderHeader();
           renderBanner();
+          renderExtraShiftsBanner();
         } else if (target === 'availability') {
           document.getElementById('tabAvailability').classList.add('active');
           document.getElementById('pageSubtitle').textContent = 'Когда ты можешь выйти';
@@ -4070,13 +4816,6 @@
     updateSoundToggleUI();
     forceSplashTimeout();
 
-    // ============================================
-    // СИНХРОНИЗАЦИЯ ЗВУКА И ЛУЧА СВЕТА
-    // Луч света стартует через 0.6s и идёт 2.0s (см. .splash-shine в CSS).
-    // Звук вызывается сразу, а внутри playEntrySound сам компенсирует задержку
-    // JS-инициализации через __SPLASH_T0 → мелодия стартует ровно в 0.6s от
-    // начала splash и заканчивается в 2.6s — синхронно с уходом луча.
-    // ============================================
     playEntrySound();
 
     const saved = getSavedPhone();

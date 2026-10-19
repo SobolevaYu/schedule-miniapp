@@ -4181,10 +4181,20 @@
           listHtml += '</div>';
 
           if (sh.iAmIn) {
-            listHtml += '<div class="extra-card-people">✅ <b>Вы записаны</b></div>';
-            listHtml += '<div class="extra-card-actions">';
-            listHtml += '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + escapeHtml(sh.id) + '">Отменить заявку</button>';
-            listHtml += '</div>';
+            if (sh.myStatus === 'approved') {
+              listHtml += '<div class="extra-card-people">✅ <b>Подтверждено</b></div>';
+              listHtml += '<div class="extra-card-actions">';
+              listHtml += '<button class="extra-card-btn primary" data-action="add-calendar" data-shift-id="' + escapeHtml(sh.id) + '" data-date="' + escapeHtml(dateShown) + '" data-start="' + escapeHtml(startShown) + '" data-end="' + escapeHtml(endShown) + '">Добавить в календарь</button>';
+              listHtml += '</div>';
+              listHtml += '<div class="extra-card-actions" style="margin-top:8px;">';
+              listHtml += '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + escapeHtml(sh.id) + '">Отменить заявку</button>';
+              listHtml += '</div>';
+            } else {
+              listHtml += '<div class="extra-card-people">⏳ <b>Ждёт подтверждения</b></div>';
+              listHtml += '<div class="extra-card-actions">';
+              listHtml += '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + escapeHtml(sh.id) + '">Отменить заявку</button>';
+              listHtml += '</div>';
+            }
           } else if (sh.free > 0) {
             listHtml += '<div class="extra-card-actions">';
             listHtml += '<button class="extra-card-btn primary" data-action="join" data-shift-id="' + escapeHtml(sh.id) + '">Записаться</button>';
@@ -4214,6 +4224,11 @@
             await joinExtraShiftAction(shiftId, btn);
           } else if (action === 'cancel') {
             await cancelExtraShiftAction(shiftId, btn);
+          } else if (action === 'add-calendar') {
+            const date = btn.getAttribute('data-date');
+            const start = btn.getAttribute('data-start');
+            const end = btn.getAttribute('data-end');
+            openGoogleCalendarForExtraShift(date, start, end);
           }
         });
       });
@@ -4319,11 +4334,31 @@
         card.style.opacity = isDeleted ? '0.5' : '1';
 
         let peopleHtml = '';
-        if (sh.people && sh.people.length > 0) {
-          peopleHtml = '<div class="extra-card-people">Записались: <b>' +
-            sh.people.map(p => escapeHtml(p.name || p.phone)).join(', ') +
-            '</b></div>';
-        } else {
+
+        // Ждут подтверждения
+        if (sh.pending && sh.pending.length > 0) {
+          peopleHtml += '<div class="extra-card-people" style="margin-bottom:6px;">';
+          peopleHtml += '⏳ <b>Ждут подтверждения:</b>';
+          peopleHtml += '</div>';
+          sh.pending.forEach(p => {
+            peopleHtml += '<div class="admin-list-item" style="padding:6px 0;">';
+            peopleHtml += '<span class="admin-list-name">' + escapeHtml(p.name || p.phone) + '</span>';
+            peopleHtml += '<span style="display:flex;gap:6px;">';
+            peopleHtml += '<button class="extra-card-btn primary" style="flex:0 0 auto;min-width:auto;padding:6px 12px;font-size:12px;" data-approve-phone="' + escapeHtml(p.phone) + '" data-approve-shift="' + escapeHtml(sh.id) + '">✓</button>';
+            peopleHtml += '<button class="extra-card-btn danger" style="flex:0 0 auto;min-width:auto;padding:6px 12px;font-size:12px;" data-reject-phone="' + escapeHtml(p.phone) + '" data-reject-shift="' + escapeHtml(sh.id) + '">✕</button>';
+            peopleHtml += '</span>';
+            peopleHtml += '</div>';
+          });
+        }
+
+        // Подтверждены
+        if (sh.approved && sh.approved.length > 0) {
+          peopleHtml += '<div class="extra-card-people" style="margin-top:10px;">';
+          peopleHtml += '✅ <b>Подтверждены:</b> ' + sh.approved.map(p => escapeHtml(p.name || p.phone)).join(', ');
+          peopleHtml += '</div>';
+        }
+
+        if ((!sh.pending || sh.pending.length === 0) && (!sh.approved || sh.approved.length === 0)) {
           peopleHtml = '<div class="extra-card-people">Пока никто не записался</div>';
         }
 
@@ -4382,6 +4417,76 @@
             btn.disabled = false;
             btn.textContent = 'Удалить смену';
           }
+                list.querySelectorAll('[data-approve-phone]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const shiftId = btn.getAttribute('data-approve-shift');
+          const phone = btn.getAttribute('data-approve-phone');
+          btn.disabled = true;
+          btn.textContent = '…';
+
+          try {
+            const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+              ? String(tg.initDataUnsafe.user.id)
+              : '';
+            const resp = await postToServer({
+              action: 'approve_extra_shift_request',
+              telegram_id: tgId,
+              initData: getTgInitData(),
+              shift_id: shiftId,
+              phone: phone
+            });
+            if (resp && resp.ok) {
+              showToast('Подтверждено', 'Сотрудник записан');
+              await loadExtraShiftsAdmin();
+              renderExtraShiftsAdminList();
+            } else {
+              showToast('Ошибка', (resp && resp.error) || 'ошибка', true);
+              btn.disabled = false;
+              btn.textContent = '✓';
+            }
+          } catch (e) {
+            showToast('Ошибка', 'Сервер недоступен', true);
+            btn.disabled = false;
+            btn.textContent = '✓';
+          }
+        });
+      });
+
+      list.querySelectorAll('[data-reject-phone]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Отклонить заявку? Место освободится.')) return;
+          const shiftId = btn.getAttribute('data-reject-shift');
+          const phone = btn.getAttribute('data-reject-phone');
+          btn.disabled = true;
+          btn.textContent = '…';
+
+          try {
+            const tgId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id)
+              ? String(tg.initDataUnsafe.user.id)
+              : '';
+            const resp = await postToServer({
+              action: 'reject_extra_shift_request',
+              telegram_id: tgId,
+              initData: getTgInitData(),
+              shift_id: shiftId,
+              phone: phone
+            });
+            if (resp && resp.ok) {
+              showToast('Отклонено', 'Заявка снята');
+              await loadExtraShiftsAdmin();
+              renderExtraShiftsAdminList();
+            } else {
+              showToast('Ошибка', (resp && resp.error) || 'ошибка', true);
+              btn.disabled = false;
+              btn.textContent = '✕';
+            }
+          } catch (e) {
+            showToast('Ошибка', 'Сервер недоступен', true);
+            btn.disabled = false;
+            btn.textContent = '✕';
+          }
+        });
+      });
         });
       });
     }
@@ -4493,7 +4598,29 @@
         }
       });
     }
-
+    function openGoogleCalendarForExtraShift(date, start, end) {
+      const [y, m, d] = date.split('-');
+      const [sh, sm] = start.split(':');
+      const [eh, em] = end.split(':');
+      const isOvernight = (parseInt(eh) * 60 + parseInt(em)) <= (parseInt(sh) * 60 + parseInt(sm));
+      const startStr = y + m + d + 'T' + sh.padStart(2, '0') + sm.padStart(2, '0') + '00';
+      let endY = y, endM = m, endD = d;
+      if (isOvernight) {
+        const next = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+        next.setDate(next.getDate() + 1);
+        endY = String(next.getFullYear());
+        endM = String(next.getMonth() + 1).padStart(2, '0');
+        endD = String(next.getDate()).padStart(2, '0');
+      }
+      const endStr = endY + endM + endD + 'T' + eh.padStart(2, '0') + em.padStart(2, '0') + '00';
+      const text = encodeURIComponent('Доп. смена ' + start + '–' + end);
+      const dates = startStr + '/' + endStr;
+      const details = encodeURIComponent('Дополнительная смена');
+      const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text + '&dates=' + dates + '&details=' + details;
+      if (tg && tg.openLink) tg.openLink(url);
+      else window.open(url, '_blank');
+      showToast('Открыто', 'Google Calendar');
+    }
     // ============================================
     // SPLASH — ЛОГИКА
     // ============================================

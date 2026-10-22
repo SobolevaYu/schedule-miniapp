@@ -79,8 +79,15 @@
     @media (prefers-color-scheme:dark){
       .header-icon-btn{background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.32);color:var(--brand-light)}
     }
-    .header-date{font-size:14px;font-weight:500;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3);letter-spacing:.1px}
+    .header-date{font-size:14px;font-weight:500;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3);letter-spacing:.1px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
     @media (prefers-color-scheme:dark){.header-date{color:var(--tg-theme-hint-color,#94A3B8)}}
+    .city-chip{
+      display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:var(--radius-pill);
+      background:rgba(16,185,129,.10);border:1px solid rgba(16,185,129,.28);color:var(--brand-dark);
+      font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;
+    }
+    .city-chip svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    @media (prefers-color-scheme:dark){.city-chip{color:var(--brand-light)}}
     .header-today{
       display:flex;align-items:center;gap:var(--space-3);
       padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);
@@ -121,18 +128,9 @@
       font-family:inherit;transition:transform .15s ease,box-shadow .2s ease;
     }
     .phone-form button:active{transform:scale(.98);box-shadow:0 0 0 6px rgba(16,185,129,.15)}
-    .phone-form .manual{display:block;background:none;color:var(--brand);font-size:13px;text-decoration:none;cursor:pointer;margin:0 auto;padding:var(--space-2);border-bottom:1px dashed var(--brand)}
-    .phone-form input{
-      width:100%;padding:14px;border:1px solid rgba(148,163,184,.3);
-      border-radius:var(--radius-md);font-size:15px;margin-bottom:var(--space-2);
-      text-align:center;background:rgba(255,255,255,.6);color:var(--tg-theme-text-color,#0F172A);font-family:inherit;
-    }
-    .phone-form input:focus{outline:2px solid var(--brand);outline-offset:2px;border-color:var(--brand)}
-    @media (prefers-color-scheme:dark){
-      .phone-form input{background:rgba(15,23,42,.5);color:var(--tg-theme-text-color,#F1F5F9)}
-    }
-    .config-warn{font-size:13px;color:#B45309;background:rgba(250,204,21,.15);border:1px solid rgba(250,204,21,.5);border-radius:var(--radius-md);padding:var(--space-3);margin-top:var(--space-3);line-height:1.5;text-align:left}
-    @media (prefers-color-scheme:dark){.config-warn{color:#FDE68A}}
+    .phone-form button:disabled{opacity:.6}
+    .phone-form .form-msg{font-size:13px;line-height:1.5;margin-top:var(--space-3);color:#DC2626}
+    @media (prefers-color-scheme:dark){.phone-form .form-msg{color:#FCA5A5}}
 
     .month-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3);gap:var(--space-2)}
     .month-title{font-size:18px;font-weight:700;letter-spacing:-.4px;flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -185,7 +183,9 @@
     }
     .day-num{font-size:11px;font-weight:600;line-height:1;letter-spacing:-.2px}
     .day-time{font-size:9px;line-height:1.05;font-weight:600;text-align:center;word-break:break-word;overflow-wrap:anywhere}
+    .day-more{font-size:9px;font-weight:800;text-align:center;line-height:1;margin-top:1px}
     .day-status{font-size:13px;font-weight:700;text-align:center;margin-top:2px}
+    .day-star{position:absolute;top:2px;right:3px;font-size:8px;line-height:1}
     .day.other-month{opacity:.22}
     .days.slide-left{animation:slideFromRight .28s cubic-bezier(.32,.72,0,1)}
     .days.slide-right{animation:slideFromLeft .28s cubic-bezier(.32,.72,0,1)}
@@ -222,14 +222,11 @@
     .legend-color{width:14px;height:14px;border-radius:4px;border:1px solid rgba(148,163,184,.3)}
     .legend-icon{width:12px;height:12px}
     .legend-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .tz-note{margin-top:var(--space-2);font-size:11px;color:var(--tg-theme-hint-color,#64748B)}
 
-    .loading{color:var(--tg-theme-hint-color,#64748B);font-size:14px;text-align:center;padding:var(--space-6)}
-    .error{color:#EF4444;font-size:14px;padding:var(--space-3);text-align:center}
-    .not-found{background:rgba(239,68,68,.08);color:#DC2626;padding:var(--space-5);border-radius:var(--radius-lg);text-align:center;font-size:14px;line-height:1.5}
-    @media (prefers-color-scheme:dark){.not-found{background:rgba(239,68,68,.12);color:#FCA5A5}}
     .init-error{
       background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.32);
-      border-radius:var(--radius-lg);padding:var(--space-4);
+      border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-4);
       font-size:14px;line-height:1.5;color:#DC2626;
       display:flex;flex-direction:column;gap:var(--space-3);
     }
@@ -263,6 +260,7 @@
       border:1px solid rgba(255,255,255,.6);
       border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;
       padding:var(--space-6) var(--space-5);
+      padding-bottom:calc(var(--space-6) + env(safe-area-inset-bottom,0px));
       width:100%;max-width:500px;
       animation:slideUp .22s cubic-bezier(.32,.72,0,1);
       max-height:85vh;overflow-y:auto;box-shadow:0 -4px 24px rgba(0,0,0,.15);
@@ -274,6 +272,7 @@
     .popup-title{font-size:20px;font-weight:700;margin-bottom:var(--space-2);letter-spacing:-.3px;line-height:1.2}
     .popup-info{font-size:14px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-5);line-height:1.5}
     @media (prefers-color-scheme:dark){.popup-info{color:var(--tg-theme-hint-color,#94A3B8)}}
+    .popup-hint{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin:-8px 0 var(--space-4);line-height:1.4}
     .popup-btn{
       width:100%;padding:14px;background:var(--grad-primary);color:#fff;border:none;
       border-radius:var(--radius-lg);font-size:15px;font-weight:600;cursor:pointer;
@@ -281,24 +280,53 @@
       font-family:inherit;transition:transform .15s ease,box-shadow .2s ease;
     }
     .popup-btn:active{transform:scale(.98);box-shadow:0 0 0 6px rgba(16,185,129,.15)}
+    .popup-btn:disabled{opacity:.6}
     .popup-btn.google{background:linear-gradient(135deg,#4285F4 0%,#3367D6 100%);box-shadow:0 4px 14px rgba(66,133,244,.28)}
     .popup-btn.apple{background:linear-gradient(135deg,#1F2937 0%,#000 100%);box-shadow:0 4px 14px rgba(0,0,0,.28)}
     .popup-btn.danger{background:linear-gradient(135deg,#EF4444 0%,#DC2626 100%);box-shadow:0 4px 14px rgba(239,68,68,.28)}
+    .popup-btn.sick{background:linear-gradient(135deg,#C8B4A0 0%,#A89480 100%);color:#3D3227}
+    .popup-btn.vac{background:linear-gradient(135deg,#8B82FF 0%,#6E63E6 100%)}
     .popup-btn.secondary{background:transparent;color:var(--tg-theme-link-color,var(--brand));font-weight:500;margin-bottom:0;box-shadow:none;border:1px solid rgba(16,185,129,.22)}
     .popup-btn.secondary:active{box-shadow:0 0 0 4px rgba(16,185,129,.10)}
+    .popup-btn.outline{background:transparent;color:var(--brand);box-shadow:none;border:1px dashed rgba(16,185,129,.5)}
 
     .time-fields{display:flex;gap:var(--space-3);margin-bottom:var(--space-4)}
     .time-fields>div{flex:1}
-    .time-fields label{font-size:13px;color:var(--tg-theme-hint-color,#64748B);display:block;margin-bottom:var(--space-2);font-weight:500}
-    .time-fields select{
+    .time-fields label,.shift-row label{font-size:13px;color:var(--tg-theme-hint-color,#64748B);display:block;margin-bottom:var(--space-2);font-weight:500}
+    .time-fields select,.shift-row select{
       width:100%;padding:var(--space-3);border:1px solid rgba(148,163,184,.3);
       border-radius:var(--radius-md);font-size:15px;text-align:center;
       background:rgba(255,255,255,.7);color:var(--tg-theme-text-color,#0F172A);
       font-weight:600;font-family:inherit;
     }
     @media (prefers-color-scheme:dark){
-      .time-fields select{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9)}
+      .time-fields select,.shift-row select{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9)}
     }
+    .shift-rows{margin-bottom:var(--space-3)}
+    .shift-row{padding:var(--space-3);border:1px solid rgba(16,185,129,.2);border-radius:var(--radius-lg);margin-bottom:var(--space-2)}
+    .shift-row-fields{display:flex;gap:var(--space-2);align-items:flex-end}
+    .shift-row-fields>div{flex:1;min-width:0}
+    .shift-row-remove{
+      width:44px;height:46px;flex-shrink:0;border-radius:var(--radius-md);border:1px solid rgba(239,68,68,.35);
+      background:transparent;color:#DC2626;font-size:18px;cursor:pointer;font-family:inherit;
+    }
+    .shift-row-note{font-size:12px;color:#4F46E5;margin-top:6px;min-height:15px}
+    @media (prefers-color-scheme:dark){.shift-row-note{color:#A5B4FC}}
+
+    .city-list{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3)}
+    .city-btn{
+      width:100%;padding:14px var(--space-4);border-radius:var(--radius-lg);font-size:15px;font-weight:600;
+      border:1px solid rgba(16,185,129,.28);background:transparent;color:var(--tg-theme-text-color,#0F172A);
+      text-align:left;cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;align-items:center;
+    }
+    .city-btn.active{background:rgba(16,185,129,.14);border-color:var(--brand)}
+    .city-btn span{font-size:12px;font-weight:500;color:var(--tg-theme-hint-color,#64748B)}
+    @media (prefers-color-scheme:dark){.city-btn{color:var(--tg-theme-text-color,#F1F5F9)}}
+
+    .shift-card{padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);border:1px solid rgba(16,185,129,.25);margin-bottom:var(--space-3)}
+    .shift-card-time{font-size:17px;font-weight:700;margin-bottom:var(--space-2)}
+    .shift-card-sub{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3)}
+    .shift-card .popup-btn{margin-bottom:0}
 
     .tabs{
       position:fixed;bottom:var(--space-2);left:var(--space-3);right:var(--space-3);
@@ -306,6 +334,7 @@
       backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
       border:1px solid rgba(255,255,255,.5);display:none;z-index:500;
       border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);padding:6px;gap:var(--space-1);
+      margin-bottom:env(safe-area-inset-bottom,0px);
     }
     .tabs.visible{display:flex}
     @media (prefers-color-scheme:dark){.tabs{background:rgba(30,41,59,.85);border-color:rgba(148,163,184,.15)}}
@@ -362,6 +391,7 @@
       font-family:inherit;transition:transform .15s ease;
     }
     .edit-back:active{transform:scale(.9)}
+    .edit-back svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     @media (prefers-color-scheme:dark){
       .edit-back{background:rgba(30,41,59,.55);border-color:rgba(148,163,184,.15);color:var(--tg-theme-text-color,#F1F5F9)}
     }
@@ -505,7 +535,7 @@
     .employee-avatar.inactive{background:linear-gradient(135deg,#94A3B8 0%,#CBD5E1 100%);box-shadow:none}
     .employee-admin-info{flex:1;min-width:0}
     .employee-admin-name{font-size:15px;font-weight:600;line-height:1.3;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .employee-admin-meta{font-size:12px;color:var(--tg-theme-hint-color,#64748B);display:flex;align-items:center;gap:var(--space-2);line-height:1.3}
+    .employee-admin-meta{font-size:12px;color:var(--tg-theme-hint-color,#64748B);display:flex;align-items:center;gap:var(--space-2);line-height:1.3;flex-wrap:wrap}
     @media (prefers-color-scheme:dark){.employee-admin-meta{color:var(--tg-theme-hint-color,#94A3B8)}}
     .employee-status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
     .employee-status-dot.online{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.15)}
@@ -551,10 +581,10 @@
     .form-field{margin-bottom:var(--space-4)}
     .form-field label{display:block;font-size:13px;font-weight:500;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-2)}
     @media (prefers-color-scheme:dark){.form-field label{color:var(--tg-theme-hint-color,#94A3B8)}}
-    .form-field input{width:100%;padding:14px var(--space-4);border:1px solid rgba(148,163,184,.3);border-radius:var(--radius-md);font-size:15px;background:rgba(255,255,255,.7);color:var(--tg-theme-text-color,#0F172A);font-family:inherit;transition:border-color .2s ease}
-    .form-field input:focus{outline:none;border-color:var(--brand)}
+    .form-field input,.form-field select{width:100%;padding:14px var(--space-4);border:1px solid rgba(148,163,184,.3);border-radius:var(--radius-md);font-size:15px;background:rgba(255,255,255,.7);color:var(--tg-theme-text-color,#0F172A);font-family:inherit;transition:border-color .2s ease}
+    .form-field input:focus,.form-field select:focus{outline:none;border-color:var(--brand)}
     @media (prefers-color-scheme:dark){
-      .form-field input{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9);border-color:rgba(148,163,184,.2)}
+      .form-field input,.form-field select{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9);border-color:rgba(148,163,184,.2)}
     }
     .form-error{color:#DC2626;font-size:13px;margin-top:var(--space-2);min-height:18px;line-height:1.3}
 
@@ -573,18 +603,21 @@
     @media (prefers-color-scheme:dark){.extra-card{background:var(--grad-surface-dark)}}
     .extra-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-3);margin-bottom:var(--space-2)}
     .extra-card-date{font-size:16px;font-weight:700;color:var(--tg-theme-text-color,#0F172A);line-height:1.3}
+    @media (prefers-color-scheme:dark){.extra-card-date{color:var(--tg-theme-text-color,#F1F5F9)}}
     .extra-card-time{font-size:14px;color:var(--tg-theme-hint-color,#64748B);margin-top:4px;font-weight:500}
     .extra-card-places{font-size:12px;font-weight:700;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(16,185,129,.15);color:var(--brand);white-space:nowrap;flex-shrink:0}
     .extra-card-places.full{background:rgba(239,68,68,.12);color:#DC2626}
     .extra-card-people{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3);line-height:1.5}
     .extra-card-people b{color:var(--tg-theme-text-color,#0F172A)}
+    @media (prefers-color-scheme:dark){.extra-card-people b{color:var(--tg-theme-text-color,#F1F5F9)}}
     .extra-card-actions{display:flex;gap:var(--space-2);flex-wrap:wrap}
     .extra-card-btn{flex:1;min-width:120px;padding:10px;border-radius:var(--radius-md);font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:transform .15s ease}
     .extra-card-btn:active{transform:scale(.97)}
     .extra-card-btn.primary{background:var(--grad-primary);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.28)}
-    .extra-card-btn.primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+    .extra-card-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
     .extra-card-btn.danger{background:transparent;color:#DC2626;border:1px solid rgba(239,68,68,.4)}
     .extra-card-btn.secondary{background:transparent;color:var(--brand);border:1px solid rgba(16,185,129,.3)}
+    .extra-card-btn.small{flex:0 0 auto;min-width:auto;padding:6px 12px;font-size:12px}
     .extra-empty{text-align:center;padding:var(--space-5);color:var(--tg-theme-hint-color,#64748B);font-size:14px}
     .extra-create-form{display:flex;flex-direction:column;gap:var(--space-3)}
     .extra-create-form .form-field{margin-bottom:0}
@@ -640,30 +673,27 @@
         </button>
       </div>
     </div>
-    <div class="header-date" id="headerDate">—</div>
+    <div class="header-date"><span id="headerDate">—</span><button class="city-chip" id="cityChip" style="display:none"></button></div>
     <div class="header-today" id="headerToday" style="display:none"></div>
   </div>
-  <p class="subtitle" id="pageSubtitle">Твоё расписание смен</p>
+  <p class="subtitle" id="pageSubtitle" style="display:none"></p>
 
   <div class="phone-form" id="phoneForm" style="display:none">
-    <p class="hint">Чтобы видеть свои смены, поделись номером телефона, который записан в системе.</p>
+    <p class="hint" id="phoneFormHint">Чтобы видеть свои смены, поделись номером телефона, который записан в системе.</p>
     <button id="sharePhone">Поделиться номером</button>
-    <a class="manual" id="manualLink">Ввести номер вручную</a>
-    <input type="tel" id="phoneInput" placeholder="+79639190173" style="display:none" />
-    <button id="saveManual" style="display:none">Сохранить</button>
-    <div class="config-warn" id="configWarn" style="display:none"></div>
+    <div class="form-msg" id="phoneFormMsg"></div>
   </div>
 
-  <div class="tab-content active" id="tabSchedule">
+  <div class="tab-content" id="tabSchedule">
     <div id="initError" style="display:none"></div>
     <div id="calendarWrap" style="display:none">
       <div id="banner" style="display:none"></div>
       <div id="extraShiftsBanner" style="display:none"></div>
       <div class="month-header">
-        <button class="month-nav" id="prevMonth">‹</button>
+        <button class="month-nav" id="prevMonth" aria-label="Предыдущий месяц">‹</button>
         <div class="month-title" id="monthTitle">—</div>
         <button class="today-btn" id="todayBtn">Сегодня</button>
-        <button class="month-nav" id="nextMonth">›</button>
+        <button class="month-nav" id="nextMonth" aria-label="Следующий месяц">›</button>
       </div>
       <div class="calendar">
         <div class="weekdays">
@@ -680,17 +710,19 @@
         <div class="legend-item">
           <span class="legend-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>Ночная
         </div>
+        <div class="legend-item">★ Доп. смена</div>
       </div>
+      <div class="tz-note" id="tzNote"></div>
     </div>
   </div>
 
   <div class="tab-content" id="tabAvailability">
-    <div class="info-block">Отметь дни, когда ты <b>можешь выйти на подработку</b>. Нажми на день в календаре — укажи часы. Руководитель увидит твою доступность.</div>
+    <div class="info-block">Отметь дни, когда ты <b>можешь выйти на подработку</b>. Нажми на день в календаре — укажи часы по своему времени. Руководитель увидит твою доступность.</div>
     <div class="month-header">
-      <button class="month-nav" id="prevMonthAvail">‹</button>
+      <button class="month-nav" id="prevMonthAvail" aria-label="Предыдущий месяц">‹</button>
       <div class="month-title" id="monthTitleAvail">—</div>
       <button class="today-btn" id="todayBtnAvail">Сегодня</button>
-      <button class="month-nav" id="nextMonthAvail">›</button>
+      <button class="month-nav" id="nextMonthAvail" aria-label="Следующий месяц">›</button>
     </div>
     <div class="calendar">
       <div class="weekdays">
@@ -703,7 +735,7 @@
   </div>
 
   <div class="tab-content" id="tabAdmin">
-    <div class="info-block">Нажми на день — увидишь, кто может выйти на подработку.</div>
+    <div class="info-block">Нажми на день — увидишь, кто может выйти на подработку. Всё время здесь — <b>по Москве</b>.</div>
     <button class="admin-action-btn" id="employeesAdminBtn">
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
       Сотрудники
@@ -717,10 +749,10 @@
       Дополнительные смены
     </button>
     <div class="month-header">
-      <button class="month-nav" id="prevMonthAdmin">‹</button>
+      <button class="month-nav" id="prevMonthAdmin" aria-label="Предыдущий месяц">‹</button>
       <div class="month-title" id="monthTitleAdmin">—</div>
       <button class="today-btn" id="todayBtnAdmin">Сегодня</button>
-      <button class="month-nav" id="nextMonthAdmin">›</button>
+      <button class="month-nav" id="nextMonthAdmin" aria-label="Следующий месяц">›</button>
     </div>
     <div class="calendar">
       <div class="weekdays">
@@ -734,23 +766,23 @@
 
   <div class="tab-content" id="tabEditEmployees">
     <div class="edit-header">
-      <button class="edit-back" id="editBackBtn">‹</button>
+      <button class="edit-back" id="editBackBtn" aria-label="Назад">‹</button>
       <div class="edit-title">Редактирование расписания</div>
     </div>
-    <div class="info-block">Выбери сотрудника, чтобы посмотреть и изменить его смены.</div>
+    <div class="info-block">Выбери сотрудника, чтобы посмотреть и изменить его смены. Время вносится <b>по Москве</b> — каждый сотрудник увидит его в своём часовом поясе.</div>
     <div id="employeesList" class="employees-list"></div>
   </div>
 
   <div class="tab-content" id="tabEditEmployeeCalendar">
     <div class="edit-header">
-      <button class="edit-back" id="editCalendarBackBtn">‹</button>
+      <button class="edit-back" id="editCalendarBackBtn" aria-label="Назад">‹</button>
       <div class="edit-title" id="editCalendarTitle">Сотрудник</div>
     </div>
     <div class="month-header">
-      <button class="month-nav" id="prevMonthEdit">‹</button>
+      <button class="month-nav" id="prevMonthEdit" aria-label="Предыдущий месяц">‹</button>
       <div class="month-title" id="monthTitleEdit">—</div>
       <button class="today-btn" id="todayBtnEdit">Сегодня</button>
-      <button class="month-nav" id="nextMonthEdit">›</button>
+      <button class="month-nav" id="nextMonthEdit" aria-label="Следующий месяц">›</button>
     </div>
     <div class="calendar">
       <div class="weekdays">
@@ -760,13 +792,12 @@
       </div>
       <div class="days" id="daysEdit"></div>
     </div>
+    <div class="tz-note">Время — по Москве</div>
   </div>
 
   <div class="tab-content" id="tabEmployeesAdmin">
     <div class="edit-header">
-      <button class="edit-back" id="employeesAdminBackBtn">
-        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+      <button class="edit-back" id="employeesAdminBackBtn" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
       <div class="edit-title">Сотрудники</div>
       <button class="header-icon-btn" id="addEmployeeBtn" aria-label="Добавить сотрудника">
         <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -788,9 +819,7 @@
 
   <div class="tab-content" id="tabExtraShiftsAdmin">
     <div class="edit-header">
-      <button class="edit-back" id="extraShiftsBackBtn">
-        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+      <button class="edit-back" id="extraShiftsBackBtn" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
       <div class="edit-title">Дополнительные смены</div>
       <button class="header-icon-btn" id="addExtraShiftBtn" aria-label="Создать доп. смену">
         <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -801,9 +830,7 @@
 
   <div class="tab-content" id="tabEmployeeCardAdmin">
     <div class="edit-header">
-      <button class="edit-back" id="employeeCardBackBtn">
-        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+      <button class="edit-back" id="employeeCardBackBtn" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
       <div class="edit-title" id="employeeCardTitle">Сотрудник</div>
     </div>
     <div class="employee-card-body" id="employeeCardBody"></div>
@@ -826,21 +853,24 @@
     'use strict';
 
     // ═══════════════════════════════════════════════════════════
-    // КОНФИГ (заполнить!)
+    // КОНФИГ — единственная настройка
     // ═══════════════════════════════════════════════════════════
-    const SHEET_ID    = '1CpWhm4KHW3pKi5BbMRo7nzAqpCkkUtYe-qmHVIVX648';   // ← ID Google-таблицы
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';   // ← URL Apps Script Web App
+    const BOT_LINK    = 'https://t.me/miniwfm_bot';
 
-    const SHEET_NAME         = 'Смены';
-    const SHEET_AVAILABILITY = 'Доступность';
-    const SHEET_EMPLOYEES    = 'Сотрудники';
-    const STORAGE_KEY        = 'user_phone';
-    const ADMIN_PHONES       = ['+79879286721', '+79102490096'];
-    const SOURCE_TZ          = 'Europe/Samara';
+    const CONFIG_READY = /^https:\/\/\S+/.test(WEB_APP_URL);
+    const MSK_OFFSET = 180;   // всё время на сервере — по Москве
+    const CACHE_KEY = 'turno_cache_v2';
+    const CACHE_TTL = 15 * 60 * 1000;
 
-    const CONFIG_READY =
-      /^[A-Za-z0-9_-]{20,}$/.test(SHEET_ID) &&
-      /^https:\/\/\S+/.test(WEB_APP_URL);
+    // Должно совпадать с CITIES на сервере
+    const CITIES = {
+      moscow:      { name: 'Москва',          offset: 180 },
+      spb:         { name: 'Санкт-Петербург', offset: 180 },
+      ivanovo:     { name: 'Иваново',         offset: 180 },
+      samara:      { name: 'Самара',          offset: 240 },
+      novosibirsk: { name: 'Новосибирск',     offset: 420 }
+    };
 
     // ═══════════════════════════════════════════════════════════
     // ОКРУЖЕНИЕ
@@ -855,6 +885,7 @@
       vacation: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20"/><path d="M5 9l7-7 7 7"/><path d="M5 22h14"/></svg>',
       dayoff:   '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
       moon:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+      pin:      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
       check:    '<polyline points="20 6 9 17 4 12"/>',
       error:    '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
       helpCalendar: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
@@ -863,6 +894,30 @@
       helpMoon:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
       arrowRight:   '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>'
     };
+
+    const ERRORS = {
+      busy: 'Сервер занят, попробуйте ещё раз',
+      not_admin: 'Нет доступа',
+      need_contact: 'Нужно подтвердить номер',
+      not_employee: 'Номер не найден среди сотрудников',
+      expired: 'Сессия устарела — закройте и откройте приложение',
+      bad_signature: 'Откройте приложение через Telegram',
+      no_signature: 'Откройте приложение через Telegram',
+      contact_unverified: 'Не удалось подтвердить номер. Обновите Telegram и попробуйте снова',
+      contact_mismatch: 'Можно поделиться только своим номером',
+      bad_time: 'Проверьте время смены', invalid_time: 'Проверьте время смены',
+      bad_date: 'Неверная дата', invalid_date: 'Неверная дата',
+      no_month_sheet: 'Нет листа-месяца для этой даты',
+      no_day_column: 'Этого дня нет в листе-месяце',
+      no_places: 'Мест больше нет',
+      duplicate: 'Такая доп. смена уже есть',
+      shift_closed: 'Смена закрыта', shift_not_found: 'Смена не найдена',
+      request_not_found: 'Заявка не найдена',
+      phone_taken: 'Этот номер уже есть у другого сотрудника',
+      invalid_phone: 'Неверный номер телефона', empty_name: 'Введите имя',
+      not_found: 'Не найдено', server_error: 'Ошибка сервера'
+    };
+    function errText(code) { return ERRORS[code] || ('Ошибка: ' + String(code || 'неизвестно')); }
 
     // ═══════════════════════════════════════════════════════════
     // УТИЛИТЫ
@@ -874,14 +929,6 @@
       set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
       del(k) { try { localStorage.removeItem(k); } catch (e) {} }
     };
-
-    function normalizePhone(p) {
-      if (!p) return '';
-      let s = String(p).trim().replace(/[^0-9+]/g, '');
-      if (!s) return '';
-      if (s[0] !== '+') s = '+' + s;
-      return s;
-    }
 
     function getTgInitData() {
       try { return (tg && typeof tg.initData === 'string' && tg.initData) || ''; }
@@ -901,230 +948,219 @@
         .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
     function isValidIsoDate(s) { return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s); }
-    function isTruthy(v) { return v === true || v === 1 || v === '1' || v === 'TRUE' || v === 'true'; }
 
-    function formatDateRu(isoDate) {
-      if (!isValidIsoDate(isoDate)) return isoDate || '—';
-      const [y, m, d] = isoDate.split('-');
-      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-      const mNum = parseInt(m, 10);
-      if (mNum < 1 || mNum > 12) return isoDate;
-      return parseInt(d, 10) + ' ' + months[mNum - 1] + ' ' + y;
-    }
-    function getMonthName(m) {
-      return ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][m];
+    const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const MONTHS_NOM = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+    const WEEKDAYS = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+
+    function formatDateRu(iso) {
+      if (!isValidIsoDate(iso)) return escapeHtml(iso || '—');
+      const [y, m, d] = iso.split('-').map(Number);
+      if (m < 1 || m > 12) return escapeHtml(iso);
+      return d + ' ' + MONTHS_GEN[m - 1] + ' ' + y;
     }
 
-    function isNightShift(startStr, endStr) {
-      if (!startStr || !endStr) return false;
-      const [sh, sm] = String(startStr).split(':').map(Number);
-      const [eh, em] = String(endStr).split(':').map(Number);
-      if ([sh, sm, eh, em].some(Number.isNaN)) return false;
-      const S = sh * 60 + sm;
-      let E = eh * 60 + em;
-      if (E <= S) E += 1440;
-      return E > 22 * 60 || S < 6 * 60;
+    // Время: минуты, длительность, перевод между часовыми поясами
+    function timeToMin(t) {
+      const m = String(t || '').trim().match(/^(\d{1,2}):(\d{2})$/);
+      if (!m) return NaN;
+      const h = +m[1], mm = +m[2];
+      if (mm > 59 || h > 24 || (h === 24 && mm !== 0)) return NaN;
+      return h * 60 + mm;
+    }
+    function minToTime(m, isEnd) {
+      let x = ((m % 1440) + 1440) % 1440;
+      if (isEnd && x === 0 && m > 0) x = 1440;
+      return pad2(Math.floor(x / 60)) + ':' + pad2(x % 60);
+    }
+    function slotDuration(start, end) {
+      const s = timeToMin(start), e = timeToMin(end);
+      if (isNaN(s) || isNaN(e) || s >= 1440) return 0;
+      if (e % 1440 === s) return 0;
+      let d = e - s;
+      if (d <= 0) d += 1440;
+      return d;
+    }
+    function isOvernight(start, end) {
+      const s = timeToMin(start), d = slotDuration(start, end);
+      return d > 0 && s + d > 1440;
+    }
+    function addDays(iso, n) {
+      const [y, m, d] = iso.split('-').map(Number);
+      const dt = new Date(Date.UTC(y, m - 1, d + n));
+      return dt.getUTCFullYear() + '-' + pad2(dt.getUTCMonth() + 1) + '-' + pad2(dt.getUTCDate());
+    }
+    function convertSlot(date, start, end, fromOff, toOff) {
+      const s = timeToMin(start), dur = slotDuration(start, end);
+      if (isNaN(s) || !dur || !isValidIsoDate(date)) return null;
+      let ls = s + (toOff - fromOff);
+      const shift = Math.floor(ls / 1440);
+      ls -= shift * 1440;
+      return { date: addDays(date, shift), start: minToTime(ls, false), end: minToTime(ls + dur, true) };
+    }
+    function isNightShift(start, end) {
+      const S = timeToMin(start), dur = slotDuration(start, end);
+      if (isNaN(S) || !dur) return false;
+      return S + dur > 22 * 60 || S < 6 * 60;
+    }
+    // Сегодняшняя дата и время в часовом поясе со смещением offset (минуты)
+    function nowAt(offset) {
+      const d = new Date(Date.now() + offset * 60000);
+      return {
+        iso: d.getUTCFullYear() + '-' + pad2(d.getUTCMonth() + 1) + '-' + pad2(d.getUTCDate()),
+        y: d.getUTCFullYear(), m: d.getUTCMonth(), d: d.getUTCDate(),
+        h: d.getUTCHours(), wd: d.getUTCDay()
+      };
     }
 
-    function addDays(isoDate, n) {
-      const d = new Date(isoDate + 'T00:00:00Z');
-      d.setUTCDate(d.getUTCDate() + n);
-      return d.toISOString().slice(0, 10);
+    function myCityKey() { return me && CITIES[me.city] ? me.city : ''; }
+    function myOffset() { const k = myCityKey(); return k ? CITIES[k].offset : MSK_OFFSET; }
+    function tzLabel() {
+      const k = myCityKey();
+      if (!k) return 'Время — по Москве';
+      return 'Время — по городу ' + CITIES[k].name + (CITIES[k].offset === MSK_OFFSET ? ' (МСК)' : ' (МСК' + (CITIES[k].offset > MSK_OFFSET ? '+' : '') + ((CITIES[k].offset - MSK_OFFSET) / 60) + ')');
     }
 
     // ═══════════════════════════════════════════════════════════
     // STATE
     // ═══════════════════════════════════════════════════════════
-    let userPhone = null;
-    let currentMonth = new Date();
-    let currentMonthAvail = new Date();
-    let currentMonthAdmin = new Date();
-    let currentMonthEdit = new Date();
-    let currentEditPhone = null;
-    let allShifts = [];
-    let allAvailability = [];
-    let allExtraShifts = [];
+    let me = null;                // { phone, name, city, isAdmin, icsUrl }
+    let myShifts = [];            // по Москве: { date, start, end, status, extra }
+    let myAvail = [];             // по Москве: { date, start, end }
+    let allExtraShifts = [];      // по Москве
+    let adminData = null;         // { employees, shifts, availability } — только у руководителя
     let allExtraShiftsAdmin = [];
-    let employeesMap = {};
-    let employeesIcsMap = {};
+    let currentEditPhone = null;
+
+    const months = { schedule: null, avail: null, admin: null, edit: null };
 
     let __splashHidden = false;
     let __splashErrorTimer = null;
-    let __initRunning = false;
-    let __initDone = false;
+
+    function namesMap() {
+      const map = {};
+      (adminData && adminData.employees || []).forEach(e => { map[e.phone] = e.name; });
+      return map;
+    }
+    function getNameForPhone(phone) { return namesMap()[phone] || phone; }
 
     // ═══════════════════════════════════════════════════════════
     // СЕТЬ
     // ═══════════════════════════════════════════════════════════
     async function fetchWithTimeout(url, opts, ms) {
-      ms = ms || 15000;
       const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), ms);
-      try {
-        return await fetch(url, Object.assign({}, opts, { signal: ctrl.signal }));
-      } finally {
-        clearTimeout(t);
-      }
+      const t = setTimeout(() => ctrl.abort(), ms || 20000);
+      try { return await fetch(url, Object.assign({}, opts, { signal: ctrl.signal })); }
+      finally { clearTimeout(t); }
     }
 
+    // Каждый запрос подписан Telegram — сервер сам определяет, кто вы
     async function postToServer(payload) {
       if (!CONFIG_READY) throw new Error('Приложение не настроено');
+      const body = Object.assign({}, payload, { initData: getTgInitData() });
       const res = await fetchWithTimeout(WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'data=' + encodeURIComponent(JSON.stringify(payload))
+        body: 'data=' + encodeURIComponent(JSON.stringify(body))
       });
-      const text = await res.text();
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      try { return JSON.parse(text); }
-      catch (e) { throw new Error('Сервер вернул не JSON'); }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // GOOGLE SHEETS
-    // ═══════════════════════════════════════════════════════════
-    function gvizToIsoDate(cell) {
-      if (!cell) return '';
-      if (typeof cell.v === 'string') {
-        const m = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
-        if (m) return m[1] + '-' + pad2(parseInt(m[2], 10) + 1) + '-' + pad2(m[3]);
-      }
-      for (const raw of [cell.f, cell.v]) {
-        const s = String(raw || '').trim();
-        if (!s) continue;
-        let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
-        if (m) return m[1] + '-' + pad2(m[2]) + '-' + pad2(m[3]);
-        m = s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
-        if (m) return m[3] + '-' + pad2(m[2]) + '-' + pad2(m[1]);
-      }
-      return '';
-    }
-    function gvizToTime(cell) {
-      if (!cell) return '';
-      if (typeof cell.v === 'string') {
-        const m = cell.v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+)/);
-        if (m) return pad2(m[4]) + ':' + pad2(m[5]);
-      }
-      for (const raw of [cell.f, cell.v]) {
-        const s = String(raw || '').trim();
-        if (!s) continue;
-        const m = s.match(/^(\d{1,2}):(\d{2})/);
-        if (m) return pad2(m[1]) + ':' + m[2];
-      }
-      return '';
-    }
-
-    async function sheetFetch(sheetName) {
-      const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
-        '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
-      const res = await fetchWithTimeout(url);
       const text = await res.text();
-      const start = text.indexOf('{');
-      const end = text.lastIndexOf('}');
-      if (start === -1 || end <= start) throw new Error('Пустой ответ Google Sheets');
-      const json = JSON.parse(text.substring(start, end + 1));
-      return (json.table && json.table.rows) || [];
+      try { return JSON.parse(text); } catch (e) { throw new Error('Сервер вернул не JSON'); }
     }
 
-    async function loadShifts() {
-      const rows = await sheetFetch(SHEET_NAME);
-      allShifts = rows.map(r => ({
-        phone:  normalizePhone(r.c[0] && r.c[0].v || ''),
-        date:   gvizToIsoDate(r.c[1]),
-        start:  gvizToTime(r.c[2]),
-        end:    gvizToTime(r.c[3]),
-        status: String((r.c[4] && r.c[4].v) || '').trim().toUpperCase()
-      })).filter(s => s.phone && s.date);
+    function applyData(resp) {
+      me = resp.me || null;
+      myShifts = resp.shifts || [];
+      myAvail = resp.availability || [];
+      allExtraShifts = resp.extra || [];
+      adminData = resp.admin || null;
     }
 
-    async function loadAvailability() {
+    function saveCache(resp) {
+      safeLS.set(CACHE_KEY, JSON.stringify({ uid: getTgUserId(), time: Date.now(), data: resp }));
+    }
+    function loadCache() {
       try {
-        const rows = await sheetFetch(SHEET_AVAILABILITY);
-        allAvailability = rows.map(r => ({
-          phone: normalizePhone(r.c[0] && r.c[0].v || ''),
-          date:  gvizToIsoDate(r.c[1]),
-          start: gvizToTime(r.c[2]),
-          end:   gvizToTime(r.c[3])
-        })).filter(a => a.phone && a.date);
-      } catch (e) { console.warn('availability:', e); }
+        const c = JSON.parse(safeLS.get(CACHE_KEY) || 'null');
+        if (!c || c.uid !== getTgUserId() || !c.data || Date.now() - c.time > CACHE_TTL) return null;
+        return c.data;
+      } catch (e) { return null; }
     }
 
-    async function loadEmployees() {
-      try {
-        const rows = await sheetFetch(SHEET_EMPLOYEES);
-        const names = {}, ics = {};
-        rows.forEach(r => {
-          const phone = normalizePhone(r.c[0] && r.c[0].v || '');
-          const name  = String((r.c[1] && r.c[1].v) || '').trim();
-          const icsUrl = String((r.c[2] && r.c[2].v) || '').trim();
-          const active = r.c[3] ? isTruthy(r.c[3].v) : true;
-          if (phone && active) {
-            if (name) names[phone] = name;
-            if (icsUrl) ics[phone] = icsUrl;
-          }
-        });
-        employeesMap = names;
-        employeesIcsMap = ics;
-      } catch (e) { console.warn('employees:', e); }
+    // ═══════════════════════════════════════════════════════════
+    // ДАННЫЕ В МЕСТНОМ ВРЕМЕНИ СОТРУДНИКА
+    // ═══════════════════════════════════════════════════════════
+    // Смены пользователя: { [местная дата]: [ {kind, start, end, extra, orig} ] }
+    function myEntriesByDate() {
+      const map = {};
+      const off = myOffset();
+      myShifts.forEach(s => {
+        if (s.status === 'Б' || s.status === 'О') {
+          (map[s.date] = map[s.date] || []).push({ kind: s.status === 'Б' ? 'sick' : 'vacation', orig: s });
+          return;
+        }
+        const c = convertSlot(s.date, s.start, s.end, MSK_OFFSET, off);
+        if (!c) return;
+        (map[c.date] = map[c.date] || []).push({ kind: 'shift', start: c.start, end: c.end, extra: !!s.extra, orig: s });
+      });
+      Object.keys(map).forEach(k => map[k].sort((a, b) => String(a.start || '').localeCompare(String(b.start || ''))));
+      return map;
     }
-
-    async function loadExtraShifts() {
-      if (!CONFIG_READY || !userPhone) { allExtraShifts = []; return; }
-      try {
-        const resp = await postToServer({ action: 'list_extra_shifts', phone: userPhone });
-        allExtraShifts = (resp && resp.ok) ? (resp.shifts || []) : [];
-      } catch (e) { allExtraShifts = []; }
+    function myAvailByDate() {
+      const map = {};
+      const off = myOffset();
+      myAvail.forEach(a => {
+        const c = convertSlot(a.date, a.start, a.end, MSK_OFFSET, off);
+        if (c) map[c.date] = { start: c.start, end: c.end, orig: a };
+      });
+      return map;
     }
-
-    async function loadExtraShiftsAdmin() {
-      if (!CONFIG_READY) { allExtraShiftsAdmin = []; return; }
-      try {
-        const resp = await postToServer({
-          action: 'list_extra_shifts_admin',
-          telegram_id: getTgUserId(),
-          initData: getTgInitData()
-        });
-        allExtraShiftsAdmin = (resp && resp.ok) ? (resp.shifts || []) : [];
-      } catch (e) { allExtraShiftsAdmin = []; }
-    }
-
-    async function registerTelegramId() {
-      if (!tg || !userPhone) return;
-      const tgId = getTgUserId();
-      const initData = getTgInitData();
-      if (!tgId || !initData) return;
-      // Ключ включает phone — при смене номера перерегистрируемся
-      const sentKey = 'tg_id_sent_' + tgId + '_' + userPhone;
-      if (safeLS.get(sentKey) === '1') return;
-      try {
-        await postToServer({
-          action: 'register_telegram',
-          phone: userPhone,
-          telegram_id: tgId,
-          initData
-        });
-        safeLS.set(sentKey, '1');
-      } catch (e) { console.warn('registerTelegram:', e); }
+    // Смены сотрудника для руководителя — по Москве
+    function adminEntriesByDate(phone) {
+      const map = {};
+      (adminData && adminData.shifts || []).forEach(s => {
+        if (s.phone !== phone) return;
+        const e = (s.status === 'Б') ? { kind: 'sick' } : (s.status === 'О') ? { kind: 'vacation' }
+          : { kind: 'shift', start: s.start, end: s.end };
+        (map[s.date] = map[s.date] || []).push(e);
+      });
+      Object.keys(map).forEach(k => map[k].sort((a, b) => String(a.start || '').localeCompare(String(b.start || ''))));
+      return map;
     }
 
     // ═══════════════════════════════════════════════════════════
     // КАЛЕНДАРЬ
     // ═══════════════════════════════════════════════════════════
-    function buildMonthCells(year, month) {
-      const first = new Date(year, month, 1);
-      const last  = new Date(year, month + 1, 0);
-      let startW = first.getDay() - 1;
-      if (startW < 0) startW = 6;
-      const daysInMonth = last.getDate();
-      const prevLast = new Date(year, month, 0).getDate();
-      const today = new Date();
-      const todayStr = today.getFullYear() + '-' + pad2(today.getMonth() + 1) + '-' + pad2(today.getDate());
+    function initMonths() {
+      const n = nowAt(myOffset());
+      const msk = nowAt(MSK_OFFSET);
+      months.schedule = { y: n.y, m: n.m };
+      months.avail = { y: n.y, m: n.m };
+      months.admin = { y: msk.y, m: msk.m };
+      months.edit = { y: msk.y, m: msk.m };
+    }
+    function shiftMonth(key, delta) {
+      const st = months[key];
+      let m = st.m + delta, y = st.y;
+      while (m < 0) { m += 12; y--; }
+      while (m > 11) { m -= 12; y++; }
+      months[key] = { y: y, m: m };
+    }
+    function resetMonth(key) {
+      const n = nowAt(key === 'admin' || key === 'edit' ? MSK_OFFSET : myOffset());
+      months[key] = { y: n.y, m: n.m };
+    }
 
+    function buildMonthCells(year, month, todayIso) {
+      const firstWd = new Date(Date.UTC(year, month, 1)).getUTCDay();
+      const startW = (firstWd + 6) % 7;
+      const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+      const prevLast = new Date(Date.UTC(year, month, 0)).getUTCDate();
       const cells = [];
       for (let i = startW - 1; i >= 0; i--) cells.push({ num: prevLast - i, other: true, date: null });
       for (let d = 1; d <= daysInMonth; d++) {
         const iso = year + '-' + pad2(month + 1) + '-' + pad2(d);
-        cells.push({ num: d, other: false, date: iso, isToday: iso === todayStr });
+        cells.push({ num: d, other: false, date: iso, isToday: iso === todayIso });
       }
       const rem = (7 - (cells.length % 7)) % 7;
       for (let i = 1; i <= rem; i++) cells.push({ num: i, other: true, date: null });
@@ -1140,78 +1176,90 @@
       setTimeout(() => el.classList.remove(dir), 320);
     }
 
-    function todayInTz(tz) {
-      const dtf = new Intl.DateTimeFormat('en-US', {
-        timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit'
-      });
-      const m = {};
-      dtf.formatToParts(new Date()).forEach(p => { m[p.type] = p.value; });
-      return m.year + '-' + m.month + '-' + m.day;
+    function newDayDiv(cell) {
+      const div = document.createElement('div');
+      div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
+      div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+      return div;
+    }
+
+    // Заполняет клетку дня списком смен (поддерживает несколько смен в день)
+    function fillDayEntries(div, num, entries) {
+      if (!entries || !entries.length) return;
+      const status = entries.find(e => e.kind === 'sick' || e.kind === 'vacation');
+      if (status) {
+        div.classList.add(status.kind);
+        div.innerHTML = '<div class="day-num">' + num + '</div><div class="day-status">' + (status.kind === 'sick' ? 'Б' : 'О') + '</div>';
+        return;
+      }
+      const shifts = entries.filter(e => e.kind === 'shift');
+      if (!shifts.length) return;
+      div.classList.add('shift');
+      const night = shifts.some(s => isNightShift(s.start, s.end));
+      if (night) div.classList.add('night');
+      const first = shifts[0];
+      const icon = night ? '<span class="night-icon">' + ICONS.moon + '</span>' : '';
+      let html = '<div class="day-num">' + num + '</div>';
+      if (shifts.some(s => s.extra)) html += '<span class="day-star">★</span>';
+      html += '<div class="day-time">' + first.start + '<br>' + first.end + icon + '</div>';
+      if (shifts.length > 1) html += '<div class="day-more">+' + (shifts.length - 1) + '</div>';
+      div.innerHTML = html;
     }
 
     // ═══════════════════════════════════════════════════════════
     // РЕНДЕР
     // ═══════════════════════════════════════════════════════════
+    function todayText(entries, prefix) {
+      if (!entries || !entries.length) return null;
+      const st = entries.find(e => e.kind === 'sick' || e.kind === 'vacation');
+      if (st) return { cls: st.kind, icon: st.kind === 'sick' ? ICONS.sick : ICONS.vacation, text: prefix + ': ' + (st.kind === 'sick' ? 'больничный' : 'отпуск') };
+      const sh = entries.filter(e => e.kind === 'shift');
+      if (!sh.length) return null;
+      const night = sh.some(s => isNightShift(s.start, s.end)) ? ' ' + ICONS.moon : '';
+      return { cls: 'shift', icon: ICONS.bell, text: prefix + ' смена: ' + sh.map(s => s.start + '–' + s.end).join(', ') + night };
+    }
+
     function renderHeader() {
-      const now = new Date();
-      const h = now.getHours();
+      const n = nowAt(myOffset());
       let greeting = 'Доброе утро';
-      if (h >= 12 && h < 18) greeting = 'Добрый день';
-      else if (h >= 18 || h < 5) greeting = 'Добрый вечер';
+      if (n.h >= 12 && n.h < 18) greeting = 'Добрый день';
+      else if (n.h >= 18 || n.h < 5) greeting = 'Добрый вечер';
 
       let name = 'друг';
       if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) name = tg.initDataUnsafe.user.first_name || 'друг';
       document.getElementById('greeting').textContent = greeting + ', ' + name + '!';
 
-      const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-      const days = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
-      const dName = days[now.getDay()];
+      const dName = WEEKDAYS[n.wd];
       document.getElementById('headerDate').textContent =
-        dName.charAt(0).toUpperCase() + dName.slice(1) + ', ' +
-        now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+        dName.charAt(0).toUpperCase() + dName.slice(1) + ', ' + n.d + ' ' + MONTHS_GEN[n.m] + ' ' + n.y;
 
-      const todayStr = todayInTz(SOURCE_TZ);
-      const todayEl = document.getElementById('headerToday');
-      const shift = allShifts.find(s => s.phone === userPhone && s.date === todayStr);
-
-      if (!shift) {
-        todayEl.className = 'header-today dayoff';
-        todayEl.innerHTML = ICONS.dayoff + ' Сегодня выходной';
-        todayEl.style.display = 'flex';
-        return;
+      const chip = document.getElementById('cityChip');
+      if (me) {
+        const k = myCityKey();
+        chip.innerHTML = ICONS.pin + escapeHtml(k ? CITIES[k].name : 'Выбрать город');
+        chip.style.display = 'inline-flex';
       }
-      if (shift.status === 'Б') {
-        todayEl.className = 'header-today sick';
-        todayEl.innerHTML = ICONS.sick + ' Сегодня: больничный';
-      } else if (shift.status === 'О') {
-        todayEl.className = 'header-today vacation';
-        todayEl.innerHTML = ICONS.vacation + ' Сегодня: отпуск';
-      } else if (shift.start && shift.end) {
-        const night = isNightShift(shift.start, shift.end) ? ' ' + ICONS.moon : '';
-        todayEl.className = 'header-today shift';
-        todayEl.innerHTML = ICONS.bell + ' Сегодня смена: ' + shift.start + '–' + shift.end + night;
-      } else {
+
+      const todayEl = document.getElementById('headerToday');
+      if (!me) { todayEl.style.display = 'none'; return; }
+      const t = todayText(myEntriesByDate()[n.iso], 'Сегодня');
+      if (!t) {
         todayEl.className = 'header-today dayoff';
         todayEl.innerHTML = ICONS.dayoff + ' Сегодня выходной';
+      } else {
+        todayEl.className = 'header-today ' + t.cls;
+        todayEl.innerHTML = t.icon + ' ' + t.text;
       }
       todayEl.style.display = 'flex';
     }
 
     function renderBanner() {
       const banner = document.getElementById('banner');
-      const tomorrow = addDays(todayInTz(SOURCE_TZ), 1);
-      const shift = allShifts.find(s => s.phone === userPhone && s.date === tomorrow);
-      if (!shift) { banner.style.display = 'none'; return; }
-      if (shift.status === 'Б') {
-        banner.className = 'banner sick';
-        banner.innerHTML = ICONS.sick + ' Завтра: Больничный';
-      } else if (shift.status === 'О') {
-        banner.className = 'banner vacation';
-        banner.innerHTML = ICONS.vacation + ' Завтра: Отпуск';
-      } else if (shift.start && shift.end) {
-        banner.className = 'banner shift';
-        banner.innerHTML = ICONS.bell + ' Завтра смена: ' + shift.start + ' – ' + shift.end;
-      } else { banner.style.display = 'none'; return; }
+      const tomorrow = addDays(nowAt(myOffset()).iso, 1);
+      const t = todayText(myEntriesByDate()[tomorrow], 'Завтра');
+      if (!t) { banner.style.display = 'none'; return; }
+      banner.className = 'banner ' + t.cls;
+      banner.innerHTML = t.icon + ' ' + t.text;
       banner.style.display = 'flex';
     }
 
@@ -1226,149 +1274,114 @@
     }
 
     function renderCalendar() {
-      const y = currentMonth.getFullYear(), m = currentMonth.getMonth();
-      document.getElementById('monthTitle').textContent = getMonthName(m) + ' ' + y;
+      const { y, m } = months.schedule;
+      document.getElementById('monthTitle').textContent = MONTHS_NOM[m] + ' ' + y;
+      document.getElementById('tzNote').textContent = tzLabel();
       const cont = document.getElementById('days');
       cont.innerHTML = '';
-
-      const byDate = {};
-      allShifts.forEach(s => { if (s.phone === userPhone) byDate[s.date] = s; });
-
-      buildMonthCells(y, m).forEach(cell => {
-        const div = document.createElement('div');
-        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-        if (!cell.date) { div.innerHTML = '<div class="day-num">' + cell.num + '</div>'; cont.appendChild(div); return; }
-
-        const sh = byDate[cell.date];
-        if (!sh) {
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
-        } else if (sh.status === 'Б') {
-          div.classList.add('sick');
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">Б</div>';
-          div.addEventListener('click', () => showShiftPopup(sh));
-        } else if (sh.status === 'О') {
-          div.classList.add('vacation');
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">О</div>';
-          div.addEventListener('click', () => showShiftPopup(sh));
-        } else if (sh.start && sh.end) {
-          div.classList.add('shift');
-          const night = isNightShift(sh.start, sh.end);
-          if (night) div.classList.add('night');
-          const icon = night ? '<span class="night-icon">' + ICONS.moon + '</span>' : '';
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + sh.start + '<br>' + sh.end + icon + '</div>';
-          div.addEventListener('click', () => showShiftPopup(sh));
-        } else {
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+      const byDate = myEntriesByDate();
+      const frag = document.createDocumentFragment();
+      buildMonthCells(y, m, nowAt(myOffset()).iso).forEach(cell => {
+        const div = newDayDiv(cell);
+        if (cell.date && byDate[cell.date]) {
+          fillDayEntries(div, cell.num, byDate[cell.date]);
+          div.addEventListener('click', () => showDayPopup(cell.date, byDate[cell.date]));
         }
-        cont.appendChild(div);
+        frag.appendChild(div);
       });
+      cont.appendChild(frag);
     }
 
     function renderAvailabilityCalendar() {
-      const y = currentMonthAvail.getFullYear(), m = currentMonthAvail.getMonth();
-      document.getElementById('monthTitleAvail').textContent = getMonthName(m) + ' ' + y;
+      const { y, m } = months.avail;
+      document.getElementById('monthTitleAvail').textContent = MONTHS_NOM[m] + ' ' + y;
       const cont = document.getElementById('daysAvail');
       cont.innerHTML = '';
-
-      const byDate = {};
-      allAvailability.forEach(a => { if (a.phone === userPhone) byDate[a.date] = a; });
-
-      buildMonthCells(y, m).forEach(cell => {
-        const div = document.createElement('div');
-        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-        if (!cell.date) { div.innerHTML = '<div class="day-num">' + cell.num + '</div>'; cont.appendChild(div); return; }
-
-        const a = byDate[cell.date];
-        if (a && a.start && a.end) {
-          div.classList.add('available');
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + a.start + '<br>' + a.end + '</div>';
-        } else {
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+      const byDate = myAvailByDate();
+      const frag = document.createDocumentFragment();
+      buildMonthCells(y, m, nowAt(myOffset()).iso).forEach(cell => {
+        const div = newDayDiv(cell);
+        if (cell.date) {
+          const a = byDate[cell.date];
+          if (a) {
+            div.classList.add('available');
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + a.start + '<br>' + a.end + '</div>';
+          }
+          div.addEventListener('click', () => showAvailabilityPopup(cell.date, a || null));
         }
-        div.addEventListener('click', () => showAvailabilityPopup(cell.date, a));
-        cont.appendChild(div);
+        frag.appendChild(div);
       });
+      cont.appendChild(frag);
     }
 
     function renderAdminCalendar() {
-      const y = currentMonthAdmin.getFullYear(), m = currentMonthAdmin.getMonth();
-      document.getElementById('monthTitleAdmin').textContent = getMonthName(m) + ' ' + y;
+      if (!adminData) return;
+      const { y, m } = months.admin;
+      document.getElementById('monthTitleAdmin').textContent = MONTHS_NOM[m] + ' ' + y;
       const cont = document.getElementById('daysAdmin');
       cont.innerHTML = '';
-
-      // Фильтр по активным сотрудникам
-      const activePhones = new Set(Object.keys(employeesMap));
       const counts = {};
-      allAvailability.forEach(a => {
-        if (activePhones.has(a.phone)) counts[a.date] = (counts[a.date] || 0) + 1;
-      });
-
-      buildMonthCells(y, m).forEach(cell => {
-        const div = document.createElement('div');
-        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-        if (!cell.date) { div.innerHTML = '<div class="day-num">' + cell.num + '</div>'; cont.appendChild(div); return; }
-
-        const n = counts[cell.date] || 0;
-        if (n > 0) {
-          div.classList.add('has-people');
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + n + ' чел.</div>';
-        } else {
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+      adminData.availability.forEach(a => { counts[a.date] = (counts[a.date] || 0) + 1; });
+      const frag = document.createDocumentFragment();
+      buildMonthCells(y, m, nowAt(MSK_OFFSET).iso).forEach(cell => {
+        const div = newDayDiv(cell);
+        if (cell.date) {
+          const n = counts[cell.date] || 0;
+          if (n > 0) {
+            div.classList.add('has-people');
+            div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + n + ' чел.</div>';
+          }
+          div.addEventListener('click', () => showAdminDayPopup(cell.date));
         }
-        div.addEventListener('click', () => showAdminDayPopup(cell.date));
-        cont.appendChild(div);
+        frag.appendChild(div);
       });
+      cont.appendChild(frag);
     }
 
     function renderEditCalendar() {
-      if (!currentEditPhone) return;
-      const y = currentMonthEdit.getFullYear(), m = currentMonthEdit.getMonth();
-      document.getElementById('monthTitleEdit').textContent = getMonthName(m) + ' ' + y;
+      if (!currentEditPhone || !adminData) return;
+      const { y, m } = months.edit;
+      document.getElementById('monthTitleEdit').textContent = MONTHS_NOM[m] + ' ' + y;
       const cont = document.getElementById('daysEdit');
       cont.innerHTML = '';
-
-      const byDate = {};
-      allShifts.forEach(s => { if (s.phone === currentEditPhone) byDate[s.date] = s; });
-
-      buildMonthCells(y, m).forEach(cell => {
-        const div = document.createElement('div');
-        div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-        if (!cell.date) { div.innerHTML = '<div class="day-num">' + cell.num + '</div>'; cont.appendChild(div); return; }
-
-        const sh = byDate[cell.date];
-        if (!sh) {
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
-        } else if (sh.status === 'Б') {
-          div.classList.add('sick');
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">Б</div>';
-        } else if (sh.status === 'О') {
-          div.classList.add('vacation');
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-status">О</div>';
-        } else if (sh.start && sh.end) {
-          div.classList.add('shift');
-          const night = isNightShift(sh.start, sh.end);
-          if (night) div.classList.add('night');
-          const icon = night ? '<span class="night-icon">' + ICONS.moon + '</span>' : '';
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + sh.start + '<br>' + sh.end + icon + '</div>';
-        } else {
-          div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+      const byDate = adminEntriesByDate(currentEditPhone);
+      const frag = document.createDocumentFragment();
+      buildMonthCells(y, m, nowAt(MSK_OFFSET).iso).forEach(cell => {
+        const div = newDayDiv(cell);
+        if (cell.date) {
+          fillDayEntries(div, cell.num, byDate[cell.date]);
+          div.addEventListener('click', () => showEditShiftPopup(cell.date));
         }
-        div.addEventListener('click', () => showEditShiftPopup(cell.date));
-        cont.appendChild(div);
+        frag.appendChild(div);
       });
+      cont.appendChild(frag);
+    }
+
+    function renderAll() {
+      renderHeader(); renderBanner(); renderCalendar();
+      renderAvailabilityCalendar(); renderExtraShiftsBanner();
+      if (adminData) { renderAdminCalendar(); renderEditCalendar(); }
     }
 
     // ═══════════════════════════════════════════════════════════
-    // ПОПАПЫ
+    // ПОПАПЫ: ОБЩЕЕ
     // ═══════════════════════════════════════════════════════════
     function closeAllPopups() { document.querySelectorAll('.popup-overlay').forEach(o => o.remove()); }
 
+    function openPopup(html, opts) {
+      closeAllPopups();
+      const overlay = document.createElement('div');
+      overlay.className = 'popup-overlay';
+      overlay.innerHTML = '<div class="popup">' + html + '</div>';
+      document.body.appendChild(overlay);
+      if (!(opts && opts.locked)) {
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+      }
+      return overlay;
+    }
+
     function showToast(title, subtitle, isError) {
-      // Плавная замена предыдущего
-      document.querySelectorAll('.toast').forEach(t => {
-        t.classList.remove('show');
-        setTimeout(() => t.remove(), 320);
-      });
+      document.querySelectorAll('.toast').forEach(t => { t.classList.remove('show'); setTimeout(() => t.remove(), 320); });
       const toast = document.createElement('div');
       toast.className = 'toast' + (isError ? ' toast-error' : '');
       toast.setAttribute('role', 'status');
@@ -1379,23 +1392,45 @@
         (subtitle ? '<div class="toast-sub">' + escapeHtml(subtitle) + '</div>' : '') + '</div>';
       document.body.appendChild(toast);
       requestAnimationFrame(() => toast.classList.add('show'));
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-      }, 2200);
+      try { if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred(isError ? 'error' : 'success'); } catch (e) {}
+      setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2400);
     }
 
-    // Слоты времени :00 и :30 (исправление — раньше были только :00)
-    function buildTimeOptions(selected) {
+    // Подтверждение в стиле Telegram
+    function askConfirm(text) {
+      return new Promise(resolve => {
+        try {
+          if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
+            tg.showConfirm(text, ok => resolve(!!ok));
+            return;
+          }
+        } catch (e) {}
+        resolve(window.confirm(text));
+      });
+    }
+
+    // Выпадающие списки времени: начало 00:00–23:30, конец 00:30–24:00
+    function buildStartOptions(selected) {
       let html = '';
-      for (let h = 0; h < 24; h++) {
-        for (const mm of ['00', '30']) {
-          const val = pad2(h) + ':' + mm;
-          const sel = selected === val ? ' selected' : '';
-          html += '<option value="' + val + '"' + sel + '>' + val + '</option>';
-        }
+      for (let h = 0; h < 24; h++) for (const mm of ['00', '30']) {
+        const v = pad2(h) + ':' + mm;
+        html += '<option value="' + v + '"' + (v === selected ? ' selected' : '') + '>' + v + '</option>';
       }
       return html;
+    }
+    function buildEndOptions(selected) {
+      if (selected === '00:00') selected = '24:00';
+      let html = '';
+      for (let h = 0; h <= 24; h++) for (const mm of ['00', '30']) {
+        const v = pad2(h) + ':' + mm;
+        if (v === '00:00' || timeToMin(v) > 1440 || isNaN(timeToMin(v))) continue;
+        html += '<option value="' + v + '"' + (v === selected ? ' selected' : '') + '>' + v + '</option>';
+      }
+      return html;
+    }
+    function overnightNote(start, end) {
+      if (!slotDuration(start, end)) return '⚠️ Начало и конец совпадают';
+      return isOvernight(start, end) ? '🌙 Окончание — на следующий день' : '';
     }
 
     function openUrl(url) {
@@ -1404,342 +1439,345 @@
       else window.open(url, '_blank');
     }
 
-    function buildGoogleCalendarUrl(date, start, end, tz) {
-      const [y, m, d] = date.split('-');
-      const [sh, sm] = start.split(':');
-      const [eh, em] = end.split(':');
-      const overnight = (parseInt(eh, 10) * 60 + parseInt(em, 10)) <= (parseInt(sh, 10) * 60 + parseInt(sm, 10));
-      const startStr = y + m + d + 'T' + sh + sm + '00';
-      let endY = y, endM = m, endD = d;
-      if (overnight) {
-        const nd = addDays(date, 1).split('-');
-        endY = nd[0]; endM = nd[1]; endD = nd[2];
-      }
-      const endStr = endY + endM + endD + 'T' + eh + em + '00';
-      const text = encodeURIComponent('Смена ' + start + '–' + end);
-      let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-        '&text=' + text +
-        '&dates=' + startStr + '/' + endStr;
-      if (tz) url += '&ctz=' + encodeURIComponent(tz);
-      return url;
+    // Ссылка в Google Календарь: передаём московское время и пояс Москвы —
+    // Google сам покажет смену в часовом поясе телефона
+    function buildGoogleCalendarUrl(mskDate, start, end, title) {
+      const dur = slotDuration(start, end);
+      const s = timeToMin(start);
+      const endDate = addDays(mskDate, Math.floor((s + dur) / 1440));
+      const fmt = (iso, t) => iso.replace(/-/g, '') + 'T' + t.replace(':', '') + '00';
+      const endT = minToTime(s + dur, false);
+      return 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(title || 'Смена') +
+        '&dates=' + fmt(mskDate, start) + '/' + fmt(endDate, endT) +
+        '&ctz=' + encodeURIComponent('Europe/Moscow');
     }
 
-    function showShiftPopup(shift) {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-
-      let title = 'Смена', info = '', showCal = false;
-      if (shift.status === 'Б') { title = 'Больничный'; info = 'Дата: ' + formatDateRu(shift.date); }
-      else if (shift.status === 'О') { title = 'Отпуск'; info = 'Дата: ' + formatDateRu(shift.date); }
-      else if (shift.start && shift.end) {
-        title = 'Смена' + (isNightShift(shift.start, shift.end) ? ' (ночная)' : '');
-        info = formatDateRu(shift.date) + '<br>' + shift.start + ' – ' + shift.end;
-        showCal = true;
-      } else { info = formatDateRu(shift.date); }
-
-      let html = '<div class="popup"><div class="popup-title">' + title + '</div>' +
-        '<div class="popup-info">' + info + '</div>';
-      if (showCal) {
-        html += '<button class="popup-btn google" id="addGoogle">Добавить в Google Calendar</button>';
-        if (employeesIcsMap[userPhone]) {
-          html += '<button class="popup-btn apple" id="addApple">Добавить в Apple Calendar</button>';
-        }
+    // ═══════════════════════════════════════════════════════════
+    // ПОПАПЫ СОТРУДНИКА
+    // ═══════════════════════════════════════════════════════════
+    function showDayPopup(localDate, entries) {
+      const status = entries.find(e => e.kind === 'sick' || e.kind === 'vacation');
+      let html;
+      if (status) {
+        html = '<div class="popup-title">' + (status.kind === 'sick' ? 'Больничный' : 'Отпуск') + '</div>' +
+          '<div class="popup-info">' + formatDateRu(localDate) + '</div>';
+      } else {
+        const shifts = entries.filter(e => e.kind === 'shift');
+        html = '<div class="popup-title">' + (shifts.length > 1 ? 'Смены' : 'Смена') + '</div>' +
+          '<div class="popup-info">' + formatDateRu(localDate) + ' · ' + escapeHtml(tzLabel().toLowerCase()) + '</div>';
+        shifts.forEach((s, i) => {
+          const night = isNightShift(s.start, s.end);
+          html += '<div class="shift-card"><div class="shift-card-time">' + s.start + ' – ' + s.end +
+            (night ? ' <span class="night-icon">' + ICONS.moon + '</span>' : '') + '</div>' +
+            '<div class="shift-card-sub">' + (s.extra ? '★ Доп. смена' : 'Смена') +
+            (isOvernight(s.start, s.end) ? ' · окончание на следующий день' : '') + '</div>' +
+            '<button class="popup-btn google" data-gcal="' + i + '">Добавить в Google Calendar</button></div>';
+        });
+        if (me && me.icsUrl) html += '<button class="popup-btn apple" id="addApple">Подписаться в Apple Calendar</button>';
       }
-      html += '<button class="popup-btn secondary" id="closePopup">Закрыть</button></div>';
-      overlay.innerHTML = html;
-      document.body.appendChild(overlay);
+      html += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
+      const overlay = openPopup(html);
+      overlay.querySelector('#closePopup').addEventListener('click', () => overlay.remove());
 
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closePopup').addEventListener('click', () => overlay.remove());
-
-      if (showCal) {
-        document.getElementById('addGoogle').addEventListener('click', () => {
-          openUrl(buildGoogleCalendarUrl(shift.date, shift.start, shift.end, SOURCE_TZ));
-          overlay.remove();
+      const shifts = entries.filter(e => e.kind === 'shift');
+      overlay.querySelectorAll('[data-gcal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const s = shifts[+btn.getAttribute('data-gcal')];
+          openUrl(buildGoogleCalendarUrl(s.orig.date, s.orig.start, s.orig.end, s.extra ? 'Доп. смена' : 'Смена'));
           showToast('Открыто', 'Google Calendar');
         });
-        const apple = document.getElementById('addApple');
-        if (apple) apple.addEventListener('click', () => {
-          const ics = employeesIcsMap[userPhone];
-          if (!ics) { showToast('Ошибка', 'Ссылка не найдена', true); return; }
-          openUrl(ics);
+      });
+      const apple = overlay.querySelector('#addApple');
+      if (apple) apple.addEventListener('click', () => { openUrl(me.icsUrl); overlay.remove(); });
+    }
+
+    function showAvailabilityPopup(localDate, existing) {
+      const defStart = existing ? existing.start : '10:00';
+      const defEnd = existing ? existing.end : '18:00';
+      let html = '<div class="popup-title">Могу выйти</div>' +
+        '<div class="popup-info">' + formatDateRu(localDate) + ' · ' + escapeHtml(tzLabel().toLowerCase()) + '</div>' +
+        '<div class="time-fields">' +
+          '<div><label for="availStart">С</label><select id="availStart">' + buildStartOptions(defStart) + '</select></div>' +
+          '<div><label for="availEnd">До</label><select id="availEnd">' + buildEndOptions(defEnd) + '</select></div>' +
+        '</div><div class="popup-hint" id="availNote"></div>' +
+        '<button class="popup-btn" id="saveAvail">Сохранить</button>';
+      if (existing) html += '<button class="popup-btn danger" id="deleteAvail">Удалить отметку</button>';
+      html += '<button class="popup-btn secondary" id="closeAvailPopup">Отмена</button>';
+      const overlay = openPopup(html);
+      const sEl = overlay.querySelector('#availStart'), eEl = overlay.querySelector('#availEnd');
+      const note = overlay.querySelector('#availNote');
+      const upd = () => { note.textContent = overnightNote(sEl.value, eEl.value); };
+      sEl.addEventListener('change', upd); eEl.addEventListener('change', upd); upd();
+      overlay.querySelector('#closeAvailPopup').addEventListener('click', () => overlay.remove());
+
+      overlay.querySelector('#saveAvail').addEventListener('click', async e => {
+        const btn = e.currentTarget;
+        const s = sEl.value, en = eEl.value;
+        if (!slotDuration(s, en)) { showToast('Ошибка', 'Начало и конец совпадают', true); return; }
+        const msk = convertSlot(localDate, s, en, myOffset(), MSK_OFFSET);
+        btn.disabled = true; btn.textContent = 'Сохраняем…';
+        try {
+          // Если отметка «переехала» на другую московскую дату — убираем старую
+          if (existing && existing.orig.date !== msk.date) {
+            const d = await postToServer({ action: 'save_availability', date: existing.orig.date, start_time: '', end_time: '' });
+            if (!d || !d.ok) throw new Error(errText(d && d.error));
+          }
+          const resp = await postToServer({ action: 'save_availability', date: msk.date, start_time: msk.start, end_time: msk.end });
+          if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+        } catch (err) {
+          showToast('Ошибка', err.message || 'Сервер недоступен', true);
+          btn.disabled = false; btn.textContent = 'Сохранить';
+          return;
+        }
+        myAvail = myAvail.filter(a => !(existing && a === existing.orig) && a.date !== msk.date);
+        myAvail.push({ date: msk.date, start: msk.start, end: msk.end });
+        syncAdminAvailability();
+        overlay.remove();
+        renderAvailabilityCalendar(); renderAdminCalendar();
+        showToast('Сохранено', formatDateRu(localDate) + ' · ' + s + '–' + en);
+      });
+
+      if (existing) {
+        overlay.querySelector('#deleteAvail').addEventListener('click', async e => {
+          const btn = e.currentTarget;
+          btn.disabled = true; btn.textContent = 'Удаляем…';
+          try {
+            const resp = await postToServer({ action: 'save_availability', date: existing.orig.date, start_time: '', end_time: '' });
+            if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+          } catch (err) {
+            showToast('Ошибка', err.message || 'Не удалось удалить', true);
+            btn.disabled = false; btn.textContent = 'Удалить отметку';
+            return;
+          }
+          myAvail = myAvail.filter(a => a !== existing.orig);
+          syncAdminAvailability();
           overlay.remove();
-          showToast('Открыто', 'Apple Calendar');
+          renderAvailabilityCalendar(); renderAdminCalendar();
+          showToast('Удалено', formatDateRu(localDate) + ' · отметка снята');
         });
       }
     }
+    // У руководителя его собственная доступность тоже видна в общем календаре
+    function syncAdminAvailability() {
+      if (!adminData || !me) return;
+      adminData.availability = adminData.availability.filter(a => a.phone !== me.phone)
+        .concat(myAvail.map(a => ({ phone: me.phone, date: a.date, start: a.start, end: a.end })));
+    }
 
-    function showEditShiftPopup(dateStr) {
-      closeAllPopups();
-      const existing = allShifts.find(s => s.phone === currentEditPhone && s.date === dateStr);
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-
-      let currentInfo = 'Нет смены';
-      if (existing) {
-        if (existing.status === 'Б') currentInfo = 'Сейчас: Больничный';
-        else if (existing.status === 'О') currentInfo = 'Сейчас: Отпуск';
-        else if (existing.start && existing.end) currentInfo = 'Сейчас: ' + existing.start + '–' + existing.end;
-      }
-      const defStart = (existing && existing.start) || '09:00';
-      const defEnd   = (existing && existing.end)   || '18:00';
-
-      let html = '<div class="popup">';
-      html += '<div class="popup-title">' + formatDateRu(dateStr) + '</div>';
-      html += '<div class="popup-info">' + currentInfo + '</div>';
-      html += '<div class="time-fields">';
-      html += '<div><label>С</label><select id="editStart">' + buildTimeOptions(defStart) + '</select></div>';
-      html += '<div><label>До</label><select id="editEnd">' + buildTimeOptions(defEnd) + '</select></div>';
+    function showCityPicker(mandatory) {
+      const current = myCityKey();
+      let html = '<div class="popup-title">Ваш город</div>' +
+        '<div class="popup-info">Время смен будет показано по вашему городу. Изменить можно в любой момент — нажмите на город в шапке.</div>' +
+        '<div class="city-list">';
+      Object.keys(CITIES).forEach(k => {
+        const diff = (CITIES[k].offset - MSK_OFFSET) / 60;
+        html += '<button class="city-btn' + (k === current ? ' active' : '') + '" data-city="' + k + '">' +
+          escapeHtml(CITIES[k].name) + '<span>' + (diff === 0 ? 'МСК' : 'МСК+' + diff) + '</span></button>';
+      });
       html += '</div>';
-      html += '<button class="popup-btn" id="saveEditShift">Сохранить смену</button>';
-      html += '<button class="popup-btn" id="setSick" style="background:linear-gradient(135deg,#C8B4A0 0%,#A89480 100%);color:#3D3227;">Больничный</button>';
-      html += '<button class="popup-btn" id="setVacation" style="background:linear-gradient(135deg,#8B82FF 0%,#6E63E6 100%);color:#fff;">Отпуск</button>';
-      if (existing) html += '<button class="popup-btn danger" id="deleteShift">Удалить</button>';
-      html += '<button class="popup-btn secondary" id="closeEditPopup">Отмена</button>';
-      html += '</div>';
-      overlay.innerHTML = html;
-      document.body.appendChild(overlay);
+      if (!mandatory) html += '<button class="popup-btn secondary" id="closeCity">Отмена</button>';
+      const overlay = openPopup(html, { locked: mandatory });
+      if (!mandatory) overlay.querySelector('#closeCity').addEventListener('click', () => overlay.remove());
 
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeEditPopup').addEventListener('click', () => overlay.remove());
-
-      document.getElementById('saveEditShift').addEventListener('click', async () => {
-        const s = document.getElementById('editStart').value;
-        const e = document.getElementById('editEnd').value;
-        if (s >= e) { showToast('Ошибка', 'Конец должен быть позже начала', true); return; }
-        if (await saveShiftChange(currentEditPhone, dateStr, s, e, '')) overlay.remove();
-      });
-      document.getElementById('setSick').addEventListener('click', async () => {
-        if (await saveShiftChange(currentEditPhone, dateStr, '', '', 'Б')) overlay.remove();
-      });
-      document.getElementById('setVacation').addEventListener('click', async () => {
-        if (await saveShiftChange(currentEditPhone, dateStr, '', '', 'О')) overlay.remove();
-      });
-      const del = document.getElementById('deleteShift');
-      if (del) del.addEventListener('click', async () => {
-        if (await saveShiftChange(currentEditPhone, dateStr, '', '', 'DELETE')) overlay.remove();
+      overlay.querySelectorAll('[data-city]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const city = btn.getAttribute('data-city');
+          overlay.querySelectorAll('[data-city]').forEach(b => { b.disabled = true; });
+          try {
+            const resp = await postToServer({ action: 'set_city', city: city });
+            if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+          } catch (err) {
+            showToast('Ошибка', err.message || 'Сервер недоступен', true);
+            overlay.querySelectorAll('[data-city]').forEach(b => { b.disabled = false; });
+            return;
+          }
+          me.city = city;
+          overlay.remove();
+          resetMonth('schedule'); resetMonth('avail');
+          renderAll();
+          showToast('Готово', 'Город: ' + CITIES[city].name);
+        });
       });
     }
 
-    async function saveShiftChange(phone, date, start, end, status) {
-      if (!ADMIN_PHONES.includes(userPhone)) { showToast('Отказ', 'Нет доступа', true); return false; }
-      if (!CONFIG_READY) { showToast('Ошибка', 'Приложение не настроено', true); return false; }
-      if (!getTgInitData()) { showToast('Ошибка', 'Открой через Telegram', true); return false; }
-      if (!isValidIsoDate(date)) { showToast('Ошибка', 'Некорректная дата', true); return false; }
+    function showHelp() {
+      const html = '<div class="popup-title">Как пользоваться</div>' +
+        '<div class="popup-info">Краткая инструкция</div>' +
+        '<div class="help-block"><div class="help-block-title">' + ICONS.helpCalendar + ' Расписание</div><div class="help-block-text">Нажми на день со сменой — увидишь детали. Время показано по твоему городу (его можно сменить в шапке). Если в дне несколько смен, в клетке будет «+1».</div></div>' +
+        '<div class="help-block"><div class="help-block-title">' + ICONS.helpCircle + ' Доступность</div><div class="help-block-text">Открой вкладку «Доступность». Нажми на день, когда можешь выйти. Укажи время по своему городу. Сохрани.</div></div>' +
+        '<div class="help-block"><div class="help-block-title">' + ICONS.helpBell + ' Напоминания</div><div class="help-block-text">Если у тебя есть смена завтра, бот вечером пришлёт напоминание. О заявках на доп. смены бот тоже сообщит.</div></div>' +
+        '<div class="help-block"><div class="help-block-title">' + ICONS.helpMoon + ' Ночные смены</div><div class="help-block-text">Смены через полночь отмечены луной. Смена показывается в тот день, когда начинается.</div></div>' +
+        '<button class="popup-btn" id="closeHelpBtn" style="margin-top:12px;">Понятно</button>';
+      const overlay = openPopup(html);
+      overlay.querySelector('#closeHelpBtn').addEventListener('click', () => overlay.remove());
+    }
 
+    // ═══════════════════════════════════════════════════════════
+    // ПОПАПЫ РУКОВОДИТЕЛЯ (время — по Москве)
+    // ═══════════════════════════════════════════════════════════
+    function shiftRowHtml(start, end) {
+      return '<div class="shift-row"><div class="shift-row-fields">' +
+        '<div><label>С</label><select class="sr-start">' + buildStartOptions(start) + '</select></div>' +
+        '<div><label>До</label><select class="sr-end">' + buildEndOptions(end) + '</select></div>' +
+        '<button class="shift-row-remove" type="button" aria-label="Удалить смену">✕</button>' +
+        '</div><div class="shift-row-note"></div></div>';
+    }
+    function wireShiftRow(row) {
+      const s = row.querySelector('.sr-start'), e = row.querySelector('.sr-end'), n = row.querySelector('.shift-row-note');
+      const upd = () => { n.textContent = overnightNote(s.value, e.value); };
+      s.addEventListener('change', upd); e.addEventListener('change', upd); upd();
+      row.querySelector('.shift-row-remove').addEventListener('click', () => row.remove());
+    }
+
+    function showEditShiftPopup(mskDate) {
+      const entries = adminEntriesByDate(currentEditPhone)[mskDate] || [];
+      const status = entries.find(e => e.kind === 'sick' || e.kind === 'vacation');
+      const shifts = entries.filter(e => e.kind === 'shift');
+
+      let current = 'Нет смены';
+      if (status) current = 'Сейчас: ' + (status.kind === 'sick' ? 'больничный' : 'отпуск');
+      else if (shifts.length) current = 'Сейчас: ' + shifts.map(s => s.start + '–' + s.end).join(', ');
+
+      const rows = shifts.length ? shifts : [{ start: '09:00', end: '18:00' }];
+      let html = '<div class="popup-title">' + formatDateRu(mskDate) + '</div>' +
+        '<div class="popup-info">' + escapeHtml(getNameForPhone(currentEditPhone)) + ' · ' + escapeHtml(current) + '<br>Время — по Москве</div>' +
+        '<div class="shift-rows" id="shiftRows">' + rows.map(r => shiftRowHtml(r.start, r.end)).join('') + '</div>' +
+        '<button class="popup-btn outline" id="addShiftRow">+ Добавить ещё смену в этот день</button>' +
+        '<button class="popup-btn" id="saveEditShift">Сохранить</button>' +
+        '<button class="popup-btn sick" id="setSick">Больничный</button>' +
+        '<button class="popup-btn vac" id="setVacation">Отпуск</button>';
+      if (entries.length) html += '<button class="popup-btn danger" id="deleteShift">Очистить день</button>';
+      html += '<button class="popup-btn secondary" id="closeEditPopup">Отмена</button>';
+
+      const overlay = openPopup(html);
+      const rowsEl = overlay.querySelector('#shiftRows');
+      rowsEl.querySelectorAll('.shift-row').forEach(wireShiftRow);
+      overlay.querySelector('#addShiftRow').addEventListener('click', () => {
+        if (rowsEl.children.length >= 4) { showToast('Ошибка', 'Не больше 4 смен в день', true); return; }
+        rowsEl.insertAdjacentHTML('beforeend', shiftRowHtml('09:00', '18:00'));
+        wireShiftRow(rowsEl.lastElementChild);
+      });
+      overlay.querySelector('#closeEditPopup').addEventListener('click', () => overlay.remove());
+
+      const run = async (btn, payload) => {
+        const all = overlay.querySelectorAll('button');
+        all.forEach(b => { b.disabled = true; });
+        const ok = await saveShiftChange(currentEditPhone, mskDate, payload);
+        if (ok) overlay.remove(); else all.forEach(b => { b.disabled = false; });
+      };
+
+      overlay.querySelector('#saveEditShift').addEventListener('click', e => {
+        const list = [];
+        for (const row of rowsEl.querySelectorAll('.shift-row')) {
+          const s = row.querySelector('.sr-start').value, en = row.querySelector('.sr-end').value;
+          if (!slotDuration(s, en)) { showToast('Ошибка', 'Начало и конец смены совпадают', true); return; }
+          list.push({ start: s, end: en });
+        }
+        list.sort((a, b) => a.start.localeCompare(b.start));
+        run(e.currentTarget, list.length ? { shifts: list, status: '' } : { status: 'DELETE' });
+      });
+      overlay.querySelector('#setSick').addEventListener('click', e => run(e.currentTarget, { status: 'Б' }));
+      overlay.querySelector('#setVacation').addEventListener('click', e => run(e.currentTarget, { status: 'О' }));
+      const del = overlay.querySelector('#deleteShift');
+      if (del) del.addEventListener('click', e => run(e.currentTarget, { status: 'DELETE' }));
+    }
+
+    async function saveShiftChange(phone, date, payload) {
       let resp;
       try {
-        resp = await postToServer({
-          action: 'update_shift',
-          telegram_id: getTgUserId(),
-          initData: getTgInitData(),
-          phone, date, start_time: start, end_time: end, status
-        });
+        resp = await postToServer(Object.assign({ action: 'update_shift', phone: phone, date: date }, payload));
       } catch (e) {
         showToast('Ошибка сети', String(e.message || e).substring(0, 80), true);
         return false;
       }
-      if (!resp || !resp.ok) {
-        showToast('Ошибка', (resp && resp.error) || 'Сервер отказал', true);
-        return false;
+      if (!resp || !resp.ok) { showToast('Ошибка', errText(resp && resp.error), true); return false; }
+
+      // Обновляем данные на экране без перезагрузки
+      adminData.shifts = adminData.shifts.filter(s => !(s.phone === phone && s.date === date));
+      const fresh = [];
+      if (payload.status === 'Б' || payload.status === 'О') fresh.push({ date: date, start: '', end: '', status: payload.status });
+      else if (payload.shifts) payload.shifts.forEach(s => fresh.push({ date: date, start: s.start, end: s.end, status: '' }));
+      fresh.forEach(s => adminData.shifts.push(Object.assign({ phone: phone }, s)));
+      if (me && phone === me.phone) {
+        myShifts = myShifts.filter(s => s.extra || s.date !== date).concat(fresh);
       }
 
-      allShifts = allShifts.filter(s => !(s.phone === phone && s.date === date));
-      if (status === 'DELETE') {
-        showToast('Удалено', formatDateRu(date) + ' · смена снята');
-      } else if (status === 'Б' || status === 'О') {
-        allShifts.push({ phone, date, start: '', end: '', status });
-        showToast('Сохранено', formatDateRu(date) + ' · ' + (status === 'Б' ? 'больничный' : 'отпуск'));
-      } else {
-        allShifts.push({ phone, date, start, end, status: '' });
-        showToast('Сохранено', formatDateRu(date) + ' · ' + start + '–' + end);
-      }
-      renderEditCalendar(); renderCalendar(); renderAdminCalendar();
-      renderHeader(); renderBanner();
+      let msg = 'смена снята';
+      if (payload.status === 'Б') msg = 'больничный';
+      else if (payload.status === 'О') msg = 'отпуск';
+      else if (payload.shifts) msg = payload.shifts.map(s => s.start + '–' + s.end).join(', ') + ' МСК';
+      showToast('Сохранено', formatDateRu(date) + ' · ' + msg);
+      renderAll();
       return true;
     }
 
-    function showAvailabilityPopup(dateStr, existing) {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-      const defStart = (existing && existing.start) || '10:00';
-      const defEnd   = (existing && existing.end)   || '18:00';
-
-      let buttons = '<button class="popup-btn" id="saveAvail">Сохранить</button>';
-      if (existing) buttons += '<button class="popup-btn danger" id="deleteAvail">Удалить отметку</button>';
-      buttons += '<button class="popup-btn secondary" id="closeAvailPopup">Отмена</button>';
-
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">Могу выйти</div>' +
-        '<div class="popup-info">' + formatDateRu(dateStr) + '</div>' +
-        '<div class="time-fields">' +
-          '<div><label>С</label><select id="availStart">' + buildTimeOptions(defStart) + '</select></div>' +
-          '<div><label>До</label><select id="availEnd">' + buildTimeOptions(defEnd) + '</select></div>' +
-        '</div>' + buttons + '</div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeAvailPopup').addEventListener('click', () => overlay.remove());
-
-      document.getElementById('saveAvail').addEventListener('click', async (e) => {
-        const btn = e.currentTarget;
-        const s = document.getElementById('availStart').value;
-        const en = document.getElementById('availEnd').value;
-        if (s >= en) { showToast('Ошибка', 'Конец должен быть позже начала', true); return; }
-        if (!CONFIG_READY) { showToast('Ошибка', 'Приложение не настроено', true); return; }
-
-        btn.disabled = true; btn.textContent = 'Сохраняем…';
-        try {
-          // Добавлены initData/telegram_id для аутентификации
-          await postToServer({
-            phone: userPhone,
-            date: dateStr,
-            start_time: s,
-            end_time: en,
-            telegram_id: getTgUserId(),
-            initData: getTgInitData()
-          });
-        } catch (err) {
-          showToast('Ошибка', 'Сервер недоступен', true);
-          btn.disabled = false; btn.textContent = 'Сохранить';
-          return;
-        }
-        const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
-        if (idx >= 0) { allAvailability[idx].start = s; allAvailability[idx].end = en; }
-        else allAvailability.push({ phone: userPhone, date: dateStr, start: s, end: en });
-        overlay.remove();
-        renderAvailabilityCalendar(); renderAdminCalendar();
-        showToast('Сохранено', formatDateRu(dateStr) + ' · ' + s + '–' + en);
-      });
-
-      if (existing) {
-        document.getElementById('deleteAvail').addEventListener('click', async (e) => {
-          const btn = e.currentTarget;
-          btn.disabled = true; btn.textContent = 'Удаляем…';
-          try {
-            await postToServer({
-              phone: userPhone,
-              date: dateStr,
-              start_time: '',
-              end_time: '',
-              telegram_id: getTgUserId(),
-              initData: getTgInitData()
-            });
-          } catch (err) {
-            showToast('Ошибка', 'Не удалось удалить', true);
-            btn.disabled = false; btn.textContent = 'Удалить отметку';
-            return;
-          }
-          const idx = allAvailability.findIndex(a => a.phone === userPhone && a.date === dateStr);
-          if (idx >= 0) allAvailability.splice(idx, 1);
-          overlay.remove();
-          renderAvailabilityCalendar(); renderAdminCalendar();
-          showToast('Удалено', formatDateRu(dateStr) + ' · отметка снята');
-        });
-      }
-    }
-
-    function showAdminDayPopup(dateStr) {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-      const activePhones = new Set(Object.keys(employeesMap));
-      const people = allAvailability
-        .filter(a => a.date === dateStr && activePhones.has(a.phone))
+    function showAdminDayPopup(mskDate) {
+      const people = adminData.availability
+        .filter(a => a.date === mskDate)
         .sort((a, b) => getNameForPhone(a.phone).localeCompare(getNameForPhone(b.phone), 'ru'));
-
       const listHtml = people.length === 0
-        ? '<div style="color:#999;font-size:14px;">—</div>'
+        ? '<div class="search-empty">Никто не отметился</div>'
         : people.map(p =>
-            '<div class="admin-list-item"><span class="admin-list-name">' +
-            escapeHtml(getNameForPhone(p.phone)) +
+            '<div class="admin-list-item"><span class="admin-list-name">' + escapeHtml(getNameForPhone(p.phone)) +
             '</span><span class="admin-list-time">' + escapeHtml(p.start) + '–' + escapeHtml(p.end) + '</span></div>'
           ).join('');
-
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">' + formatDateRu(dateStr) + '</div>' +
-        '<div class="popup-info">Могут выйти</div>' + listHtml +
-        '<button class="popup-btn secondary" id="closeAdminPopup" style="margin-top:16px;">Закрыть</button></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeAdminPopup').addEventListener('click', () => overlay.remove());
+      const overlay = openPopup('<div class="popup-title">' + formatDateRu(mskDate) + '</div>' +
+        '<div class="popup-info">Могут выйти · время по Москве</div>' + listHtml +
+        '<button class="popup-btn secondary" id="closeAdminPopup" style="margin-top:16px;">Закрыть</button>');
+      overlay.querySelector('#closeAdminPopup').addEventListener('click', () => overlay.remove());
     }
-
-    function showHelp() {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">Как пользоваться</div>' +
-        '<div class="popup-info">Краткая инструкция</div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpCalendar + ' Расписание</div><div class="help-block-text">Нажми на день со сменой — увидишь детали. Кнопки внизу добавят смену в календарь телефона.</div></div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpCircle + ' Доступность</div><div class="help-block-text">Открой вкладку «Доступность». Нажми на день, когда можешь выйти. Укажи время. Сохрани.</div></div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpBell + ' Напоминания</div><div class="help-block-text">Если у тебя есть смена завтра, бот вечером пришлёт напоминание.</div></div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpMoon + ' Ночные смены</div><div class="help-block-text">Смены через полночь отмечены луной и градиентом.</div></div>' +
-        '<button class="popup-btn" id="closeHelpBtn" style="margin-top:12px;">Понятно</button></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeHelpBtn').addEventListener('click', () => overlay.remove());
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // КАРТА ИМЁН
-    // ═══════════════════════════════════════════════════════════
-    function getNameForPhone(phone) { return employeesMap[phone] || phone; }
 
     // ═══════════════════════════════════════════════════════════
     // НАВИГАЦИЯ ПО ЭКРАНАМ
     // ═══════════════════════════════════════════════════════════
-    function hideAllTabContents() {
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    }
+    function hideAllTabContents() { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); }
     function showTabContent(id) {
       hideAllTabContents();
       const el = document.getElementById(id);
       if (el) el.classList.add('active');
+      window.scrollTo(0, 0);
     }
     function setSubtitle(text, visible) {
       const el = document.getElementById('pageSubtitle');
       el.textContent = text || '';
       el.style.display = visible ? 'block' : 'none';
     }
+    function requireAdmin() {
+      if (!me || !me.isAdmin) { showToast('Отказ', 'Нет доступа', true); return false; }
+      return true;
+    }
 
     function openEditEmployees() {
-      if (!ADMIN_PHONES.includes(userPhone)) { showToast('Отказ', 'Нет доступа', true); return; }
+      if (!requireAdmin()) return;
       showTabContent('tabEditEmployees');
       setSubtitle('', false);
       renderEmployeesList();
     }
-    function closeEditEmployees() {
-      showTabContent('tabAdmin');
-      setSubtitle('Кто может выйти', true);
-    }
+    function closeEditEmployees() { showTabContent('tabAdmin'); setSubtitle('Кто может выйти', true); }
     function openEmployeeCalendar(phone, name) {
       currentEditPhone = phone;
-      currentMonthEdit = new Date();
+      resetMonth('edit');
       document.getElementById('editCalendarTitle').textContent = name;
       showTabContent('tabEditEmployeeCalendar');
-      setSubtitle('', false);
       renderEditCalendar();
     }
     function closeEmployeeCalendar() {
       currentEditPhone = null;
       showTabContent('tabEditEmployees');
-      setSubtitle('', false);
       renderEmployeesList();
     }
     function renderEmployeesList() {
       const list = document.getElementById('employeesList');
       list.innerHTML = '';
-      const entries = Object.entries(employeesMap);
-      if (!entries.length) { list.innerHTML = '<div class="search-empty">Нет сотрудников</div>'; return; }
-      entries.sort((a, b) => a[1].localeCompare(b[1], 'ru')).forEach(([phone, name]) => {
+      const emps = (adminData && adminData.employees || []).slice();
+      if (!emps.length) { list.innerHTML = '<div class="search-empty">Нет сотрудников</div>'; return; }
+      emps.sort((a, b) => a.name.localeCompare(b.name, 'ru')).forEach(emp => {
         const item = document.createElement('div');
         item.className = 'employee-item';
-        item.innerHTML = '<div class="employee-name">' + escapeHtml(name) +
+        item.innerHTML = '<div class="employee-name">' + escapeHtml(emp.name) +
           '</div><div class="employee-arrow">' + ICONS.arrowRight + '</div>';
-        item.addEventListener('click', () => openEmployeeCalendar(phone, name));
+        item.addEventListener('click', () => openEmployeeCalendar(emp.phone, emp.name));
         list.appendChild(item);
       });
     }
@@ -1749,15 +1787,15 @@
     // ═══════════════════════════════════════════════════════════
     const EMPLOYEE_INVITE_TEXT =
       'Привет! Это приложение для контроля расписания твоих смен.\n\n' +
-      'Открой бота, нажми «Моё расписание», поделись номером телефона — и увидишь свои смены.\n\n' +
-      'https://t.me/miniwfm_bot';
+      'Открой бота, нажми «Моё расписание», поделись номером телефона и выбери свой город — и увидишь свои смены.\n\n' +
+      BOT_LINK;
 
     let __employeesCache = [];
     let __employeesSearchQuery = '';
     let __employeesArchiveOpen = false;
 
     function openEmployeesAdmin() {
-      if (!ADMIN_PHONES.includes(userPhone)) { showToast('Отказ', 'Нет доступа', true); return; }
+      if (!requireAdmin()) return;
       showTabContent('tabEmployeesAdmin');
       setSubtitle('', false);
       document.getElementById('employeesSearchInput').value = '';
@@ -1765,35 +1803,15 @@
       __employeesArchiveOpen = false;
       loadEmployeesAdmin();
     }
-    function closeEmployeesAdmin() {
-      showTabContent('tabAdmin');
-      setSubtitle('Кто может выйти', true);
-    }
+    function closeEmployeesAdmin() { showTabContent('tabAdmin'); setSubtitle('Кто может выйти', true); }
 
     async function loadEmployeesAdmin() {
       const list = document.getElementById('employeesAdminList');
-      const archive = document.getElementById('employeesArchiveSection');
+      document.getElementById('employeesArchiveSection').style.display = 'none';
       list.innerHTML = '<div class="search-empty">Загружаем…</div>';
-      archive.style.display = 'none';
-      if (!CONFIG_READY) {
-        list.innerHTML = '<div class="search-empty">Приложение не настроено</div>';
-        return;
-      }
       try {
-        const resp = await postToServer({
-          action: 'list_employees',
-          telegram_id: getTgUserId(),
-          initData: getTgInitData()
-        });
-        if (!resp || !resp.ok) {
-          const err = (resp && resp.error) || 'error';
-          if (['not_admin', 'no_telegram_id', 'not_found'].includes(err)) {
-            list.innerHTML = '<div class="search-empty">Отказано в доступе</div>';
-          } else {
-            list.innerHTML = '<div class="search-empty">Не удалось: ' + escapeHtml(err) + '</div>';
-          }
-          return;
-        }
+        const resp = await postToServer({ action: 'list_employees' });
+        if (!resp || !resp.ok) { list.innerHTML = '<div class="search-empty">' + escapeHtml(errText(resp && resp.error)) + '</div>'; return; }
         __employeesCache = resp.employees || [];
         renderEmployeesAdminList();
       } catch (e) {
@@ -1805,197 +1823,169 @@
       const list = document.getElementById('employeesAdminList');
       const archive = document.getElementById('employeesArchiveSection');
       const archiveList = document.getElementById('employeesArchiveList');
-      const archiveCount = document.getElementById('archiveCount');
       const chevron = document.querySelector('#archiveToggleBtn .archive-chevron');
 
       const q = (__employeesSearchQuery || '').trim().toLowerCase();
       const qDigits = q.replace(/[^0-9]/g, '');
       const filtered = __employeesCache.filter(e => {
         if (!q) return true;
-        const name = (e.name || '').toLowerCase();
         const phoneDigits = String(e.phone || '').replace(/[^0-9]/g, '');
-        return name.includes(q) || (qDigits && phoneDigits.includes(qDigits));
+        return (e.name || '').toLowerCase().includes(q) || (qDigits && phoneDigits.includes(qDigits));
       });
-
-      // isTruthy для active — поддерживает и 1/'TRUE'/'true'
-      const active = filtered.filter(e => isTruthy(e.active));
-      const inactive = filtered.filter(e => !isTruthy(e.active));
+      const active = filtered.filter(e => e.active);
+      const inactive = filtered.filter(e => !e.active);
 
       list.innerHTML = '';
-      if (!active.length) {
-        list.innerHTML = '<div class="search-empty">' + (q ? 'Никого не найдено' : 'Список пуст') + '</div>';
-      } else {
-        active.forEach(emp => list.appendChild(buildEmployeeAdminItem(emp)));
-      }
+      if (!active.length) list.innerHTML = '<div class="search-empty">' + (q ? 'Никого не найдено' : 'Список пуст') + '</div>';
+      else active.forEach(emp => list.appendChild(buildEmployeeAdminItem(emp)));
 
-      if (!inactive.length) {
-        archive.style.display = 'none';
-      } else {
-        archive.style.display = 'block';
-        archiveCount.textContent = inactive.length;
-        archiveList.innerHTML = '';
-        inactive.forEach(emp => archiveList.appendChild(buildEmployeeAdminItem(emp)));
-        if (__employeesArchiveOpen) {
-          archiveList.style.display = 'block';
-          if (chevron) chevron.classList.add('open');
-        } else {
-          archiveList.style.display = 'none';
-          if (chevron) chevron.classList.remove('open');
-        }
-      }
+      if (!inactive.length) { archive.style.display = 'none'; return; }
+      archive.style.display = 'block';
+      document.getElementById('archiveCount').textContent = inactive.length;
+      archiveList.innerHTML = '';
+      inactive.forEach(emp => archiveList.appendChild(buildEmployeeAdminItem(emp)));
+      archiveList.style.display = __employeesArchiveOpen ? 'block' : 'none';
+      if (chevron) chevron.classList.toggle('open', __employeesArchiveOpen);
+    }
+
+    function employeeStatusText(emp) {
+      if (!emp.active) return 'В архиве';
+      return emp.hasTg ? 'Вход подтверждён' : 'Ещё не входил';
     }
 
     function buildEmployeeAdminItem(emp) {
       const div = document.createElement('div');
       div.className = 'employee-admin-item';
       const initial = (emp.name || '?').trim().charAt(0).toUpperCase();
-      const isActive = isTruthy(emp.active);
-      const dotClass = !isActive ? 'inactive' : (emp.hasTg ? 'online' : 'offline');
-      const statusText = !isActive ? 'В архиве' : (emp.hasTg ? 'Telegram подключён' : 'Нет Telegram');
-      const phone = String(emp.phone || '').trim();
-
+      const dotClass = !emp.active ? 'inactive' : (emp.hasTg ? 'online' : 'offline');
+      const city = CITIES[emp.city] ? CITIES[emp.city].name : 'город не выбран';
       div.innerHTML =
-        '<div class="employee-avatar' + (isActive ? '' : ' inactive') + '">' + escapeHtml(initial) + '</div>' +
+        '<div class="employee-avatar' + (emp.active ? '' : ' inactive') + '">' + escapeHtml(initial) + '</div>' +
         '<div class="employee-admin-info">' +
           '<div class="employee-admin-name">' + escapeHtml(emp.name || '') + '</div>' +
           '<div class="employee-admin-meta">' +
             '<span class="employee-status-dot ' + dotClass + '"></span>' +
-            '<span>' + escapeHtml(phone) + '</span>' +
-            '<span>·</span><span>' + escapeHtml(statusText) + '</span>' +
+            '<span>' + escapeHtml(emp.phone) + '</span><span>·</span><span>' + escapeHtml(city) + '</span>' +
+            '<span>·</span><span>' + escapeHtml(employeeStatusText(emp)) + '</span>' +
           '</div>' +
         '</div>' +
         '<div class="employee-admin-arrow">' + ICONS.arrowRight + '</div>';
-
-      div.addEventListener('click', () => openEmployeeCardAdmin(phone));
+      div.addEventListener('click', () => openEmployeeCardAdmin(emp.phone));
       return div;
     }
 
     function openEmployeeCardAdmin(phone) {
-      const norm = String(phone).replace(/[^0-9]/g, '');
-      const emp = __employeesCache.find(e => String(e.phone).replace(/[^0-9]/g, '') === norm);
+      const emp = __employeesCache.find(e => e.phone === phone);
       if (!emp) return;
       showTabContent('tabEmployeeCardAdmin');
-      setSubtitle('', false);
       renderEmployeeCardAdmin(emp);
     }
 
     function renderEmployeeCardAdmin(emp) {
       document.getElementById('employeeCardTitle').textContent = emp.name || 'Сотрудник';
       const body = document.getElementById('employeeCardBody');
-      const isActive = isTruthy(emp.active);
       const initial = (emp.name || '?').trim().charAt(0).toUpperCase();
-      const phone = String(emp.phone || '').trim();
-      const statusClass = isActive ? 'active' : 'inactive';
-      const statusText = isActive
-        ? (emp.hasTg ? 'Активен · Telegram подключён' : 'Активен · Нет Telegram')
-        : 'В архиве';
+      const city = CITIES[emp.city] ? CITIES[emp.city].name : 'Город не выбран';
 
       let html = '<div class="employee-card-header">' +
-        '<div class="employee-avatar' + (isActive ? '' : ' inactive') + '">' + escapeHtml(initial) + '</div>' +
+        '<div class="employee-avatar' + (emp.active ? '' : ' inactive') + '">' + escapeHtml(initial) + '</div>' +
         '<div class="employee-card-name">' + escapeHtml(emp.name || '') + '</div>' +
-        '<div class="employee-card-phone">' + escapeHtml(phone) + '</div>' +
-        '<div class="employee-card-status ' + statusClass + '">' + escapeHtml(statusText) + '</div>' +
-        '</div>';
-
-      html += '<div class="employee-card-actions">';
-      html += '<button class="employee-card-action-btn primary" id="empEditBtn">' +
-        '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Редактировать</button>';
-      html += '<button class="employee-card-action-btn secondary" id="empInviteBtn">' +
-        '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Приглашение</button>';
-      if (isActive) {
-        html += '<button class="employee-card-action-btn danger" id="empArchiveBtn">' +
-          '<svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>В архив</button>';
-      } else {
-        html += '<button class="employee-card-action-btn secondary" id="empRestoreBtn">' +
-          '<svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Вернуть из архива</button>';
-      }
+        '<div class="employee-card-phone">' + escapeHtml(emp.phone) + ' · ' + escapeHtml(city) + '</div>' +
+        '<div class="employee-card-status ' + (emp.active ? 'active' : 'inactive') + '">' + escapeHtml(employeeStatusText(emp)) + '</div>' +
+        '</div><div class="employee-card-actions">' +
+        '<button class="employee-card-action-btn primary" id="empEditBtn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Редактировать</button>' +
+        '<button class="employee-card-action-btn secondary" id="empInviteBtn"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Приглашение</button>';
+      if (emp.active) html += '<button class="employee-card-action-btn danger" id="empArchiveBtn"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>В архив</button>';
+      else html += '<button class="employee-card-action-btn secondary" id="empRestoreBtn"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Вернуть из архива</button>';
       html += '<button class="employee-card-action-btn secondary" id="empCloseCardBtn">Закрыть</button></div>';
       body.innerHTML = html;
 
       document.getElementById('empEditBtn').addEventListener('click', () => showEmployeeFormAdmin(emp));
-      document.getElementById('empInviteBtn').addEventListener('click', () => showInviteModalAdmin());
+      document.getElementById('empInviteBtn').addEventListener('click', showInviteModalAdmin);
       document.getElementById('empCloseCardBtn').addEventListener('click', () => showTabContent('tabEmployeesAdmin'));
-
       const arch = document.getElementById('empArchiveBtn');
       if (arch) arch.addEventListener('click', async () => {
-        if (!confirm('Переместить сотрудника в архив?')) return;
-        if (await deactivateEmployeeServer(emp.phone)) {
+        if (!(await askConfirm('Переместить сотрудника в архив?'))) return;
+        if (await employeeAction('deactivate_employee', { phone: emp.phone })) {
           showToast('В архиве', emp.name + ' перемещён в архив');
           openEmployeesAdmin();
         }
       });
       const rest = document.getElementById('empRestoreBtn');
       if (rest) rest.addEventListener('click', async () => {
-        if (await activateEmployeeServer(emp.phone)) {
+        if (await employeeAction('activate_employee', { phone: emp.phone })) {
           showToast('Восстановлен', emp.name + ' возвращён');
           openEmployeesAdmin();
         }
       });
     }
 
+    // Любое изменение сотрудников → перезагружаем данные руководителя
+    async function employeeAction(action, payload) {
+      try {
+        const resp = await postToServer(Object.assign({ action: action }, payload));
+        if (!resp || !resp.ok) { showToast('Ошибка', errText(resp && resp.error), true); return false; }
+        refreshData(true);
+        return true;
+      } catch (e) {
+        showToast('Ошибка', 'Сервер недоступен', true);
+        return false;
+      }
+    }
+
     function showEmployeeFormAdmin(existing) {
-      closeAllPopups();
       const isEdit = !!existing;
-      const title = isEdit ? 'Редактировать' : 'Новый сотрудник';
       const btnText = isEdit ? 'Сохранить' : 'Добавить';
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">' + title + '</div>' +
-        '<div class="popup-info">Введи имя и телефон сотрудника</div>' +
+      const overlay = openPopup(
+        '<div class="popup-title">' + (isEdit ? 'Редактировать' : 'Новый сотрудник') + '</div>' +
+        '<div class="popup-info">Введи имя и телефон сотрудника. Город сотрудник выберет сам при первом входе.</div>' +
         '<div class="form-field"><label for="empFormName">Имя</label>' +
-          '<input type="text" id="empFormName" placeholder="Соболева Юлия" value="' + (isEdit ? escapeHtml(existing.name || '') : '') + '" /></div>' +
+          '<input type="text" id="empFormName" placeholder="Иванова Анна" value="' + (isEdit ? escapeHtml(existing.name || '') : '') + '" /></div>' +
         '<div class="form-field"><label for="empFormPhone">Телефон</label>' +
-          '<input type="tel" id="empFormPhone" placeholder="+79879286721" value="' + (isEdit ? escapeHtml(existing.phone || '') : '') + '" /></div>' +
+          '<input type="tel" id="empFormPhone" placeholder="+7 900 000-00-00" value="' + (isEdit ? escapeHtml(existing.phone || '') : '') + '" /></div>' +
         '<div class="form-error" id="empFormError"></div>' +
         '<button class="popup-btn" id="empFormSubmit">' + btnText + '</button>' +
-        '<button class="popup-btn secondary" id="empFormCancel">Отмена</button></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('empFormCancel').addEventListener('click', () => overlay.remove());
+        '<button class="popup-btn secondary" id="empFormCancel">Отмена</button>');
+      overlay.querySelector('#empFormCancel').addEventListener('click', () => overlay.remove());
 
-      document.getElementById('empFormSubmit').addEventListener('click', async (e) => {
+      overlay.querySelector('#empFormSubmit').addEventListener('click', async e => {
         const btn = e.currentTarget;
-        const name = document.getElementById('empFormName').value.trim();
-        const phone = document.getElementById('empFormPhone').value.trim();
-        const err = document.getElementById('empFormError');
+        const name = overlay.querySelector('#empFormName').value.trim();
+        const phone = overlay.querySelector('#empFormPhone').value.trim();
+        const err = overlay.querySelector('#empFormError');
         err.textContent = '';
-
         if (!name) { err.textContent = 'Введи имя'; return; }
-        if (phone.replace(/[^0-9]/g, '').length < 10) { err.textContent = 'Телефон — минимум 10 цифр'; return; }
+        const digits = phone.replace(/[^0-9]/g, '');
+        if (digits.length < 10 || digits.length > 11) { err.textContent = 'Телефон — 10 или 11 цифр'; return; }
 
         btn.disabled = true; btn.textContent = 'Сохраняем…';
-        const result = isEdit
-          ? await updateEmployeeServer(existing.phone, name, phone)
-          : await addEmployeeServer(name, phone);
+        let resp;
+        try {
+          resp = await postToServer(isEdit
+            ? { action: 'update_employee', old_phone: existing.phone, name: name, phone: phone }
+            : { action: 'add_employee', name: name, phone: phone });
+        } catch (ex) { resp = { ok: false, error: 'network' }; }
 
-        if (result && result.ok) {
+        if (resp && resp.ok) {
           overlay.remove();
           showToast('Сохранено', name);
-          await loadEmployees();
-          renderEmployeesList();
+          refreshData(true);
           openEmployeesAdmin();
         } else {
           btn.disabled = false; btn.textContent = btnText;
-          err.textContent = 'Ошибка: ' + ((result && result.error) || 'неизвестно');
+          err.textContent = resp && resp.error === 'network' ? 'Сервер недоступен' : errText(resp && resp.error);
         }
       });
     }
 
     function showInviteModalAdmin() {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">Приглашение</div>' +
+      const overlay = openPopup('<div class="popup-title">Приглашение</div>' +
         '<div class="popup-info">Скопируй текст и отправь сотруднику.</div>' +
         '<div class="invite-preview">' + escapeHtml(EMPLOYEE_INVITE_TEXT) + '</div>' +
         '<button class="popup-btn" id="inviteCopyBtn" style="margin-top:16px;">Скопировать текст</button>' +
-        '<button class="popup-btn secondary" id="inviteCloseBtn">Закрыть</button></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('inviteCloseBtn').addEventListener('click', () => overlay.remove());
-      document.getElementById('inviteCopyBtn').addEventListener('click', async () => {
+        '<button class="popup-btn secondary" id="inviteCloseBtn">Закрыть</button>');
+      overlay.querySelector('#inviteCloseBtn').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('#inviteCopyBtn').addEventListener('click', async () => {
         const ok = await copyToClipboard(EMPLOYEE_INVITE_TEXT);
         showToast(ok ? 'Скопировано' : 'Не удалось', ok ? 'Отправь сотруднику' : 'Скопируй вручную', !ok);
       });
@@ -2008,7 +1998,7 @@
       try {
         const ta = document.createElement('textarea');
         ta.value = text;
-        ta.style.position = 'fixed'; ta.style.top = '-9999px'; ta.style.left = '-9999px';
+        ta.style.position = 'fixed'; ta.style.top = '-9999px';
         document.body.appendChild(ta);
         ta.focus(); ta.select();
         const ok = document.execCommand('copy');
@@ -2017,257 +2007,120 @@
       } catch (e) { return false; }
     }
 
-    async function addEmployeeServer(name, phone) {
-      try {
-        return await postToServer({
-          action: 'add_employee', telegram_id: getTgUserId(), initData: getTgInitData(), name, phone
-        });
-      } catch (e) { return { ok: false, error: String(e.message || e).substring(0, 60) }; }
-    }
-    async function updateEmployeeServer(oldPhone, name, newPhone) {
-      try {
-        return await postToServer({
-          action: 'update_employee', telegram_id: getTgUserId(), initData: getTgInitData(),
-          old_phone: oldPhone, name, phone: newPhone
-        });
-      } catch (e) { return { ok: false, error: String(e.message || e).substring(0, 60) }; }
-    }
-    async function deactivateEmployeeServer(phone) {
-      try {
-        const resp = await postToServer({ action: 'deactivate_employee', telegram_id: getTgUserId(), initData: getTgInitData(), phone });
-        if (resp && resp.ok) { await loadEmployees(); renderEmployeesList(); return true; }
-        return false;
-      } catch (e) { return false; }
-    }
-    async function activateEmployeeServer(phone) {
-      try {
-        const resp = await postToServer({ action: 'activate_employee', telegram_id: getTgUserId(), initData: getTgInitData(), phone });
-        if (resp && resp.ok) { await loadEmployees(); renderEmployeesList(); return true; }
-        return false;
-      } catch (e) { return false; }
-    }
-
     // ═══════════════════════════════════════════════════════════
-    // ДОП. СМЕНЫ
+    // ДОП. СМЕНЫ: СОТРУДНИК
     // ═══════════════════════════════════════════════════════════
-    // Исправление: ночные смены — энд относится к следующему дню
-    function convertExtraShift(sh, toTz) {
-      if (toTz === SOURCE_TZ) {
-        return { date: sh.date, start: sh.start, end: sh.end, endDate: sh.date };
-      }
-      const [shh, smm] = sh.start.split(':').map(Number);
-      const [ehh, emm] = sh.end.split(':').map(Number);
-      const overnight = (ehh * 60 + emm) <= (shh * 60 + smm);
-      const endDate = overnight ? addDays(sh.date, 1) : sh.date;
-      const startConv = convertTimeInTz(sh.date, sh.start, SOURCE_TZ, toTz);
-      const endConv   = convertTimeInTz(endDate, sh.end,   SOURCE_TZ, toTz);
-      return {
-        date: startConv ? startConv.date : sh.date,
-        start: startConv ? startConv.time : sh.start,
-        end: endConv ? endConv.time : sh.end,
-        endDate: endConv ? endConv.date : endDate
-      };
-    }
-
-    function convertTimeInTz(dateStr, timeStr, fromTz, toTz) {
-      if (!isValidIsoDate(dateStr) || !timeStr) return null;
-      if (fromTz === toTz) return { date: dateStr, time: timeStr };
-      try {
-        const [y, m, d] = dateStr.split('-').map(Number);
-        const [hh, mm] = timeStr.split(':').map(Number);
-        const naiveUtc = Date.UTC(y, m - 1, d, hh, mm, 0);
-        const fromOff = getTzOffset(new Date(naiveUtc), fromTz);
-        const trueUtc = naiveUtc - fromOff * 60000;
-        const toOff = getTzOffset(new Date(trueUtc), toTz);
-        const res = new Date(trueUtc + toOff * 60000);
-        return {
-          date: res.getUTCFullYear() + '-' + pad2(res.getUTCMonth() + 1) + '-' + pad2(res.getUTCDate()),
-          time: pad2(res.getUTCHours()) + ':' + pad2(res.getUTCMinutes())
-        };
-      } catch (e) { return null; }
-    }
-    function getTzOffset(date, tz) {
-      try {
-        const dtf = new Intl.DateTimeFormat('en-US', {
-          timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
-          hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-        });
-        const m = {};
-        dtf.formatToParts(date).forEach(p => { m[p.type] = p.value; });
-        const localUtc = Date.UTC(
-          parseInt(m.year, 10), parseInt(m.month, 10) - 1, parseInt(m.day, 10),
-          parseInt(m.hour === '24' ? '00' : m.hour, 10),
-          parseInt(m.minute, 10), parseInt(m.second, 10)
-        );
-        return Math.round((localUtc - date.getTime()) / 60000);
-      } catch (e) { return 0; }
-    }
-
     function showExtraShiftsPopup() {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
+      const off = myOffset();
       let listHtml = '';
       if (!allExtraShifts.length) {
         listHtml = '<div class="extra-empty">Свободных доп. смен нет</div>';
       } else {
         allExtraShifts.forEach(sh => {
-          const conv = convertExtraShift(sh, SOURCE_TZ);
-          const dateShown = conv.date;
-          const startShown = conv.start;
-          const endShown = conv.end;
+          const c = convertSlot(sh.date, sh.start, sh.end, MSK_OFFSET, off) || sh;
           const placesText = sh.free > 0 ? 'Свободно: ' + sh.free + ' из ' + sh.places : 'Мест нет';
-          const placesClass = sh.free > 0 ? '' : ' full';
-
-          listHtml += '<div class="extra-card">';
-          listHtml += '<div class="extra-card-header"><div>';
-          listHtml += '<div class="extra-card-date">' + escapeHtml(formatDateRu(dateShown)) + '</div>';
-          listHtml += '<div class="extra-card-time">' + escapeHtml(startShown) + '–' + escapeHtml(endShown) + '</div>';
-          listHtml += '</div><span class="extra-card-places' + placesClass + '">' + escapeHtml(placesText) + '</span></div>';
-
-          if (sh.iAmIn) {
-            if (sh.myStatus === 'approved') {
-              listHtml += '<div class="extra-card-people">✅ <b>Подтверждено</b></div>';
-              listHtml += '<div class="extra-card-actions"><button class="extra-card-btn primary" ' +
-                'data-action="add-calendar" data-shift-id="' + escapeHtml(sh.id) + '" ' +
-                'data-date="' + escapeHtml(dateShown) + '" ' +
-                'data-start="' + escapeHtml(startShown) + '" ' +
-                'data-end="' + escapeHtml(endShown) + '">Добавить в календарь</button></div>';
-              listHtml += '<div class="extra-card-actions" style="margin-top:8px;">' +
-                '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + escapeHtml(sh.id) + '">Отменить заявку</button></div>';
-            } else {
-              listHtml += '<div class="extra-card-people">⏳ <b>Ждёт подтверждения</b></div>';
-              listHtml += '<div class="extra-card-actions">' +
-                '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + escapeHtml(sh.id) + '">Отменить заявку</button></div>';
-            }
+          const id = escapeHtml(sh.id);
+          listHtml += '<div class="extra-card"><div class="extra-card-header"><div>' +
+            '<div class="extra-card-date">' + formatDateRu(c.date) + '</div>' +
+            '<div class="extra-card-time">' + escapeHtml(c.start) + '–' + escapeHtml(c.end) +
+            (isOvernight(c.start, c.end) ? ' 🌙' : '') + '</div>' +
+            '</div><span class="extra-card-places' + (sh.free > 0 ? '' : ' full') + '">' + escapeHtml(placesText) + '</span></div>';
+          if (sh.myStatus === 'approved') {
+            listHtml += '<div class="extra-card-people">✅ <b>Подтверждено</b> — смена уже в твоём расписании</div>' +
+              '<div class="extra-card-actions"><button class="extra-card-btn primary" data-action="add-calendar" data-shift-id="' + id + '">В Google Календарь</button>' +
+              '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + id + '">Отменить</button></div>';
+          } else if (sh.myStatus === 'pending') {
+            listHtml += '<div class="extra-card-people">⏳ <b>Ждёт подтверждения</b> — бот пришлёт ответ</div>' +
+              '<div class="extra-card-actions"><button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + id + '">Отменить заявку</button></div>';
           } else if (sh.free > 0) {
-            listHtml += '<div class="extra-card-actions">' +
-              '<button class="extra-card-btn primary" data-action="join" data-shift-id="' + escapeHtml(sh.id) + '">Записаться</button></div>';
+            listHtml += '<div class="extra-card-actions"><button class="extra-card-btn primary" data-action="join" data-shift-id="' + id + '">Записаться</button></div>';
           }
           listHtml += '</div>';
         });
       }
 
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">Дополнительные смены</div>' +
-        '<div class="popup-info">Запишись, если можешь выйти</div>' + listHtml +
-        '<button class="popup-btn secondary" id="closeExtraPopup" style="margin-top:16px;">Закрыть</button></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('closeExtraPopup').addEventListener('click', () => overlay.remove());
+      const overlay = openPopup('<div class="popup-title">Дополнительные смены</div>' +
+        '<div class="popup-info">Запишись, если можешь выйти · ' + escapeHtml(tzLabel().toLowerCase()) + '</div>' + listHtml +
+        '<button class="popup-btn secondary" id="closeExtraPopup" style="margin-top:16px;">Закрыть</button>');
+      overlay.querySelector('#closeExtraPopup').addEventListener('click', () => overlay.remove());
 
       overlay.querySelectorAll('[data-action]').forEach(btn => {
         btn.addEventListener('click', async () => {
           const action = btn.getAttribute('data-action');
           const id = btn.getAttribute('data-shift-id');
-          if (action === 'join') await joinExtraShiftAction(id, btn);
-          else if (action === 'cancel') await cancelExtraShiftAction(id, btn);
-          else if (action === 'add-calendar') {
-            const date = btn.getAttribute('data-date');
-            const start = btn.getAttribute('data-start');
-            const end = btn.getAttribute('data-end');
-            openUrl(buildGoogleCalendarUrl(date, start, end, SOURCE_TZ));
-            showToast('Открыто', 'Google Calendar');
+          const sh = allExtraShifts.find(s => s.id === id);
+          if (action === 'join') await extraShiftAction('join_extra_shift', id, btn, 'Записываем…', 'Заявка отправлена', 'Бот сообщит, когда руководитель ответит');
+          else if (action === 'cancel') {
+            if (!(await askConfirm('Отменить заявку на доп. смену?'))) return;
+            await extraShiftAction('cancel_extra_shift', id, btn, 'Отменяем…', 'Отменено', 'Заявка снята');
+          } else if (action === 'add-calendar' && sh) {
+            openUrl(buildGoogleCalendarUrl(sh.date, sh.start, sh.end, 'Доп. смена'));
           }
         });
       });
     }
 
-    async function joinExtraShiftAction(id, btn) {
-      if (btn) { btn.disabled = true; btn.textContent = 'Записываем…'; }
+    async function extraShiftAction(action, id, btn, busyText, okTitle, okSub) {
+      const old = btn.textContent;
+      btn.disabled = true; btn.textContent = busyText;
       try {
-        const resp = await postToServer({
-          action: 'join_extra_shift',
-          phone: userPhone,
-          name: getNameForPhone(userPhone),
-          shift_id: id,
-          telegram_id: getTgUserId(),
-          initData: getTgInitData()
-        });
-        if (resp && resp.ok) {
-          showToast('Записано', 'Вы записаны на доп. смену');
-          await loadExtraShifts();
-          closeAllPopups();
-          renderExtraShiftsBanner();
-          showExtraShiftsPopup();
-        } else {
-          showToast('Ошибка', (resp && resp.error) || 'error', true);
-          if (btn) { btn.disabled = false; btn.textContent = 'Записаться'; }
-        }
+        const resp = await postToServer({ action: action, shift_id: id });
+        if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+        allExtraShifts = resp.shifts || allExtraShifts;
+        showToast(okTitle, okSub);
+        if (action === 'cancel_extra_shift') refreshData(true);
+        renderExtraShiftsBanner();
+        showExtraShiftsPopup();
       } catch (e) {
-        showToast('Ошибка', 'Сервер недоступен', true);
-        if (btn) { btn.disabled = false; btn.textContent = 'Записаться'; }
-      }
-    }
-    async function cancelExtraShiftAction(id, btn) {
-      if (btn) { btn.disabled = true; btn.textContent = 'Отменяем…'; }
-      try {
-        const resp = await postToServer({
-          action: 'cancel_extra_shift',
-          phone: userPhone,
-          shift_id: id,
-          telegram_id: getTgUserId(),
-          initData: getTgInitData()
-        });
-        if (resp && resp.ok) {
-          showToast('Отменено', 'Заявка снята');
-          await loadExtraShifts();
-          closeAllPopups();
-          renderExtraShiftsBanner();
-          showExtraShiftsPopup();
-        } else {
-          showToast('Ошибка', (resp && resp.error) || 'error', true);
-          if (btn) { btn.disabled = false; btn.textContent = 'Отменить заявку'; }
-        }
-      } catch (e) {
-        showToast('Ошибка', 'Сервер недоступен', true);
-        if (btn) { btn.disabled = false; btn.textContent = 'Отменить заявку'; }
+        showToast('Ошибка', e.message || 'Сервер недоступен', true);
+        btn.disabled = false; btn.textContent = old;
       }
     }
 
+    // ═══════════════════════════════════════════════════════════
+    // ДОП. СМЕНЫ: РУКОВОДИТЕЛЬ
+    // ═══════════════════════════════════════════════════════════
     function openExtraShiftsAdmin() {
-      if (!ADMIN_PHONES.includes(userPhone)) { showToast('Отказ', 'Нет доступа', true); return; }
+      if (!requireAdmin()) return;
       showTabContent('tabExtraShiftsAdmin');
       setSubtitle('', false);
+      document.getElementById('extraShiftsAdminList').innerHTML = '<div class="extra-empty">Загружаем…</div>';
       loadExtraShiftsAdmin().then(renderExtraShiftsAdminList);
     }
-    function closeExtraShiftsAdmin() {
-      showTabContent('tabAdmin');
-      setSubtitle('Кто может выйти', true);
+    function closeExtraShiftsAdmin() { showTabContent('tabAdmin'); setSubtitle('Кто может выйти', true); }
+
+    async function loadExtraShiftsAdmin() {
+      try {
+        const resp = await postToServer({ action: 'list_extra_shifts_admin' });
+        allExtraShiftsAdmin = (resp && resp.ok) ? (resp.shifts || []) : [];
+      } catch (e) { allExtraShiftsAdmin = []; showToast('Ошибка', 'Сервер недоступен', true); }
     }
 
     function renderExtraShiftsAdminList() {
       const list = document.getElementById('extraShiftsAdminList');
-      if (!list) return;
       list.innerHTML = '';
       if (!allExtraShiftsAdmin.length) {
         list.innerHTML = '<div class="extra-empty">Пока нет доп. смен. Нажми «+», чтобы создать.</div>';
         return;
       }
       const sorted = allExtraShiftsAdmin.slice().sort((a, b) => {
-        const sa = a.status === 'deleted' ? 1 : 0;
-        const sb = b.status === 'deleted' ? 1 : 0;
-        if (sa !== sb) return sa - sb;
-        if (a.date !== b.date) return a.date < b.date ? -1 : 1;
-        return a.start.localeCompare(b.start);
+        const da = a.status === 'deleted' ? 1 : 0, db = b.status === 'deleted' ? 1 : 0;
+        if (da !== db) return da - db;
+        return (a.date + a.start).localeCompare(b.date + b.start);
       });
 
       sorted.forEach(sh => {
         const isDeleted = sh.status === 'deleted';
-        const placesText = sh.taken + ' из ' + sh.places;
-        const placesClass = sh.taken >= sh.places ? ' full' : '';
-        const pending = Array.isArray(sh.pending) ? sh.pending : [];
-        const approved = Array.isArray(sh.approved) ? sh.approved : [];
-
+        const pending = sh.pending || [], approved = sh.approved || [];
+        const id = escapeHtml(sh.id);
         let people = '';
         if (pending.length) {
           people += '<div class="extra-card-people" style="margin-bottom:6px;">⏳ <b>Ждут подтверждения:</b></div>';
           pending.forEach(p => {
-            people += '<div class="admin-list-item" style="padding:6px 0;">' +
-              '<span class="admin-list-name">' + escapeHtml(p.name || p.phone) + '</span>' +
+            people += '<div class="admin-list-item" style="padding:6px 0;"><span class="admin-list-name">' + escapeHtml(p.name || p.phone) + '</span>' +
               '<span style="display:flex;gap:6px;">' +
-                '<button class="extra-card-btn primary" style="flex:0 0 auto;min-width:auto;padding:6px 12px;font-size:12px;" data-approve-phone="' + escapeHtml(p.phone) + '" data-approve-shift="' + escapeHtml(sh.id) + '">✓</button>' +
-                '<button class="extra-card-btn danger" style="flex:0 0 auto;min-width:auto;padding:6px 12px;font-size:12px;" data-reject-phone="' + escapeHtml(p.phone) + '" data-reject-shift="' + escapeHtml(sh.id) + '">✕</button>' +
+              '<button class="extra-card-btn primary small" data-approve-phone="' + escapeHtml(p.phone) + '" data-shift="' + id + '" aria-label="Подтвердить">✓</button>' +
+              '<button class="extra-card-btn danger small" data-reject-phone="' + escapeHtml(p.phone) + '" data-shift="' + id + '" aria-label="Отклонить">✕</button>' +
               '</span></div>';
           });
         }
@@ -2275,162 +2128,88 @@
           people += '<div class="extra-card-people" style="margin-top:10px;">✅ <b>Подтверждены:</b> ' +
             approved.map(p => escapeHtml(p.name || p.phone)).join(', ') + '</div>';
         }
-        if (!pending.length && !approved.length) people = '<div class="extra-card-people">Пока никто не записался</div>';
+        if (!people) people = '<div class="extra-card-people">Пока никто не записался</div>';
 
         const card = document.createElement('div');
         card.className = 'extra-card';
         card.style.opacity = isDeleted ? '.5' : '1';
-
-        let html = '<div class="extra-card-header"><div>';
-        html += '<div class="extra-card-date">' + escapeHtml(formatDateRu(sh.date)) + '</div>';
-        html += '<div class="extra-card-time">' + escapeHtml(sh.start) + '–' + escapeHtml(sh.end) + '</div>';
-        html += '</div><span class="extra-card-places' + placesClass + '">' + escapeHtml(placesText) + '</span></div>';
-
-        if (isDeleted) {
-          html += '<div class="extra-card-people">❌ Удалена</div>';
-        } else {
-          html += people;
-          html += '<div class="extra-card-actions">' +
-            '<button class="extra-card-btn danger" data-delete-id="' + escapeHtml(sh.id) + '">Удалить смену</button></div>';
-        }
-        card.innerHTML = html;
+        card.innerHTML = '<div class="extra-card-header"><div>' +
+          '<div class="extra-card-date">' + formatDateRu(sh.date) + '</div>' +
+          '<div class="extra-card-time">' + escapeHtml(sh.start) + '–' + escapeHtml(sh.end) + ' МСК' +
+          (isOvernight(sh.start, sh.end) ? ' 🌙' : '') + '</div>' +
+          '</div><span class="extra-card-places' + (sh.taken >= sh.places ? ' full' : '') + '">' + sh.taken + ' из ' + sh.places + '</span></div>' +
+          (isDeleted ? '<div class="extra-card-people">❌ Удалена</div>'
+            : people + '<div class="extra-card-actions"><button class="extra-card-btn danger" data-delete-id="' + id + '">Удалить смену</button></div>');
         list.appendChild(card);
       });
 
-      list.querySelectorAll('[data-delete-id]').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          if (!confirm('Удалить доп. смену?')) return;
-          btn.disabled = true; btn.textContent = 'Удаляем…';
-          try {
-            const resp = await postToServer({
-              action: 'delete_extra_shift', telegram_id: getTgUserId(), initData: getTgInitData(),
-              shift_id: btn.getAttribute('data-delete-id')
-            });
-            if (resp && resp.ok) {
-              showToast('Удалено', 'Доп. смена скрыта');
-              await loadExtraShiftsAdmin();
-              renderExtraShiftsAdminList();
-            } else {
-              showToast('Ошибка', (resp && resp.error) || 'error', true);
-              btn.disabled = false; btn.textContent = 'Удалить смену';
-            }
-          } catch (e) {
-            showToast('Ошибка', 'Сервер недоступен', true);
-            btn.disabled = false; btn.textContent = 'Удалить смену';
-          }
-        });
-      });
-
-      list.querySelectorAll('[data-approve-phone]').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          btn.disabled = true; btn.textContent = '…';
-          try {
-            const resp = await postToServer({
-              action: 'approve_extra_shift_request',
-              telegram_id: getTgUserId(), initData: getTgInitData(),
-              shift_id: btn.getAttribute('data-approve-shift'),
-              phone: btn.getAttribute('data-approve-phone')
-            });
-            if (resp && resp.ok) {
-              showToast('Подтверждено', 'Сотрудник записан');
-              await loadExtraShiftsAdmin();
-              renderExtraShiftsAdminList();
-            } else {
-              showToast('Ошибка', (resp && resp.error) || 'error', true);
-              btn.disabled = false; btn.textContent = '✓';
-            }
-          } catch (e) {
-            showToast('Ошибка', 'Сервер недоступен', true);
-            btn.disabled = false; btn.textContent = '✓';
-          }
-        });
-      });
-
-      list.querySelectorAll('[data-reject-phone]').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          if (!confirm('Отклонить заявку?')) return;
-          btn.disabled = true; btn.textContent = '…';
-          try {
-            const resp = await postToServer({
-              action: 'reject_extra_shift_request',
-              telegram_id: getTgUserId(), initData: getTgInitData(),
-              shift_id: btn.getAttribute('data-reject-shift'),
-              phone: btn.getAttribute('data-reject-phone')
-            });
-            if (resp && resp.ok) {
-              showToast('Отклонено', 'Заявка снята');
-              await loadExtraShiftsAdmin();
-              renderExtraShiftsAdminList();
-            } else {
-              showToast('Ошибка', (resp && resp.error) || 'error', true);
-              btn.disabled = false; btn.textContent = '✕';
-            }
-          } catch (e) {
-            showToast('Ошибка', 'Сервер недоступен', true);
-            btn.disabled = false; btn.textContent = '✕';
-          }
-        });
-      });
+      const adminCall = async (btn, payload, confirmText, okTitle, okSub) => {
+        if (confirmText && !(await askConfirm(confirmText))) return;
+        const old = btn.textContent;
+        btn.disabled = true; btn.textContent = '…';
+        try {
+          const resp = await postToServer(payload);
+          if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+          showToast(okTitle, okSub);
+          await loadExtraShiftsAdmin();
+          renderExtraShiftsAdminList();
+        } catch (e) {
+          showToast('Ошибка', e.message || 'Сервер недоступен', true);
+          btn.disabled = false; btn.textContent = old;
+        }
+      };
+      list.querySelectorAll('[data-delete-id]').forEach(btn => btn.addEventListener('click', () =>
+        adminCall(btn, { action: 'delete_extra_shift', shift_id: btn.getAttribute('data-delete-id') },
+          'Удалить доп. смену? Записавшимся придёт уведомление.', 'Удалено', 'Доп. смена отменена')));
+      list.querySelectorAll('[data-approve-phone]').forEach(btn => btn.addEventListener('click', () =>
+        adminCall(btn, { action: 'approve_extra_shift_request', shift_id: btn.getAttribute('data-shift'), phone: btn.getAttribute('data-approve-phone') },
+          null, 'Подтверждено', 'Сотрудник получит уведомление')));
+      list.querySelectorAll('[data-reject-phone]').forEach(btn => btn.addEventListener('click', () =>
+        adminCall(btn, { action: 'reject_extra_shift_request', shift_id: btn.getAttribute('data-shift'), phone: btn.getAttribute('data-reject-phone') },
+          'Отклонить заявку?', 'Отклонено', 'Сотрудник получит уведомление')));
     }
 
     function showCreateExtraShiftForm() {
-      closeAllPopups();
-      const overlay = document.createElement('div');
-      overlay.className = 'popup-overlay';
-      overlay.innerHTML = '<div class="popup">' +
-        '<div class="popup-title">Новая доп. смена</div>' +
-        '<div class="popup-info">Смена появится у всех сотрудников</div>' +
+      const overlay = openPopup('<div class="popup-title">Новая доп. смена</div>' +
+        '<div class="popup-info">Смена появится у всех сотрудников. Время — по Москве, каждый увидит его по своему городу.</div>' +
         '<div class="extra-create-form">' +
-          '<div class="form-field"><label for="extraDate">Дата</label><input type="date" id="extraDate" /></div>' +
+          '<div class="form-field"><label for="extraDate">Дата (начало смены)</label><input type="date" id="extraDate" /></div>' +
           '<div class="extra-create-row">' +
-            '<div class="form-field"><label for="extraStart">С</label><select id="extraStart">' + buildTimeOptions('09:00') + '</select></div>' +
-            '<div class="form-field"><label for="extraEnd">До</label><select id="extraEnd">' + buildTimeOptions('18:00') + '</select></div>' +
+            '<div class="form-field"><label for="extraStart">С</label><select id="extraStart">' + buildStartOptions('09:00') + '</select></div>' +
+            '<div class="form-field"><label for="extraEnd">До</label><select id="extraEnd">' + buildEndOptions('18:00') + '</select></div>' +
           '</div>' +
+          '<div class="shift-row-note" id="extraNote"></div>' +
           '<div class="form-field"><label for="extraPlaces">Количество мест</label><input type="number" id="extraPlaces" min="1" max="100" value="1" /></div>' +
         '</div>' +
         '<div class="form-error" id="extraFormError"></div>' +
         '<button class="popup-btn" id="extraCreateSubmit">Создать и разослать</button>' +
-        '<button class="popup-btn secondary" id="extraCreateCancel">Отмена</button></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      document.getElementById('extraCreateCancel').addEventListener('click', () => overlay.remove());
+        '<button class="popup-btn secondary" id="extraCreateCancel">Отмена</button>');
+      overlay.querySelector('#extraCreateCancel').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('#extraDate').value = addDays(nowAt(MSK_OFFSET).iso, 1);
+      const sEl = overlay.querySelector('#extraStart'), eEl = overlay.querySelector('#extraEnd'), note = overlay.querySelector('#extraNote');
+      const upd = () => { note.textContent = overnightNote(sEl.value, eEl.value); };
+      sEl.addEventListener('change', upd); eEl.addEventListener('change', upd); upd();
 
-      const tomorrow = addDays(todayInTz(SOURCE_TZ), 1);
-      document.getElementById('extraDate').value = tomorrow;
-
-      document.getElementById('extraCreateSubmit').addEventListener('click', async (e) => {
+      overlay.querySelector('#extraCreateSubmit').addEventListener('click', async e => {
         const btn = e.currentTarget;
-        const dateVal = document.getElementById('extraDate').value;
-        const startVal = document.getElementById('extraStart').value;
-        const endVal = document.getElementById('extraEnd').value;
-        const placesVal = document.getElementById('extraPlaces').value;
-        const err = document.getElementById('extraFormError');
+        const dateVal = overlay.querySelector('#extraDate').value;
+        const placesNum = parseInt(overlay.querySelector('#extraPlaces').value, 10);
+        const err = overlay.querySelector('#extraFormError');
         err.textContent = '';
-
-        if (!dateVal) { err.textContent = 'Укажи дату'; return; }
-        if (startVal >= endVal) { err.textContent = 'Конец должен быть позже начала'; return; }
-        const placesNum = parseInt(placesVal, 10);
-        if (!placesNum || placesNum < 1) { err.textContent = 'Мест минимум 1'; return; }
+        if (!isValidIsoDate(dateVal)) { err.textContent = 'Укажи дату'; return; }
+        if (!slotDuration(sEl.value, eEl.value)) { err.textContent = 'Начало и конец совпадают'; return; }
+        if (!placesNum || placesNum < 1 || placesNum > 100) { err.textContent = 'Мест — от 1 до 100'; return; }
 
         btn.disabled = true; btn.textContent = 'Создаём…';
         try {
-          const resp = await postToServer({
-            action: 'create_extra_shift',
-            telegram_id: getTgUserId(), initData: getTgInitData(),
-            date: dateVal, start_time: startVal, end_time: endVal, places: placesNum
-          });
-          if (resp && resp.ok) {
-            overlay.remove();
-            showToast('Создано', 'Смена разослана сотрудникам');
-            await loadExtraShiftsAdmin();
-            renderExtraShiftsAdminList();
-          } else {
-            const er = (resp && resp.error) || 'error';
-            err.textContent = er === 'duplicate' ? 'Такая доп. смена уже есть' : 'Ошибка: ' + er;
-            btn.disabled = false; btn.textContent = 'Создать и разослать';
-          }
-        } catch (e) {
-          err.textContent = 'Сервер недоступен';
+          const resp = await postToServer({ action: 'create_extra_shift', date: dateVal, start_time: sEl.value, end_time: eEl.value, places: placesNum });
+          if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+          overlay.remove();
+          showToast('Создано', 'Смена разослана сотрудникам');
+          await loadExtraShiftsAdmin();
+          renderExtraShiftsAdminList();
+        } catch (ex) {
+          err.textContent = ex.message || 'Сервер недоступен';
           btn.disabled = false; btn.textContent = 'Создать и разослать';
         }
       });
@@ -2464,14 +2243,12 @@
       if (!AC) return;
       let ctx;
       try { ctx = new AC(); } catch (e) { return; }
-
       const play = () => {
         try {
           const base = ctx.currentTime + 0.4;
           const master = ctx.createGain();
           master.gain.value = 0.0001;
           master.connect(ctx.destination);
-
           const layers = [
             { freq: 329.63, start: 0.00, gain: 0.30, dur: 0.90, mod: 1.6 },
             { freq: 440.00, start: 0.28, gain: 0.55, dur: 1.30, mod: 2.0 },
@@ -2499,7 +2276,6 @@
           setTimeout(() => { try { ctx.close(); } catch (e) {} }, 2800);
         } catch (e) { try { ctx.close(); } catch (e2) {} }
       };
-
       if (ctx.state === 'suspended' && ctx.resume) {
         ctx.resume().then(play).catch(() => { try { ctx.close(); } catch (e) {} });
       } else {
@@ -2525,17 +2301,14 @@
       const el = document.getElementById('splash');
       if (!el) return;
       el.classList.add('timed-out');
-      const t = document.getElementById('splashErrTitle');
-      const x = document.getElementById('splashErrText');
-      if (t) t.textContent = title;
-      if (x) x.textContent = text;
+      document.getElementById('splashErrTitle').textContent = title;
+      document.getElementById('splashErrText').textContent = text;
     }
     function armSplashErrorTimer() {
-      if (__splashErrorTimer) clearTimeout(__splashErrorTimer);
       __splashErrorTimer = setTimeout(() => {
         if (__splashHidden) return;
-        showSplashError('Долго грузимся', 'Проверьте интернет и нажмите «Повторить»');
-      }, 12000);
+        showSplashError('Долго грузимся', 'Проверьте интернет и нажмите «Попробовать снова»');
+      }, 20000);
     }
     function ensureSplashMinTime() {
       const elapsed = Date.now() - __SPLASH_T0;
@@ -2543,267 +2316,212 @@
     }
 
     // ═══════════════════════════════════════════════════════════
-    // ФОРМА ТЕЛЕФОНА
+    // ВХОД
     // ═══════════════════════════════════════════════════════════
-    function showPhoneForm() {
+    function showPhoneForm(message) {
       document.getElementById('phoneForm').style.display = 'block';
       document.getElementById('tabsBar').classList.remove('visible');
       hideAllTabContents();
       setSubtitle('', false);
+      const msg = document.getElementById('phoneFormMsg');
+      msg.innerHTML = message || '';
+      const btn = document.getElementById('sharePhone');
+      btn.disabled = false; btn.textContent = 'Поделиться номером';
+    }
 
-      if (!CONFIG_READY) {
-        const cw = document.getElementById('configWarn');
-        cw.style.display = 'block';
-        cw.innerHTML = '⚠️ <b>Приложение не настроено.</b> Заполните <code>SHEET_ID</code> и <code>WEB_APP_URL</code> в начале скрипта.';
-      }
-
-      const shareBtn = document.getElementById('sharePhone');
-      if (tg && tg.requestContact) {
-        shareBtn.addEventListener('click', () => {
-          tg.requestContact((ok, event) => {
-            if (!ok) return;
-            const phone =
-              (event && event.responseUnsafe && event.responseUnsafe.contact && event.responseUnsafe.contact.phone_number) ||
-              (tg.initDataUnsafe && tg.initDataUnsafe.contact && tg.initDataUnsafe.contact.phone_number);
-            if (phone) {
-              const n = normalizePhone(phone);
-              safeLS.set(STORAGE_KEY, n);
-              userPhone = n;
-              initApp();
-            }
-          });
-        });
-      } else {
-        shareBtn.style.display = 'none';
-      }
-
-      const manualLink = document.getElementById('manualLink');
-      const phoneInput = document.getElementById('phoneInput');
-      const saveManual = document.getElementById('saveManual');
-      manualLink.addEventListener('click', () => {
-        phoneInput.style.display = 'block';
-        saveManual.style.display = 'block';
-        manualLink.style.display = 'none';
-      });
-      saveManual.addEventListener('click', () => {
-        const val = normalizePhone(phoneInput.value);
-        if (val.length < 10) { showToast('Ошибка', 'Введи корректный номер', true); return; }
-        safeLS.set(STORAGE_KEY, val);
-        userPhone = val;
-        initApp();
+    function shareContact() {
+      const btn = document.getElementById('sharePhone');
+      const msg = document.getElementById('phoneFormMsg');
+      if (!tg || !tg.requestContact) { msg.textContent = 'Обновите Telegram до последней версии'; return; }
+      msg.textContent = '';
+      tg.requestContact(async (ok, event) => {
+        if (!ok) return;
+        const response = event && event.response;
+        if (!response) { msg.textContent = 'Не удалось получить подтверждение номера. Попробуйте ещё раз.'; return; }
+        btn.disabled = true; btn.textContent = 'Проверяем…';
+        try {
+          const resp = await postToServer({ action: 'register_contact', contact_response: response });
+          handleAuthResponse(resp);
+        } catch (e) {
+          showPhoneForm('Сервер недоступен. Проверьте интернет и попробуйте снова.');
+        }
       });
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // INIT
-    // ═══════════════════════════════════════════════════════════
+    function showFatal(html) {
+      document.getElementById('phoneForm').style.display = 'none';
+      document.getElementById('tabsBar').classList.remove('visible');
+      showTabContent('tabSchedule');
+      document.getElementById('calendarWrap').style.display = 'none';
+      const box = document.getElementById('initError');
+      box.style.display = 'block';
+      box.innerHTML = '<div class="init-error">' + html + '</div>';
+    }
+
     function showInitError(message, retryFn) {
       const box = document.getElementById('initError');
-      if (!box) return;
       box.style.display = 'block';
-      box.innerHTML = '<div class="init-error">' +
-        '<div><b>Не удалось загрузить данные.</b><br>' + escapeHtml(message) + '</div>' +
+      box.innerHTML = '<div class="init-error"><div><b>Не удалось загрузить данные.</b><br>' + escapeHtml(message) + '</div>' +
         '<button id="retryInit">Повторить</button></div>';
       document.getElementById('retryInit').addEventListener('click', () => {
-        box.style.display = 'none';
-        box.innerHTML = '';
+        box.style.display = 'none'; box.innerHTML = '';
         if (retryFn) retryFn();
       });
     }
-    function clearInitError() {
-      const box = document.getElementById('initError');
-      if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+
+    // Общая обработка ответа на bootstrap / register_contact
+    function handleAuthResponse(resp) {
+      if (resp && resp.ok) {
+        saveCache(resp);
+        applyData(resp);
+        showApp();
+        if (!myCityKey()) showCityPicker(true);
+        return true;
+      }
+      const code = resp && resp.error;
+      if (code === 'need_contact') {
+        showPhoneForm('');
+      } else if (code === 'not_employee') {
+        showPhoneForm('Номер ' + escapeHtml(resp.phone || '') + ' не найден среди сотрудников. Обратитесь к руководителю, чтобы он добавил вас в систему.');
+      } else if (code === 'contact_unverified' || code === 'contact_mismatch') {
+        showPhoneForm(escapeHtml(errText(code)));
+      } else {
+        showFatal(escapeHtml(errText(code)));
+      }
+      return false;
     }
 
-    async function initApp() {
-      if (__initRunning) return;
-      __initRunning = true;
-
+    function showApp() {
       document.getElementById('phoneForm').style.display = 'none';
       document.getElementById('tabsBar').classList.add('visible');
-      showTabContent('tabSchedule');
-      setSubtitle('', false);
-      clearInitError();
-
-      document.getElementById('tabAdminBtn').style.display =
-        ADMIN_PHONES.includes(userPhone) ? 'block' : 'none';
-
-      // Регистрация tg_id (в фоне)
-      registerTelegramId().catch(() => {});
-
-      // Кэш (мгновенный показ)
-      const cached = loadCache();
-      if (cached) {
-        document.getElementById('calendarWrap').style.display = 'block';
-        renderHeader(); renderBanner(); renderCalendar();
-        renderAvailabilityCalendar(); renderAdminCalendar();
+      document.getElementById('initError').style.display = 'none';
+      document.getElementById('calendarWrap').style.display = 'block';
+      document.getElementById('tabAdminBtn').style.display = me && me.isAdmin ? 'block' : 'none';
+      if (!months.schedule) initMonths();
+      const activeTab = document.querySelector('.tab.active');
+      if (!document.querySelector('.tab-content.active') || (activeTab && activeTab.dataset.tab === 'schedule')) {
+        showTabContent('tabSchedule');
       }
+      renderAll();
+    }
 
+    // Тихое обновление данных с сервера
+    async function refreshData(silent) {
+      try {
+        const resp = await postToServer({ action: 'bootstrap' });
+        if (resp && resp.ok) { saveCache(resp); applyData(resp); renderAll(); return true; }
+        if (!silent) handleAuthResponse(resp);
+      } catch (e) {
+        if (!silent) throw e;
+      }
+      return false;
+    }
+
+    async function boot() {
       if (!CONFIG_READY) {
-        document.getElementById('calendarWrap').style.display = 'block';
-        renderHeader();
-        showInitError('Приложение не настроено (SHEET_ID / WEB_APP_URL).', null);
-        showSplashError('Не настроено', 'Заполните SHEET_ID и WEB_APP_URL');
-        await ensureSplashMinTime();
-        hideSplash();
-        __initRunning = false;
+        await ensureSplashMinTime(); hideSplash();
+        showFatal('<b>Приложение не настроено.</b> Заполните WEB_APP_URL в начале скрипта.');
+        return;
+      }
+      if (!tg || !getTgInitData()) {
+        await ensureSplashMinTime(); hideSplash();
+        showFatal('Откройте приложение через Telegram-бота: <a href="' + BOT_LINK + '" style="color:#10B981">' + escapeHtml(BOT_LINK.replace('https://', '')) + '</a>');
         return;
       }
 
+      // Мгновенный показ из кэша этого же пользователя
+      const cached = loadCache();
+      if (cached) { applyData(cached); showApp(); }
+
       try {
-        await Promise.all([loadShifts(), loadAvailability(), loadEmployees()]);
-        await loadExtraShifts();
-        saveCache();
-
-        const hasShifts = allShifts.some(s => s.phone === userPhone);
-        const hasAvail  = allAvailability.some(a => a.phone === userPhone);
-
-        if (!hasShifts && !hasAvail) {
-          // Различаем «нет смен» от «телефон не в системе»
-          const isRegistered = employeesMap[userPhone] !== undefined;
-          const message = isRegistered
-            ? 'Смен на этот месяц нет. Загляни позже или проверь другой месяц.'
-            : 'По номеру <b>' + escapeHtml(userPhone) + '</b> ничего не найдено. Обратись к руководителю, чтобы проверить номер в системе.';
-          document.getElementById('initError').style.display = 'block';
-          document.getElementById('initError').innerHTML =
-            '<div class="init-error">' + message +
-            '<div style="margin-top:12px"><a href="#" id="resetPhone2" style="color:#10B981;font-size:13px;">Ввести другой номер</a></div></div>';
-          document.getElementById('resetPhone2').addEventListener('click', e => {
-            e.preventDefault();
-            safeLS.del(STORAGE_KEY);
-            location.reload();
-          });
+        const resp = await postToServer({ action: 'bootstrap' });
+        if (resp && resp.ok) {
+          saveCache(resp); applyData(resp); showApp();
+          if (!myCityKey()) showCityPicker(true);
         } else {
-          document.getElementById('calendarWrap').style.display = 'block';
-          renderHeader(); renderBanner(); renderCalendar();
-          renderAvailabilityCalendar(); renderAdminCalendar();
-          renderExtraShiftsBanner();
+          safeLS.del(CACHE_KEY);
+          handleAuthResponse(resp);
         }
       } catch (e) {
-        console.error('initApp error:', e);
-        // Не уничтожаем UI — показываем ошибку с retry
-        showInitError(String(e.message || e).substring(0, 120), () => {
-          __initRunning = false;
-          initApp();
-        });
-        showToast('Ошибка загрузки', 'Нажмите «Повторить»', true);
+        console.error('boot:', e);
+        if (!cached) {
+          showTabContent('tabSchedule');
+          showInitError(String(e.message || e).substring(0, 120), () => location.reload());
+        } else {
+          showToast('Нет связи', 'Показаны сохранённые данные', true);
+        }
       }
-
       await ensureSplashMinTime();
       hideSplash();
-      __initRunning = false;
-      __initDone = true;
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // КЭШ
-    // ═══════════════════════════════════════════════════════════
-    const CACHE_KEYS = {
-      shifts: 'cache_shifts',
-      availability: 'cache_availability',
-      employees: 'cache_employees',
-      time: 'cache_time'
-    };
-    const CACHE_TTL = 15 * 60 * 1000; // 15 минут
-
-    function saveCache() {
-      try {
-        safeLS.set(CACHE_KEYS.shifts, JSON.stringify(allShifts));
-        safeLS.set(CACHE_KEYS.availability, JSON.stringify(allAvailability));
-        safeLS.set(CACHE_KEYS.employees, JSON.stringify({ names: employeesMap, ics: employeesIcsMap }));
-        safeLS.set(CACHE_KEYS.time, String(Date.now()));
-      } catch (e) { console.warn('cache save:', e); }
-    }
-    function loadCache() {
-      try {
-        const t = parseInt(safeLS.get(CACHE_KEYS.time) || '0', 10);
-        if (!t || Date.now() - t > CACHE_TTL) return false;
-        allShifts = JSON.parse(safeLS.get(CACHE_KEYS.shifts) || '[]');
-        allAvailability = JSON.parse(safeLS.get(CACHE_KEYS.availability) || '[]');
-        const emp = JSON.parse(safeLS.get(CACHE_KEYS.employees) || '{}');
-        employeesMap = emp.names || {};
-        employeesIcsMap = emp.ics || {};
-        return true;
-      } catch (e) { console.warn('cache load:', e); return false; }
     }
 
     // ═══════════════════════════════════════════════════════════
     // WIRE-UP
     // ═══════════════════════════════════════════════════════════
-    function wireTabs() {
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          const target = tab.dataset.tab;
-          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          hideAllTabContents();
-          if (target === 'schedule') {
-            showTabContent('tabSchedule');
-            setSubtitle('', false);
-            renderCalendar(); renderHeader(); renderBanner(); renderExtraShiftsBanner();
-          } else if (target === 'availability') {
-            showTabContent('tabAvailability');
-            setSubtitle('Когда ты можешь выйти', true);
-          } else if (target === 'admin') {
-            showTabContent('tabAdmin');
-            setSubtitle('Кто может выйти', true);
-            renderAdminCalendar();
-          }
-        });
-      });
-    }
+    const MONTH_VIEWS = {
+      schedule: { days: 'days', prev: 'prevMonth', next: 'nextMonth', today: 'todayBtn', render: () => renderCalendar() },
+      avail:    { days: 'daysAvail', prev: 'prevMonthAvail', next: 'nextMonthAvail', today: 'todayBtnAvail', render: () => renderAvailabilityCalendar() },
+      admin:    { days: 'daysAdmin', prev: 'prevMonthAdmin', next: 'nextMonthAdmin', today: 'todayBtnAdmin', render: () => renderAdminCalendar() },
+      edit:     { days: 'daysEdit', prev: 'prevMonthEdit', next: 'nextMonthEdit', today: 'todayBtnEdit', render: () => renderEditCalendar() }
+    };
 
-    function wireSwipe() {
-      const attach = (id, onL, onR) => {
-        const el = document.getElementById(id);
-        if (!el || el.__swipeWired) return;
-        el.__swipeWired = true;
+    function wireMonthViews() {
+      Object.keys(MONTH_VIEWS).forEach(key => {
+        const v = MONTH_VIEWS[key];
+        const go = (delta, anim) => {
+          if (!months[key]) return;
+          if (delta === 0) resetMonth(key); else shiftMonth(key, delta);
+          v.render(); animateMonth(v.days, anim);
+        };
+        document.getElementById(v.prev).addEventListener('click', () => go(-1, 'slide-right'));
+        document.getElementById(v.next).addEventListener('click', () => go(1, 'slide-left'));
+        document.getElementById(v.today).addEventListener('click', () => go(0, 'fade-only'));
+
+        const el = document.getElementById(v.days);
         let sx = 0, sy = 0, tracking = false;
         el.addEventListener('touchstart', e => {
           if (e.touches.length !== 1) return;
-          const t = e.touches[0]; sx = t.clientX; sy = t.clientY; tracking = true;
+          sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true;
         }, { passive: true });
         el.addEventListener('touchend', e => {
           if (!tracking) return; tracking = false;
           const t = e.changedTouches[0];
           const dx = t.clientX - sx, dy = t.clientY - sy;
           if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-          if (dx < 0) onL && onL(); else onR && onR();
+          if (dx < 0) go(1, 'slide-left'); else go(-1, 'slide-right');
         }, { passive: true });
-      };
-      attach('days',
-        () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); animateMonth('days', 'slide-left'); },
-        () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); animateMonth('days', 'slide-right'); });
-      attach('daysAvail',
-        () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1); renderAvailabilityCalendar(); animateMonth('daysAvail', 'slide-left'); },
-        () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1); renderAvailabilityCalendar(); animateMonth('daysAvail', 'slide-right'); });
-      attach('daysAdmin',
-        () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-left'); },
-        () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-right'); });
+      });
+    }
+
+    function wireTabs() {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.tab;
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          try { if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); } catch (e) {}
+          if (target === 'schedule') {
+            showTabContent('tabSchedule'); setSubtitle('', false);
+            renderHeader(); renderBanner(); renderCalendar(); renderExtraShiftsBanner();
+          } else if (target === 'availability') {
+            showTabContent('tabAvailability'); setSubtitle('Когда ты можешь выйти', true);
+            renderAvailabilityCalendar();
+          } else if (target === 'admin') {
+            showTabContent('tabAdmin'); setSubtitle('Кто может выйти', true);
+            renderAdminCalendar();
+          }
+        });
+      });
     }
 
     function wireButtons() {
-      document.getElementById('prevMonth').addEventListener('click', () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); animateMonth('days', 'slide-right'); });
-      document.getElementById('nextMonth').addEventListener('click', () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); animateMonth('days', 'slide-left'); });
-      document.getElementById('todayBtn').addEventListener('click', () => { currentMonth = new Date(); renderCalendar(); animateMonth('days', 'fade-only'); });
-
-      document.getElementById('prevMonthAvail').addEventListener('click', () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() - 1); renderAvailabilityCalendar(); animateMonth('daysAvail', 'slide-right'); });
-      document.getElementById('nextMonthAvail').addEventListener('click', () => { currentMonthAvail.setMonth(currentMonthAvail.getMonth() + 1); renderAvailabilityCalendar(); animateMonth('daysAvail', 'slide-left'); });
-      document.getElementById('todayBtnAvail').addEventListener('click', () => { currentMonthAvail = new Date(); renderAvailabilityCalendar(); animateMonth('daysAvail', 'fade-only'); });
-
-      document.getElementById('prevMonthAdmin').addEventListener('click', () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() - 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-right'); });
-      document.getElementById('nextMonthAdmin').addEventListener('click', () => { currentMonthAdmin.setMonth(currentMonthAdmin.getMonth() + 1); renderAdminCalendar(); animateMonth('daysAdmin', 'slide-left'); });
-      document.getElementById('todayBtnAdmin').addEventListener('click', () => { currentMonthAdmin = new Date(); renderAdminCalendar(); animateMonth('daysAdmin', 'fade-only'); });
-
-      document.getElementById('prevMonthEdit').addEventListener('click', () => { currentMonthEdit.setMonth(currentMonthEdit.getMonth() - 1); renderEditCalendar(); animateMonth('daysEdit', 'slide-right'); });
-      document.getElementById('nextMonthEdit').addEventListener('click', () => { currentMonthEdit.setMonth(currentMonthEdit.getMonth() + 1); renderEditCalendar(); animateMonth('daysEdit', 'slide-left'); });
-      document.getElementById('todayBtnEdit').addEventListener('click', () => { currentMonthEdit = new Date(); renderEditCalendar(); animateMonth('daysEdit', 'fade-only'); });
-
       document.getElementById('soundToggleBtn').addEventListener('click', e => {
         e.stopPropagation();
         setEntrySoundEnabled(!isEntrySoundEnabled());
       });
       document.getElementById('helpBtn').addEventListener('click', showHelp);
+      document.getElementById('cityChip').addEventListener('click', () => { if (me) showCityPicker(false); });
+      document.getElementById('sharePhone').addEventListener('click', shareContact);
 
       document.getElementById('editScheduleBtn').addEventListener('click', openEditEmployees);
       document.getElementById('employeesAdminBtn').addEventListener('click', openEmployeesAdmin);
@@ -2818,11 +2536,14 @@
       document.getElementById('addEmployeeBtn').addEventListener('click', () => showEmployeeFormAdmin(null));
       document.getElementById('addExtraShiftBtn').addEventListener('click', showCreateExtraShiftForm);
 
-      const s = document.getElementById('employeesSearchInput');
-      if (s) s.addEventListener('input', e => { __employeesSearchQuery = e.target.value || ''; renderEmployeesAdminList(); });
-
-      const a = document.getElementById('archiveToggleBtn');
-      if (a) a.addEventListener('click', () => { __employeesArchiveOpen = !__employeesArchiveOpen; renderEmployeesAdminList(); });
+      document.getElementById('employeesSearchInput').addEventListener('input', e => {
+        __employeesSearchQuery = e.target.value || '';
+        renderEmployeesAdminList();
+      });
+      document.getElementById('archiveToggleBtn').addEventListener('click', () => {
+        __employeesArchiveOpen = !__employeesArchiveOpen;
+        renderEmployeesAdminList();
+      });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2831,24 +2552,19 @@
     armSplashErrorTimer();
     updateSoundToggleUI();
     wireTabs();
-    wireSwipe();
+    wireMonthViews();
     wireButtons();
 
     if (document.readyState === 'complete') playEntrySound();
     else window.addEventListener('load', playEntrySound);
 
-    const saved = safeLS.get(STORAGE_KEY);
-    if (saved) {
-      userPhone = normalizePhone(saved);
-      initApp().catch(e => {
-        console.error('initApp:', e);
-        showSplashError('Ошибка', 'Не удалось загрузить приложение');
-        hideSplash();
-      });
-    } else {
-      showPhoneForm();
-      ensureSplashMinTime().then(hideSplash);
-    }
+    boot().catch(e => {
+      console.error('boot:', e);
+      showSplashError('Ошибка', 'Не удалось загрузить приложение');
+    });
+
+    // Для автотестов функций времени (не влияет на работу)
+    window.__turnoTest = { convertSlot, slotDuration, isNightShift, buildMonthCells, minToTime, timeToMin, buildGoogleCalendarUrl };
   })();
   </script>
 </body>

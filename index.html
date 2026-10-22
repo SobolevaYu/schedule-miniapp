@@ -623,6 +623,91 @@
     .extra-create-form .form-field{margin-bottom:0}
     .extra-create-row{display:flex;gap:var(--space-2)}
     .extra-create-row>*{flex:1}
+
+    /* ── Обучение при первом входе ── */
+    .onb{position:fixed;inset:0;z-index:3000;display:flex;flex-direction:column;
+      background:var(--tg-theme-bg-color,#F5F7FA);
+      padding:calc(var(--space-5) + env(safe-area-inset-top,0px)) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom,0px));
+      animation:fadeIn .25s ease-out}
+    @media (prefers-color-scheme:dark){.onb{background:var(--tg-theme-bg-color,#0F172A)}}
+    .onb-top{display:flex;justify-content:space-between;align-items:center;min-height:32px}
+    .onb-step{font-size:13px;font-weight:600;color:var(--tg-theme-hint-color,#64748B)}
+    .onb-skip{background:none;border:none;color:var(--tg-theme-hint-color,#64748B);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:6px}
+    .onb-viewport{flex:1;overflow:hidden;display:flex;align-items:center}
+    .onb-track{display:flex;width:100%;transition:transform .35s cubic-bezier(.32,.72,0,1)}
+    .onb-slide{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 var(--space-2)}
+    .onb-emoji{width:112px;height:112px;border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:56px;
+      background:linear-gradient(160deg,rgba(16,185,129,.18),rgba(99,102,241,.12));margin-bottom:var(--space-6);box-shadow:var(--shadow-md)}
+    .onb-title{font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1.2;margin-bottom:var(--space-3)}
+    .onb-text{font-size:15px;line-height:1.55;color:var(--tg-theme-hint-color,#475569);max-width:340px}
+    @media (prefers-color-scheme:dark){.onb-text{color:var(--tg-theme-hint-color,#94A3B8)}}
+    .onb-text b{color:var(--tg-theme-text-color,#0F172A)}
+    @media (prefers-color-scheme:dark){.onb-text b{color:var(--tg-theme-text-color,#F1F5F9)}}
+    .onb-legend{display:flex;flex-direction:column;gap:8px;margin-top:var(--space-4);text-align:left;font-size:14px}
+    .onb-legend div{display:flex;align-items:center;gap:10px}
+    .onb-chip{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1px solid}
+    .onb-chip.shift{background:var(--shift-bg-light);border-color:var(--shift-border);color:var(--shift-text-light)}
+    .onb-chip.sick{background:var(--sick-bg-light);border-color:var(--sick-border);color:var(--sick-text-light)}
+    .onb-chip.vac{background:var(--vac-bg-light);border-color:var(--vac-border);color:var(--vac-text-light)}
+    .onb-chip.avail{background:var(--avail-bg-light);border-color:var(--avail-border);color:var(--avail-text-light)}
+    .onb-dots{display:flex;justify-content:center;gap:6px;margin:var(--space-5) 0}
+    .onb-dot{width:7px;height:7px;border-radius:4px;background:rgba(148,163,184,.4);transition:width .25s,background .25s}
+    .onb-dot.active{width:22px;background:var(--brand)}
+    .onb-actions{display:flex;flex-direction:column;gap:var(--space-2)}
+    .onb-actions .popup-btn{margin-bottom:0}
+
+    /* ── Подсказка на главном экране ── */
+    .tip-card{display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);
+      border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(16,185,129,.10));
+      border:1px solid rgba(99,102,241,.28);animation:fadeInContent .3s ease-out}
+    .tip-emoji{font-size:24px;line-height:1;flex-shrink:0;margin-top:2px}
+    .tip-body{flex:1;min-width:0}
+    .tip-title{font-size:14px;font-weight:700;margin-bottom:2px}
+    .tip-text{font-size:13px;line-height:1.45;color:var(--tg-theme-hint-color,#475569)}
+    @media (prefers-color-scheme:dark){.tip-text{color:var(--tg-theme-hint-color,#94A3B8)}}
+    .tip-action{margin-top:var(--space-2);background:none;border:none;padding:0;color:#4F46E5;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+    @media (prefers-color-scheme:dark){.tip-action{color:#A5B4FC}}
+    .tip-close{background:none;border:none;color:var(--tg-theme-hint-color,#94A3B8);font-size:16px;cursor:pointer;padding:0 2px;line-height:1;font-family:inherit}
+
+    /* ── Кнопка «Календарь телефона» ── */
+    .cal-connect{display:flex;align-items:center;gap:var(--space-3);width:100%;margin-top:var(--space-4);padding:var(--space-3) var(--space-4);
+      border-radius:var(--radius-lg);border:1px solid rgba(16,185,129,.3);background:var(--grad-surface-light);cursor:pointer;
+      font-family:inherit;text-align:left;color:var(--tg-theme-text-color,#0F172A);box-shadow:var(--shadow-sm)}
+    @media (prefers-color-scheme:dark){.cal-connect{background:var(--grad-surface-dark);color:var(--tg-theme-text-color,#F1F5F9)}}
+    .cal-connect:active{transform:scale(.98)}
+    .cal-connect-icon{font-size:24px}
+    .cal-connect-text{flex:1;min-width:0}
+    .cal-connect-title{font-size:15px;font-weight:700}
+    .cal-connect-sub{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin-top:2px}
+
+    /* ── Пошаговые инструкции ── */
+    .steps{list-style:none;counter-reset:st;margin:0 0 var(--space-4);padding:0}
+    .steps li{counter-increment:st;position:relative;padding:0 0 var(--space-3) 38px;font-size:14px;line-height:1.5}
+    .steps li::before{content:counter(st);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;
+      background:var(--grad-primary);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .path{display:inline;font-weight:600;background:rgba(16,185,129,.12);padding:1px 6px;border-radius:6px}
+    .sub-head{font-size:15px;font-weight:700;margin:var(--space-4) 0 var(--space-3)}
+
+    /* ── Вкладка «Помощь» ── */
+    .help-hero{padding:var(--space-5);border-radius:var(--radius-xl);background:linear-gradient(135deg,rgba(16,185,129,.16),rgba(99,102,241,.12));
+      border:1px solid rgba(16,185,129,.25);margin-bottom:var(--space-4)}
+    .help-hero-title{font-size:18px;font-weight:700;margin-bottom:6px}
+    .help-hero-text{font-size:14px;line-height:1.5;color:var(--tg-theme-hint-color,#475569);margin-bottom:var(--space-4)}
+    @media (prefers-color-scheme:dark){.help-hero-text{color:var(--tg-theme-hint-color,#94A3B8)}}
+    .help-hero .popup-btn{margin-bottom:var(--space-2)}
+    .faq{border-radius:var(--radius-lg);background:var(--grad-surface-light);border:1px solid rgba(148,163,184,.18);margin-bottom:var(--space-2);overflow:hidden}
+    @media (prefers-color-scheme:dark){.faq{background:var(--grad-surface-dark)}}
+    .faq summary{list-style:none;cursor:pointer;padding:14px var(--space-4);font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq summary::after{content:'';margin-left:auto;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);opacity:.5;transition:transform .2s}
+    .faq[open] summary::after{transform:rotate(-135deg)}
+    .faq-body{padding:0 var(--space-4) var(--space-4);font-size:14px;line-height:1.55;color:var(--tg-theme-hint-color,#475569)}
+    @media (prefers-color-scheme:dark){.faq-body{color:var(--tg-theme-hint-color,#94A3B8)}}
+    .faq-body p{margin-bottom:var(--space-2)}
+    .faq-body b{color:var(--tg-theme-text-color,#0F172A)}
+    @media (prefers-color-scheme:dark){.faq-body b{color:var(--tg-theme-text-color,#F1F5F9)}}
+    .faq-body .popup-btn{margin-top:var(--space-2)}
+    .help-section-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tg-theme-hint-color,#64748B);margin:var(--space-5) 0 var(--space-2) var(--space-1)}
   </style>
 </head>
 <body>
@@ -687,6 +772,7 @@
   <div class="tab-content" id="tabSchedule">
     <div id="initError" style="display:none"></div>
     <div id="calendarWrap" style="display:none">
+      <div id="tipSlot"></div>
       <div id="banner" style="display:none"></div>
       <div id="extraShiftsBanner" style="display:none"></div>
       <div class="month-header">
@@ -713,7 +799,19 @@
         <div class="legend-item">★ Доп. смена</div>
       </div>
       <div class="tz-note" id="tzNote"></div>
+      <button class="cal-connect" id="calConnectBtn">
+        <span class="cal-connect-icon">📲</span>
+        <span class="cal-connect-text">
+          <span class="cal-connect-title">Смены в календаре телефона</span><br>
+          <span class="cal-connect-sub">Подключи один раз — смены будут появляться сами</span>
+        </span>
+        <span class="employee-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </button>
     </div>
+  </div>
+
+  <div class="tab-content" id="tabHelp">
+    <div id="helpPage"></div>
   </div>
 
   <div class="tab-content" id="tabAvailability">
@@ -845,6 +943,9 @@
     </div>
     <div class="tab" data-tab="admin" id="tabAdminBtn" style="display:none">
       <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4 4 5-7 5 7 4-4v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z"/></svg></span>Админ
+    </div>
+    <div class="tab" data-tab="help">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Помощь
     </div>
   </div>
 
@@ -1201,8 +1302,12 @@
       const icon = night ? '<span class="night-icon">' + ICONS.moon + '</span>' : '';
       let html = '<div class="day-num">' + num + '</div>';
       if (shifts.some(s => s.extra)) html += '<span class="day-star">★</span>';
-      html += '<div class="day-time">' + first.start + '<br>' + first.end + icon + '</div>';
-      if (shifts.length > 1) html += '<div class="day-more">+' + (shifts.length - 1) + '</div>';
+      if (shifts.length > 1) {
+        // Несколько смен: начало первой и счётчик остальных — помещается в маленькую клетку
+        html += '<div class="day-time">' + first.start + icon + '</div><div class="day-more">+' + (shifts.length - 1) + '</div>';
+      } else {
+        html += '<div class="day-time">' + first.start + '<br>' + first.end + icon + '</div>';
+      }
       div.innerHTML = html;
     }
 
@@ -1359,7 +1464,7 @@
 
     function renderAll() {
       renderHeader(); renderBanner(); renderCalendar();
-      renderAvailabilityCalendar(); renderExtraShiftsBanner();
+      renderAvailabilityCalendar(); renderExtraShiftsBanner(); renderTip();
       if (adminData) { renderAdminCalendar(); renderEditCalendar(); }
     }
 
@@ -1474,7 +1579,7 @@
             (isOvernight(s.start, s.end) ? ' · окончание на следующий день' : '') + '</div>' +
             '<button class="popup-btn google" data-gcal="' + i + '">Добавить в Google Calendar</button></div>';
         });
-        if (me && me.icsUrl) html += '<button class="popup-btn apple" id="addApple">Подписаться в Apple Calendar</button>';
+        html += '<button class="popup-btn apple" id="addApple">📲 Все смены — в календарь телефона</button>';
       }
       html += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
       const overlay = openPopup(html);
@@ -1489,7 +1594,7 @@
         });
       });
       const apple = overlay.querySelector('#addApple');
-      if (apple) apple.addEventListener('click', () => { openUrl(me.icsUrl); overlay.remove(); });
+      if (apple) apple.addEventListener('click', () => { overlay.remove(); showCalendarConnect(); });
     }
 
     function showAvailabilityPopup(localDate, existing) {
@@ -1596,21 +1701,289 @@
           overlay.remove();
           resetMonth('schedule'); resetMonth('avail');
           renderAll();
+          if (document.getElementById('tabHelp').classList.contains('active')) renderHelpPage();
           showToast('Готово', 'Город: ' + CITIES[city].name);
+          if (mandatory) maybeShowOnboarding();
         });
       });
     }
 
-    function showHelp() {
-      const html = '<div class="popup-title">Как пользоваться</div>' +
-        '<div class="popup-info">Краткая инструкция</div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpCalendar + ' Расписание</div><div class="help-block-text">Нажми на день со сменой — увидишь детали. Время показано по твоему городу (его можно сменить в шапке). Если в дне несколько смен, в клетке будет «+1».</div></div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpCircle + ' Доступность</div><div class="help-block-text">Открой вкладку «Доступность». Нажми на день, когда можешь выйти. Укажи время по своему городу. Сохрани.</div></div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpBell + ' Напоминания</div><div class="help-block-text">Если у тебя есть смена завтра, бот вечером пришлёт напоминание. О заявках на доп. смены бот тоже сообщит.</div></div>' +
-        '<div class="help-block"><div class="help-block-title">' + ICONS.helpMoon + ' Ночные смены</div><div class="help-block-text">Смены через полночь отмечены луной. Смена показывается в тот день, когда начинается.</div></div>' +
-        '<button class="popup-btn" id="closeHelpBtn" style="margin-top:12px;">Понятно</button>';
+    // ═══════════════════════════════════════════════════════════
+    // ОБУЧЕНИЕ, ПОДСКАЗКИ, КАЛЕНДАРЬ ТЕЛЕФОНА, ПОМОЩЬ
+    // ═══════════════════════════════════════════════════════════
+    const ONBOARDING_VERSION = '2';
+    const ONB_KEY = 'turno_onboarding_done';
+    const TIPS_KEY = 'turno_tips_dismissed';
+    const CAL_KEY = 'turno_calendar_connected';
+    let __onbShown = false;
+
+    // Telegram CloudStorage: отметка «обучение пройдено» сохраняется даже после переустановки
+    function cloudReady() {
+      try { return !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9')); } catch (e) { return false; }
+    }
+    function cloudGet(key) {
+      return new Promise(resolve => {
+        if (!cloudReady()) { resolve(null); return; }
+        const t = setTimeout(() => resolve(null), 1500);
+        try { tg.CloudStorage.getItem(key, (err, val) => { clearTimeout(t); resolve(err ? null : val); }); }
+        catch (e) { clearTimeout(t); resolve(null); }
+      });
+    }
+    function cloudSet(key, val) {
+      if (!cloudReady()) return;
+      try { tg.CloudStorage.setItem(key, val, () => {}); } catch (e) {}
+    }
+
+    function switchTab(name) {
+      const t = document.querySelector('.tab[data-tab="' + name + '"]');
+      if (t) t.click();
+    }
+
+    const LEGEND_HTML =
+      '<div class="onb-legend">' +
+        '<div><span class="onb-chip shift">9:00</span>Зелёный день — рабочая смена</div>' +
+        '<div><span class="onb-chip shift">🌙</span>Луна — ночная смена</div>' +
+        '<div><span class="onb-chip shift">+1</span>«+1» — несколько смен в один день</div>' +
+        '<div><span class="onb-chip shift">★</span>Звёздочка — доп. смена</div>' +
+        '<div><span class="onb-chip sick">Б</span>Больничный</div>' +
+        '<div><span class="onb-chip vac">О</span>Отпуск</div>' +
+      '</div>';
+
+    function onboardingSlides() {
+      const city = myCityKey() ? CITIES[myCityKey()].name : 'Москва';
+      const slides = [
+        { e: '👋', t: 'Добро пожаловать в Turno', x: 'Здесь твоё расписание смен. Время показано <b>по твоему городу — ' + escapeHtml(city) + '</b>. Пролистай — за минуту покажем, что умеет приложение.' },
+        { e: '📅', t: 'Как читать календарь', x: 'Нажми на любой день со сменой — откроются подробности.', legend: true },
+        { e: '📲', t: 'Смены в календаре телефона', x: 'Подключи календарь <b>один раз</b> — все смены сами появятся в календаре iPhone и будут обновляться, когда меняется график. Телефон напомнит о смене за 2 часа.', cal: true },
+        { e: '🟡', t: 'Хочешь подработку?', x: 'Во вкладке <b>«Доступность»</b> отметь дни и часы, когда можешь выйти. Руководитель увидит и сможет позвать тебя на смену.' },
+        { e: '🎯', t: 'Дополнительные смены', x: 'Когда нужны люди, на главном экране появится <b>жёлтая плашка</b>. Запишись — бот сообщит, подтвердили ли заявку. Подтверждённая смена появится в календаре со звёздочкой ★.' },
+        { e: '🔔', t: 'Бот напомнит', x: 'Вечером накануне смены бот пришлёт напоминание. <b>Не отключай уведомления бота</b> в Telegram.<br><br>Вся инструкция — во вкладке <b>«Помощь»</b> внизу экрана.' }
+      ];
+      if (me && me.isAdmin) {
+        slides.splice(5, 0, { e: '🛠', t: 'Для руководителя', x: 'Во вкладке <b>«Админ»</b> — редактирование смен (время вносится по Москве), сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
+      }
+      return slides;
+    }
+
+    function showOnboarding() {
+      document.querySelectorAll('.onb').forEach(o => o.remove());
+      closeAllPopups();
+      const slides = onboardingSlides();
+      let i = 0;
+      const root = document.createElement('div');
+      root.className = 'onb';
+      root.setAttribute('role', 'dialog');
+      root.setAttribute('aria-label', 'Знакомство с приложением');
+      root.innerHTML =
+        '<div class="onb-top"><span class="onb-step" id="onbStep"></span><button class="onb-skip" id="onbSkip">Пропустить</button></div>' +
+        '<div class="onb-viewport" id="onbViewport"><div class="onb-track" id="onbTrack">' +
+          slides.map(s => '<div class="onb-slide"><div class="onb-emoji">' + s.e + '</div>' +
+            '<div class="onb-title">' + escapeHtml(s.t) + '</div><div class="onb-text">' + s.x + '</div>' +
+            (s.legend ? LEGEND_HTML : '') + '</div>').join('') +
+        '</div></div>' +
+        '<div class="onb-dots">' + slides.map(() => '<span class="onb-dot"></span>').join('') + '</div>' +
+        '<div class="onb-actions">' +
+          '<button class="popup-btn outline" id="onbCal" style="display:none">📲 Подключить календарь сейчас</button>' +
+          '<button class="popup-btn" id="onbNext">Далее</button>' +
+        '</div>';
+      document.body.appendChild(root);
+
+      const track = root.querySelector('#onbTrack');
+      const dots = root.querySelectorAll('.onb-dot');
+      const next = root.querySelector('#onbNext');
+      const cal = root.querySelector('#onbCal');
+
+      const finish = () => {
+        safeLS.set(ONB_KEY, ONBOARDING_VERSION);
+        cloudSet(ONB_KEY, ONBOARDING_VERSION);
+        root.remove();
+        renderTip();
+      };
+      const go = n => {
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        track.style.transform = 'translateX(' + (-100 * i) + '%)';
+        dots.forEach((d, k) => d.classList.toggle('active', k === i));
+        root.querySelector('#onbStep').textContent = (i + 1) + ' из ' + slides.length;
+        next.textContent = i === slides.length - 1 ? 'Начать пользоваться' : 'Далее';
+        cal.style.display = slides[i].cal ? 'block' : 'none';
+        try { if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); } catch (e) {}
+      };
+      next.addEventListener('click', () => { if (i === slides.length - 1) finish(); else go(i + 1); });
+      root.querySelector('#onbSkip').addEventListener('click', finish);
+      cal.addEventListener('click', () => { finish(); showCalendarConnect(); });
+
+      const vp = root.querySelector('#onbViewport');
+      let sx = 0, sy = 0, tracking = false;
+      vp.addEventListener('touchstart', e => { if (e.touches.length !== 1) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true; }, { passive: true });
+      vp.addEventListener('touchend', e => {
+        if (!tracking) return; tracking = false;
+        const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+        go(dx < 0 ? i + 1 : i - 1);
+      }, { passive: true });
+      go(0);
+    }
+
+    // Показываем обучение один раз (после выбора города)
+    async function maybeShowOnboarding() {
+      if (__onbShown || !me) return;
+      __onbShown = true;
+      if (safeLS.get(ONB_KEY) === ONBOARDING_VERSION) { renderTip(); return; }
+      const cloud = await cloudGet(ONB_KEY);
+      if (cloud === ONBOARDING_VERSION) { safeLS.set(ONB_KEY, ONBOARDING_VERSION); renderTip(); return; }
+      showOnboarding();
+    }
+
+    // ── Подсказки на главном экране (по одной, можно скрыть) ──
+    function getDismissedTips() {
+      try { return JSON.parse(safeLS.get(TIPS_KEY) || '[]'); } catch (e) { return []; }
+    }
+    function availableTips() {
+      const tips = [];
+      if (me && me.icsUrl && safeLS.get(CAL_KEY) !== '1') {
+        tips.push({ id: 'cal', e: '📲', t: 'Смены — прямо в календаре iPhone', x: 'Подключи один раз, и все смены будут появляться в календаре телефона сами.', a: 'Подключить', fn: showCalendarConnect });
+      }
+      if (!myAvail.length) {
+        tips.push({ id: 'avail', e: '🟡', t: 'Хочешь подработку?', x: 'Отметь дни, когда можешь выйти, — руководитель увидит.', a: 'Отметить дни', fn: () => switchTab('availability') });
+      }
+      tips.push({ id: 'bot', e: '🔔', t: 'Напоминания от бота', x: 'Бот пишет вечером накануне смены. Проверь, что уведомления бота в Telegram включены.' });
+      tips.push({ id: 'help', e: '💡', t: 'Есть вопрос?', x: 'Вся инструкция — во вкладке «Помощь» внизу экрана.', a: 'Открыть помощь', fn: () => switchTab('help') });
+      const dismissed = getDismissedTips();
+      return tips.filter(t => dismissed.indexOf(t.id) === -1);
+    }
+    function renderTip() {
+      const slot = document.getElementById('tipSlot');
+      if (!slot) return;
+      if (!me || safeLS.get(ONB_KEY) !== ONBOARDING_VERSION) { slot.innerHTML = ''; return; }
+      const t = availableTips()[0];
+      if (!t) { slot.innerHTML = ''; return; }
+      slot.innerHTML = '<div class="tip-card"><div class="tip-emoji">' + t.e + '</div><div class="tip-body">' +
+        '<div class="tip-title">' + escapeHtml(t.t) + '</div><div class="tip-text">' + escapeHtml(t.x) + '</div>' +
+        (t.a ? '<button class="tip-action" id="tipAction">' + escapeHtml(t.a) + ' →</button>' : '') +
+        '</div><button class="tip-close" id="tipClose" aria-label="Скрыть подсказку">✕</button></div>';
+      const act = document.getElementById('tipAction');
+      if (act) act.addEventListener('click', t.fn);
+      document.getElementById('tipClose').addEventListener('click', () => {
+        const d = getDismissedTips();
+        d.push(t.id);
+        safeLS.set(TIPS_KEY, JSON.stringify(d));
+        renderTip();
+      });
+    }
+
+    // ── Подключение календаря телефона ──
+    function showCalendarConnect() {
+      const url = me && me.icsUrl;
+      let html = '<div class="popup-title">Смены в календаре телефона</div>';
+      if (!url) {
+        html += '<div class="popup-info">Автоматическая подписка для тебя пока не включена — попроси руководителя её настроить.</div>' +
+          '<div class="sub-head">А пока — по одной смене</div><ol class="steps">' +
+          '<li>Нажми на день со сменой в календаре.</li>' +
+          '<li>Нажми <b>«Добавить в Google Calendar»</b>.</li></ol>';
+      } else {
+        html += '<div class="popup-info">Подключается <b>один раз</b>. После этого все смены — и новые, и изменённые — сами появятся в календаре телефона, а телефон напомнит о смене за 2 часа.</div>' +
+          '<button class="popup-btn" id="calCopy">📋 Скопировать ссылку</button>' +
+          '<div class="sub-head">📱 iPhone</div><ol class="steps">' +
+            '<li>Нажми <b>«Скопировать ссылку»</b> выше.</li>' +
+            '<li>Открой <span class="path">Настройки</span> → <span class="path">Приложения</span> → <span class="path">Календарь</span> → <b>Учётные записи</b>.<br><small>На старых iOS: Настройки → Календарь → Учётные записи.</small></li>' +
+            '<li>Нажми <b>«Добавить учётную запись»</b> → <b>«Другое»</b> → пункт про <b>календарь по подписке</b>.</li>' +
+            '<li>Вставь ссылку в поле <b>«Сервер»</b> → <b>«Далее»</b> → <b>«Сохранить»</b>. Готово!</li>' +
+          '</ol>' +
+          '<div class="sub-head">🤖 Android (Google Календарь)</div><ol class="steps">' +
+            '<li>Скопируй ссылку кнопкой выше и перешли её себе.</li>' +
+            '<li>На компьютере открой <b>calendar.google.com</b> → слева <b>«Другие календари»</b> → <b>＋</b> → <b>добавить по URL</b>.</li>' +
+            '<li>Вставь ссылку и добавь календарь — смены появятся и в Google Календаре на телефоне.</li>' +
+          '</ol>' +
+          '<div class="popup-hint" style="margin-top:0">Телефон обновляет такой календарь сам, иногда с задержкой в несколько часов. Самое свежее расписание — всегда в приложении.</div>';
+      }
+      html += '<button class="popup-btn secondary" id="calClose">Закрыть</button>';
       const overlay = openPopup(html);
-      overlay.querySelector('#closeHelpBtn').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('#calClose').addEventListener('click', () => overlay.remove());
+      const copy = overlay.querySelector('#calCopy');
+      if (copy) copy.addEventListener('click', async () => {
+        const ok = await copyToClipboard(url);
+        if (ok) {
+          safeLS.set(CAL_KEY, '1');
+          renderTip();
+          showToast('Ссылка скопирована', 'Теперь открой Настройки телефона');
+        } else {
+          showToast('Не удалось скопировать', 'Попробуй ещё раз', true);
+        }
+      });
+    }
+
+    // ── Вкладка «Помощь» ──
+    function faq(icon, title, body, open) {
+      return '<details class="faq"' + (open ? ' open' : '') + '><summary><span>' + icon + '</span>' + escapeHtml(title) + '</summary><div class="faq-body">' + body + '</div></details>';
+    }
+    function renderHelpPage() {
+      const el = document.getElementById('helpPage');
+      const city = myCityKey() ? CITIES[myCityKey()].name : 'не выбран';
+      let html = '<div class="help-hero"><div class="help-hero-title">Как пользоваться Turno</div>' +
+        '<div class="help-hero-text">Здесь собрано всё, что умеет приложение. Нажми на раздел, чтобы раскрыть.</div>' +
+        '<button class="popup-btn" data-help="onboarding">▶️ Пройти знакомство заново</button>' +
+        '<button class="popup-btn outline" data-help="calendar" style="margin-bottom:0">📲 Подключить календарь телефона</button></div>';
+
+      html += '<div class="help-section-label">Сотруднику</div>';
+      html += faq('📅', 'Расписание и обозначения',
+        '<p>На главном экране — календарь твоих смен. Нажми на день, чтобы увидеть подробности. Листай месяцы стрелками или свайпом, кнопка <b>«Сегодня»</b> вернёт к текущему месяцу.</p>' +
+        '<p>Вверху — плашки <b>«Сегодня»</b> и <b>«Завтра»</b> с твоими сменами.</p>' + LEGEND_HTML, true);
+      html += faq('🌍', 'Город и время',
+        '<p>Время смен показано <b>по твоему городу</b> (сейчас: ' + escapeHtml(city) + ').</p>' +
+        '<p>Переехал или выбрал не тот город — нажми на город в шапке экрана.</p>' +
+        '<p><b>Ночная смена</b> показывается в тот день, когда начинается. Например, смена 22:00–06:00 стоит в дне, когда ты выходишь на работу вечером.</p>' +
+        '<button class="popup-btn outline" data-help="city">Сменить город</button>');
+      html += faq('📲', 'Смены в календаре iPhone и Google',
+        '<p><b>Подписка (лучший вариант):</b> подключаешь один раз — все смены сами появляются в календаре телефона и обновляются. Телефон напоминает о смене за 2 часа.</p>' +
+        '<p><b>По одной смене:</b> нажми на день → «Добавить в Google Calendar».</p>' +
+        '<button class="popup-btn" data-help="calendar">Подключить календарь</button>');
+      html += faq('🟡', 'Подработка: отметить, когда могу выйти',
+        '<ol class="steps"><li>Открой вкладку <b>«Доступность»</b>.</li><li>Нажми на день, когда можешь выйти.</li><li>Укажи часы <b>по своему времени</b> и нажми «Сохранить».</li></ol>' +
+        '<p>Отмеченные дни подсвечиваются жёлтым. Чтобы убрать отметку — нажми на день → «Удалить отметку».</p>');
+      html += faq('🎯', 'Дополнительные смены',
+        '<p>Когда руководителю нужны люди, на главном экране появляется <b>жёлтая плашка «Дополнительные смены»</b>, а бот присылает сообщение.</p>' +
+        '<ol class="steps"><li>Нажми на плашку.</li><li>Выбери смену и нажми <b>«Записаться»</b>.</li><li>Статус ⏳ — ждём ответа руководителя. Бот сообщит, подтвердили заявку ✅ или нет.</li></ol>' +
+        '<p>Подтверждённая доп. смена появится в календаре со звёздочкой ★. Передумал — нажми «Отменить».</p>');
+      html += faq('🔔', 'Сообщения от бота',
+        '<p>Бот присылает:</p><p>• напоминание вечером накануне смены;<br>• новые доп. смены;<br>• ответ на твою заявку;<br>• отмену доп. смены.</p>' +
+        '<p>Проверь, что <b>уведомления бота не выключены</b> в Telegram и ты не заблокировал бота.</p>');
+
+      html += '<div class="help-section-label">Частые вопросы</div>';
+      html += faq('❓', 'Не вижу своих смен',
+        '<p>Проверь месяц — перелистни стрелками. Если месяц пустой, график ещё не составлен. Если смен нет совсем — обратись к руководителю: возможно, в системе другой номер телефона.</p>');
+      html += faq('❓', 'Время смены отличается от того, что говорил руководитель',
+        '<p>Руководитель вносит время по Москве, а ты видишь его по своему городу. Проверь, что в шапке выбран правильный город.</p>');
+      html += faq('❓', 'Смена в календаре телефона не обновилась',
+        '<p>Телефон обновляет календарь по подписке сам и иногда с задержкой в несколько часов. Самое свежее расписание — всегда в приложении.</p>');
+      html += faq('❓', 'Пишет «Сессия устарела» или не открывается',
+        '<p>Закрой приложение и открой его заново через кнопку в боте.</p>');
+      html += faq('❓', 'Поменял номер телефона',
+        '<p>Сообщи руководителю — он обновит номер в системе. После этого просто открой приложение.</p>');
+
+      if (me && me.isAdmin) {
+        html += '<div class="help-section-label">Руководителю</div>';
+        html += faq('✏️', 'Редактирование смен',
+          '<ol class="steps"><li><b>«Админ»</b> → <b>«Редактировать расписание»</b> → выбери сотрудника.</li><li>Нажми на день, укажи время <b>по Москве</b> и сохрани.</li></ol>' +
+          '<p><b>Несколько смен в день</b> — «+ Добавить ещё смену». <b>Ночная смена</b> — выбери конец раньше начала (22:00 → 06:00). Есть время <b>24:00</b>.</p>' +
+          '<p>В таблице: <b>09:00-18:00</b>, несколько смен — через точку с запятой: <b>07:00-11:00; 18:00-22:00</b>. Больничный — <b>Б</b>, отпуск — <b>О</b>.</p>');
+        html += faq('👥', 'Сотрудники',
+          '<p><b>«Админ» → «Сотрудники»</b>: добавить (＋), изменить имя и номер, отправить приглашение, убрать в архив.</p>' +
+          '<p>Статус <b>«Вход подтверждён»</b> — сотрудник открыл приложение и поделился номером. Город сотрудник выбирает сам.</p>');
+        html += faq('🎯', 'Доп. смены и заявки',
+          '<ol class="steps"><li><b>«Админ» → «Дополнительные смены» → ＋</b>.</li><li>Укажи дату, время по Москве и число мест — всем придёт сообщение.</li><li>Заявки подтверждай ✓ или отклоняй ✕ — сотрудник получит ответ от бота.</li></ol>' +
+          '<p>О каждой новой заявке бот пишет тебе сообщение.</p>');
+        html += faq('🟡', 'Кто может выйти',
+          '<p>Во вкладке <b>«Админ»</b> — календарь доступности: число людей, готовых выйти в этот день. Нажми на день, чтобы увидеть имена и часы (по Москве).</p>');
+      }
+      html += '<div class="tz-note" style="text-align:center;margin-top:var(--space-5)">Turno · ритм команды</div>';
+      el.innerHTML = html;
+
+      el.querySelectorAll('[data-help]').forEach(btn => btn.addEventListener('click', () => {
+        const a = btn.getAttribute('data-help');
+        if (a === 'onboarding') showOnboarding();
+        else if (a === 'calendar') showCalendarConnect();
+        else if (a === 'city') showCityPicker(false);
+      }));
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2375,7 +2748,7 @@
         saveCache(resp);
         applyData(resp);
         showApp();
-        if (!myCityKey()) showCityPicker(true);
+        if (!myCityKey()) showCityPicker(true); else maybeShowOnboarding();
         return true;
       }
       const code = resp && resp.error;
@@ -2437,7 +2810,7 @@
         const resp = await postToServer({ action: 'bootstrap' });
         if (resp && resp.ok) {
           saveCache(resp); applyData(resp); showApp();
-          if (!myCityKey()) showCityPicker(true);
+          if (!myCityKey()) showCityPicker(true); else maybeShowOnboarding();
         } else {
           safeLS.del(CACHE_KEY);
           handleAuthResponse(resp);
@@ -2509,6 +2882,9 @@
           } else if (target === 'admin') {
             showTabContent('tabAdmin'); setSubtitle('Кто может выйти', true);
             renderAdminCalendar();
+          } else if (target === 'help') {
+            showTabContent('tabHelp'); setSubtitle('', false);
+            renderHelpPage();
           }
         });
       });
@@ -2519,7 +2895,8 @@
         e.stopPropagation();
         setEntrySoundEnabled(!isEntrySoundEnabled());
       });
-      document.getElementById('helpBtn').addEventListener('click', showHelp);
+      document.getElementById('helpBtn').addEventListener('click', () => { if (me) switchTab('help'); });
+      document.getElementById('calConnectBtn').addEventListener('click', showCalendarConnect);
       document.getElementById('cityChip').addEventListener('click', () => { if (me) showCityPicker(false); });
       document.getElementById('sharePhone').addEventListener('click', shareContact);
 

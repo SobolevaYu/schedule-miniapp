@@ -977,6 +977,35 @@
 
     .stale-note{font-size:12px;color:var(--muted);margin:6px 4px 0}
 
+    /* ── Иконки вместо смайликов ── */
+    .i{width:1.15em;height:1.15em;flex-shrink:0;vertical-align:-.2em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .i.i-fill{fill:currentColor;stroke-width:1.5}
+    .i.i-brand{color:var(--brand-text)}
+    .popup-btn .i,.employee-card-action-btn .i{width:20px;height:20px;margin-right:8px;vertical-align:-4px}
+    .popup-x .i,.tip-close .i{width:16px;height:16px;vertical-align:0}
+    .shift-row-remove .i{width:18px;height:18px;vertical-align:-3px}
+    .extra-card-btn.small .i{width:16px;height:16px;vertical-align:-3px}
+    .day-star{display:flex;color:var(--avail-fg);top:4px;right:4px}
+    .day-star .i{width:9px;height:9px}
+    .day.shift .night-icon + .day-star,.day .day-star{position:absolute}
+    .legend-item .i{width:13px;height:13px;color:var(--avail-fg)}
+    .onb-emoji{font-size:0;color:var(--brand-text)}
+    .onb-emoji .i{width:52px;height:52px;stroke-width:1.6}
+    .onb-chip .i{width:13px;height:13px}
+    .tip-emoji{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:var(--soft);color:var(--brand-text);margin-top:0}
+    .tip-emoji .i{width:19px;height:19px}
+    .tip-card{align-items:center}
+    .faq summary .faq-ic{display:flex;width:30px;height:30px;border-radius:9px;background:var(--soft);color:var(--brand-text);align-items:center;justify-content:center;flex-shrink:0}
+    .faq summary .faq-ic .i{width:17px;height:17px}
+    .cal-connect-icon{display:flex;width:40px;height:40px;border-radius:12px;background:var(--soft);color:var(--brand-text);align-items:center;justify-content:center;flex-shrink:0}
+    .cal-connect-icon .i{width:21px;height:21px}
+    .sub-head{display:flex;align-items:center;gap:8px}
+    .sub-head .i{color:var(--brand-text)}
+    .pub-bar-text .i{margin-right:4px}
+    .extra-card-people .i{width:15px;height:15px;margin-right:2px;vertical-align:-3px}
+    .extra-card-time .i,.shift-row-note .i,.popup-hint .i,.popup-info .i{width:14px;height:14px;vertical-align:-2px}
+    .inline-ic .i{width:15px;height:15px;vertical-align:-3px}
+
     /* маленькие экраны (iPhone SE и подобные): больше места клеткам календаря */
     @media (max-width:350px){
       body{padding-left:12px;padding-right:12px}
@@ -1068,11 +1097,11 @@
         <div class="legend-item">
           <span class="legend-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>Ночная
         </div>
-        <div class="legend-item">★ Доп. смена</div>
+        <div class="legend-item"><svg class="i i-fill" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Доп. смена</div>
       </div>
       <div class="tz-note" id="tzNote"></div>
       <button class="cal-connect" id="calConnectBtn">
-        <span class="cal-connect-icon">📲</span>
+        <span class="cal-connect-icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
         <span class="cal-connect-text">
           <span class="cal-connect-title">Смены в календаре телефона</span><br>
           <span class="cal-connect-sub">Подключи один раз — смены будут появляться сами</span>
@@ -1300,6 +1329,39 @@
     }
     window.addEventListener('error', e => reportError((e.message || 'error') + ' @' + (e.lineno || 0) + ':' + (e.colno || 0)));
     window.addEventListener('unhandledrejection', e => reportError('promise: ' + ((e.reason && (e.reason.stack || e.reason.message)) || e.reason)));
+
+    // Векторные иконки (стиль Lucide): одинаковая толщина линий, цвет — от текста вокруг
+    const IC = {
+      star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+      smartphone: '<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',
+      calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+      calendarPlus: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="13.5" x2="12" y2="18.5"/><line x1="9.5" y1="16" x2="14.5" y2="16"/>',
+      moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+      alert: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+      sparkles: '<path d="M12 3l1.8 4.9L18.7 9.7l-4.9 1.8L12 16.4l-1.8-4.9L5.3 9.7l4.9-1.8z"/><path d="M19 15v4"/><path d="M21 17h-4"/><path d="M5 3v3"/><path d="M6.5 4.5h-3"/>',
+      half: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none" opacity=".3"/>',
+      bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+      crown: '<path d="M3 7l4 4 5-7 5 7 4-4v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z"/>',
+      help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+      bulb: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>',
+      globe: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+      users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+      pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>',
+      clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+      checkCircle: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+      xCircle: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+      zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+      check: '<polyline points="20 6 9 17 4 12"/>',
+      x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+      copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+      play: '<polygon points="6 4 20 12 6 20 6 4"/>',
+      building: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/>',
+      plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+      refresh: '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>'
+    };
+    function ic(name, cls) {
+      return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + (IC[name] || '') + '</svg>';
+    }
 
     const ICONS = {
       bell:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
@@ -1654,7 +1716,7 @@
       const first = shifts[0];
       const icon = night ? '<span class="night-icon">' + ICONS.moon + '</span>' : '';
       let html = '<div class="day-num">' + num + '</div>';
-      if (shifts.some(s => s.extra)) html += '<span class="day-star">★</span>';
+      if (shifts.some(s => s.extra)) html += '<span class="day-star">' + ic('star', 'i-fill') + '</span>';
       if (shifts.length > 1) {
         // Несколько смен: начало первой и счётчик остальных — помещается в маленькую клетку
         html += '<div class="day-time">' + escapeHtml(first.start) + icon + '</div><div class="day-more">+' + (shifts.length - 1) + '</div>';
@@ -1895,7 +1957,7 @@
       overlay.className = 'popup-overlay';
       if (locked) overlay.dataset.locked = '1';
       overlay.innerHTML = '<div class="popup" role="dialog" aria-modal="true">' +
-        (locked ? '' : '<button type="button" class="popup-x" aria-label="Закрыть">✕</button>') + html + '</div>';
+        (locked ? '' : '<button type="button" class="popup-x" aria-label="Закрыть">' + ic('x') + '</button>') + html + '</div>';
       document.body.appendChild(overlay);
       if (!locked) {
         overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -1953,8 +2015,8 @@
       return html;
     }
     function overnightNote(start, end) {
-      if (!slotDuration(start, end)) return '⚠️ Начало и конец совпадают';
-      return isOvernight(start, end) ? '🌙 Окончание — на следующий день' : '';
+      if (!slotDuration(start, end)) return ic('alert') + ' Начало и конец совпадают';
+      return isOvernight(start, end) ? ic('moon') + ' Окончание — на следующий день' : '';
     }
 
     function openUrl(url) {
@@ -1994,11 +2056,11 @@
           const night = isNightShift(s.start, s.end);
           html += '<div class="shift-card"><div class="shift-card-time">' + s.start + ' – ' + s.end +
             (night ? ' <span class="night-icon">' + ICONS.moon + '</span>' : '') + '</div>' +
-            '<div class="shift-card-sub">' + (s.extra ? '★ Доп. смена' : 'Смена') +
+            '<div class="shift-card-sub">' + (s.extra ? ic('star', 'i-fill') + ' Доп. смена' : 'Смена') +
             (isOvernight(s.start, s.end) ? ' · окончание на следующий день' : '') + '</div>' +
-            '<button class="popup-btn google" data-gcal="' + i + '">Добавить в Google Calendar</button></div>';
+            '<button class="popup-btn google" data-gcal="' + i + '">' + ic('calendarPlus') + 'Добавить в Google Calendar</button></div>';
         });
-        html += '<div class="popup-actions"><button class="popup-btn apple" id="addApple">📲 Все смены — в календарь телефона</button></div>';
+        html += '<div class="popup-actions"><button class="popup-btn apple" id="addApple">' + ic('smartphone') + 'Все смены — в календарь телефона</button></div>';
       }
       const overlay = openPopup(html);
 
@@ -2028,7 +2090,7 @@
       const overlay = openPopup(html);
       const sEl = overlay.querySelector('#availStart'), eEl = overlay.querySelector('#availEnd');
       const note = overlay.querySelector('#availNote');
-      const upd = () => { note.textContent = overnightNote(sEl.value, eEl.value); };
+      const upd = () => { note.innerHTML = overnightNote(sEl.value, eEl.value); };
       sEl.addEventListener('change', upd); eEl.addEventListener('change', upd); upd();
 
       // Сохраняем «оптимистично»: календарь меняется сразу, сервер догоняет в фоне.
@@ -2185,9 +2247,9 @@
     const LEGEND_HTML =
       '<div class="onb-legend">' +
         '<div><span class="onb-chip shift">9:00</span>Зелёный день — рабочая смена</div>' +
-        '<div><span class="onb-chip shift">🌙</span>Луна — ночная смена</div>' +
+        '<div><span class="onb-chip shift">' + ic('moon') + '</span>Луна — ночная смена</div>' +
         '<div><span class="onb-chip shift">+1</span>«+1» — несколько смен в один день</div>' +
-        '<div><span class="onb-chip shift">★</span>Звёздочка — доп. смена</div>' +
+        '<div><span class="onb-chip shift">' + ic('star', 'i-fill') + '</span>Звёздочка — доп. смена</div>' +
         '<div><span class="onb-chip sick">Б</span>Больничный</div>' +
         '<div><span class="onb-chip vac">О</span>Отпуск</div>' +
       '</div>';
@@ -2195,15 +2257,15 @@
     function onboardingSlides() {
       const city = myCityKey() ? CITIES[myCityKey()].name : 'Москва';
       const slides = [
-        { e: '👋', t: 'Добро пожаловать в Turno', x: 'Здесь твоё расписание смен. Время показано <b>по твоему городу — ' + escapeHtml(city) + '</b>. Пролистай — за минуту покажем, что умеет приложение.' },
-        { e: '📅', t: 'Как читать календарь', x: 'Нажми на любой день со сменой — откроются подробности.', legend: true },
-        { e: '📲', t: 'Смены в календаре телефона', x: 'Подключи календарь <b>один раз</b> — все смены сами появятся в календаре iPhone и будут обновляться, когда меняется график. Телефон напомнит о смене за 2 часа.', cal: true },
-        { e: '🟡', t: 'Хочешь подработку?', x: 'Во вкладке <b>«Подработка»</b> отметь дни и часы, когда можешь выйти. Руководитель увидит и сможет позвать тебя на смену.' },
-        { e: '🎯', t: 'Дополнительные смены', x: 'Когда нужны люди, на главном экране появится <b>жёлтая плашка</b>. Запишись — бот сообщит, подтвердили ли заявку. Подтверждённая смена появится в календаре со звёздочкой ★.' },
-        { e: '🔔', t: 'Бот напомнит', x: 'Вечером накануне смены бот пришлёт напоминание. <b>Не отключай уведомления бота</b> в Telegram.<br><br>Вся инструкция — во вкладке <b>«Помощь»</b> внизу экрана.' }
+        { e: 'sparkles', t: 'Добро пожаловать в Turno', x: 'Здесь твоё расписание смен. Время показано <b>по твоему городу — ' + escapeHtml(city) + '</b>. Пролистай — за минуту покажем, что умеет приложение.' },
+        { e: 'calendar', t: 'Как читать календарь', x: 'Нажми на любой день со сменой — откроются подробности.', legend: true },
+        { e: 'smartphone', t: 'Смены в календаре телефона', x: 'Подключи календарь <b>один раз</b> — все смены сами появятся в календаре iPhone и будут обновляться, когда меняется график. Телефон напомнит о смене за 2 часа.', cal: true },
+        { e: 'half', t: 'Хочешь подработку?', x: 'Во вкладке <b>«Подработка»</b> отметь дни и часы, когда можешь выйти. Руководитель увидит и сможет позвать тебя на смену.' },
+        { e: 'star', t: 'Дополнительные смены', x: 'Когда нужны люди, на главном экране появится <b>жёлтая плашка</b>. Запишись — бот сообщит, подтвердили ли заявку. Подтверждённая смена появится в календаре со звёздочкой.' },
+        { e: 'bell', t: 'Бот напомнит', x: 'Вечером накануне смены бот пришлёт напоминание. <b>Не отключай уведомления бота</b> в Telegram.<br><br>Вся инструкция — во вкладке <b>«Помощь»</b> внизу экрана.' }
       ];
       if (me && me.isAdmin) {
-        slides.splice(5, 0, { e: '🛠', t: 'Для руководителя', x: 'Во вкладке <b>«Управление»</b> — расписание (время вносится по Москве) с <b>шаблонами</b> и <b>публикацией</b>: правки сначала в черновике, сотрудникам они уходят после кнопки «Опубликовать». Там же сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
+        slides.splice(5, 0, { e: 'crown', t: 'Для руководителя', x: 'Во вкладке <b>«Управление»</b> — расписание (время вносится по Москве) с <b>шаблонами</b> и <b>публикацией</b>: правки сначала в черновике, сотрудникам они уходят после кнопки «Опубликовать». Там же сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
       }
       return slides;
     }
@@ -2220,13 +2282,13 @@
       root.innerHTML =
         '<div class="onb-top"><span class="onb-step" id="onbStep"></span><button class="onb-skip" id="onbSkip">Пропустить</button></div>' +
         '<div class="onb-viewport" id="onbViewport"><div class="onb-track" id="onbTrack">' +
-          slides.map(s => '<div class="onb-slide"><div class="onb-emoji">' + s.e + '</div>' +
+          slides.map(s => '<div class="onb-slide"><div class="onb-emoji">' + ic(s.e) + '</div>' +
             '<div class="onb-title">' + escapeHtml(s.t) + '</div><div class="onb-text">' + s.x + '</div>' +
             (s.legend ? LEGEND_HTML : '') + '</div>').join('') +
         '</div></div>' +
         '<div class="onb-dots">' + slides.map(() => '<span class="onb-dot"></span>').join('') + '</div>' +
         '<div class="onb-actions">' +
-          '<button class="popup-btn outline" id="onbCal" style="display:none">📲 Подключить календарь сейчас</button>' +
+          '<button class="popup-btn outline" id="onbCal" style="display:none">' + ic('smartphone') + 'Подключить календарь сейчас</button>' +
           '<button class="popup-btn" id="onbNext">Далее</button>' +
         '</div>';
       document.body.appendChild(root);
@@ -2284,13 +2346,13 @@
     function availableTips() {
       const tips = [];
       if (me && me.icsUrl && safeLS.get(CAL_KEY) !== '1') {
-        tips.push({ id: 'cal', e: '📲', t: 'Смены — прямо в календаре iPhone', x: 'Подключи один раз, и все смены будут появляться в календаре телефона сами.', a: 'Подключить', fn: showCalendarConnect });
+        tips.push({ id: 'cal', e: 'smartphone', t: 'Смены — прямо в календаре iPhone', x: 'Подключи один раз, и все смены будут появляться в календаре телефона сами.', a: 'Подключить', fn: showCalendarConnect });
       }
       if (!myAvail.length) {
-        tips.push({ id: 'avail', e: '🟡', t: 'Хочешь подработку?', x: 'Отметь дни, когда можешь выйти, — руководитель увидит.', a: 'Отметить дни', fn: () => switchTab('availability') });
+        tips.push({ id: 'avail', e: 'half', t: 'Хочешь подработку?', x: 'Отметь дни, когда можешь выйти, — руководитель увидит.', a: 'Отметить дни', fn: () => switchTab('availability') });
       }
-      tips.push({ id: 'bot', e: '🔔', t: 'Напоминания от бота', x: 'Бот пишет вечером накануне смены. Проверь, что уведомления бота в Telegram включены.' });
-      tips.push({ id: 'help', e: '💡', t: 'Есть вопрос?', x: 'Вся инструкция — во вкладке «Помощь» внизу экрана.', a: 'Открыть помощь', fn: () => switchTab('help') });
+      tips.push({ id: 'bot', e: 'bell', t: 'Напоминания от бота', x: 'Бот пишет вечером накануне смены. Проверь, что уведомления бота в Telegram включены.' });
+      tips.push({ id: 'help', e: 'bulb', t: 'Есть вопрос?', x: 'Вся инструкция — во вкладке «Помощь» внизу экрана.', a: 'Открыть помощь', fn: () => switchTab('help') });
       const dismissed = getDismissedTips();
       return tips.filter(t => dismissed.indexOf(t.id) === -1);
     }
@@ -2300,10 +2362,10 @@
       if (!me || safeLS.get(ONB_KEY) !== ONBOARDING_VERSION) { slot.innerHTML = ''; return; }
       const t = availableTips()[0];
       if (!t) { slot.innerHTML = ''; return; }
-      slot.innerHTML = '<div class="tip-card"><div class="tip-emoji">' + t.e + '</div><div class="tip-body">' +
+      slot.innerHTML = '<div class="tip-card"><div class="tip-emoji">' + ic(t.e) + '</div><div class="tip-body">' +
         '<div class="tip-title">' + escapeHtml(t.t) + '</div><div class="tip-text">' + escapeHtml(t.x) + '</div>' +
         (t.a ? '<button class="tip-action" id="tipAction">' + escapeHtml(t.a) + ' →</button>' : '') +
-        '</div><button class="tip-close" id="tipClose" aria-label="Скрыть подсказку">✕</button></div>';
+        '</div><button class="tip-close" id="tipClose" aria-label="Скрыть подсказку">' + ic('x') + '</button></div>';
       const act = document.getElementById('tipAction');
       if (act) act.addEventListener('click', t.fn);
       document.getElementById('tipClose').addEventListener('click', () => {
@@ -2325,19 +2387,19 @@
           '<li>Нажми <b>«Добавить в Google Calendar»</b>.</li></ol>';
       } else {
         html += '<div class="popup-info">Подключается <b>один раз</b>. После этого все смены — и новые, и изменённые — сами появятся в календаре телефона, а телефон напомнит о смене за 2 часа.</div>' +
-          '<div class="sub-head">📱 iPhone</div><ol class="steps">' +
+          '<div class="sub-head">' + ic('smartphone') + 'iPhone</div><ol class="steps">' +
             '<li>Нажми <b>«Скопировать ссылку»</b> внизу.</li>' +
             '<li>Открой <span class="path">Настройки</span> → <span class="path">Приложения</span> → <span class="path">Календарь</span> → <b>Учётные записи</b>.<br><small>На старых iOS: Настройки → Календарь → Учётные записи.</small></li>' +
             '<li>Нажми <b>«Добавить учётную запись»</b> → <b>«Другое»</b> → пункт про <b>календарь по подписке</b>.</li>' +
             '<li>Вставь ссылку в поле <b>«Сервер»</b> → <b>«Далее»</b> → <b>«Сохранить»</b>. Готово!</li>' +
           '</ol>' +
-          '<div class="sub-head">🤖 Android (Google Календарь)</div><ol class="steps">' +
+          '<div class="sub-head">' + ic('smartphone') + 'Android (Google Календарь)</div><ol class="steps">' +
             '<li>Скопируй ссылку кнопкой внизу и перешли её себе.</li>' +
-            '<li>На компьютере открой <b>calendar.google.com</b> → слева <b>«Другие календари»</b> → <b>＋</b> → <b>добавить по URL</b>.</li>' +
+            '<li>На компьютере открой <b>calendar.google.com</b> → слева <b>«Другие календари»</b> → <b>«+»</b> → <b>добавить по URL</b>.</li>' +
             '<li>Вставь ссылку и добавь календарь — смены появятся и в Google Календаре на телефоне.</li>' +
           '</ol>' +
           '<div class="popup-hint" style="margin-top:0">Телефон обновляет такой календарь сам, иногда с задержкой в несколько часов. Самое свежее расписание — всегда в приложении.</div>' +
-          '<div class="popup-actions"><button class="popup-btn" id="calCopy">📋 Скопировать ссылку</button></div>';
+          '<div class="popup-actions"><button class="popup-btn" id="calCopy">' + ic('copy') + 'Скопировать ссылку</button></div>';
       }
       const overlay = openPopup(html);
       const copy = overlay.querySelector('#calCopy');
@@ -2355,69 +2417,69 @@
 
     // ── Вкладка «Помощь» ──
     function faq(icon, title, body, open) {
-      return '<details class="faq"' + (open ? ' open' : '') + '><summary><span>' + icon + '</span>' + escapeHtml(title) + '</summary><div class="faq-body">' + body + '</div></details>';
+      return '<details class="faq"' + (open ? ' open' : '') + '><summary><span class="faq-ic">' + ic(icon) + '</span>' + escapeHtml(title) + '</summary><div class="faq-body">' + body + '</div></details>';
     }
     function renderHelpPage() {
       const el = document.getElementById('helpPage');
       const city = myCityKey() ? CITIES[myCityKey()].name : 'не выбран';
       let html = '<div class="help-hero"><div class="help-hero-title">Как пользоваться Turno</div>' +
         '<div class="help-hero-text">Здесь собрано всё, что умеет приложение. Нажми на раздел, чтобы раскрыть.</div>' +
-        '<button class="popup-btn" data-help="onboarding">▶️ Пройти знакомство заново</button>' +
-        '<button class="popup-btn outline" data-help="calendar" style="margin-bottom:0">📲 Подключить календарь телефона</button>' +
-        (myCompanies.length > 1 ? '<button class="popup-btn ghost" data-help="company" style="margin:8px 0 0">🏢 Сменить компанию · сейчас ' + escapeHtml(myCompany ? myCompany.name : '') + '</button>' : '') +
+        '<button class="popup-btn" data-help="onboarding">' + ic('play') + 'Пройти знакомство заново</button>' +
+        '<button class="popup-btn outline" data-help="calendar" style="margin-bottom:0">' + ic('smartphone') + 'Подключить календарь телефона</button>' +
+        (myCompanies.length > 1 ? '<button class="popup-btn ghost" data-help="company" style="margin:8px 0 0">' + ic('building') + 'Сменить компанию · сейчас ' + escapeHtml(myCompany ? myCompany.name : '') + '</button>' : '') +
         '</div>';
 
       html += '<div class="help-section-label">Сотруднику</div>';
-      html += faq('📅', 'Расписание и обозначения',
+      html += faq('calendar', 'Расписание и обозначения',
         '<p>На главном экране — календарь твоих смен. Нажми на день, чтобы увидеть подробности. Листай месяцы стрелками или свайпом, кнопка <b>«Сегодня»</b> вернёт к текущему месяцу.</p>' +
         '<p>Вверху — плашки <b>«Сегодня»</b> и <b>«Завтра»</b> с твоими сменами.</p>' + LEGEND_HTML, true);
-      html += faq('🌍', 'Город и время',
+      html += faq('globe', 'Город и время',
         '<p>Время смен показано <b>по твоему городу</b> (сейчас: ' + escapeHtml(city) + ').</p>' +
         '<p>Переехал или выбрал не тот город — нажми на город в шапке экрана.</p>' +
         '<p><b>Ночная смена</b> показывается в тот день, когда начинается. Например, смена 22:00–06:00 стоит в дне, когда ты выходишь на работу вечером.</p>' +
         '<button class="popup-btn outline" data-help="city">Сменить город</button>');
-      html += faq('📲', 'Смены в календаре iPhone и Google',
+      html += faq('smartphone', 'Смены в календаре iPhone и Google',
         '<p><b>Подписка (лучший вариант):</b> подключаешь один раз — все смены сами появляются в календаре телефона и обновляются. Телефон напоминает о смене за 2 часа.</p>' +
         '<p><b>По одной смене:</b> нажми на день → «Добавить в Google Calendar».</p>' +
         '<button class="popup-btn" data-help="calendar">Подключить календарь</button>');
-      html += faq('🟡', 'Подработка: отметить, когда могу выйти',
+      html += faq('half', 'Подработка: отметить, когда могу выйти',
         '<ol class="steps"><li>Открой вкладку <b>«Подработка»</b>.</li><li>Нажми на день, когда можешь выйти.</li><li>Укажи часы <b>по своему времени</b> и нажми «Сохранить».</li></ol>' +
         '<p>Отмеченные дни подсвечиваются жёлтым. Чтобы убрать отметку — нажми на день → «Удалить отметку».</p>');
-      html += faq('🎯', 'Дополнительные смены',
+      html += faq('star', 'Дополнительные смены',
         '<p>Когда руководителю нужны люди, на главном экране появляется <b>жёлтая плашка «Дополнительные смены»</b>, а бот присылает сообщение.</p>' +
-        '<ol class="steps"><li>Нажми на плашку.</li><li>Выбери смену и нажми <b>«Записаться»</b>.</li><li>Статус ⏳ — ждём ответа руководителя. Бот сообщит, подтвердили заявку ✅ или нет.</li></ol>' +
-        '<p>Подтверждённая доп. смена появится в календаре со звёздочкой ★. Передумал — нажми «Отменить».</p>');
-      html += faq('🔔', 'Сообщения от бота',
+        '<ol class="steps"><li>Нажми на плашку.</li><li>Выбери смену и нажми <b>«Записаться»</b>.</li><li>Статус «Ждёт подтверждения» — ждём ответа руководителя. Бот сообщит, подтвердили заявку или нет.</li></ol>' +
+        '<p>Подтверждённая доп. смена появится в календаре со звёздочкой <span class="inline-ic">' + ic('star', 'i-fill') + '</span>. Передумал — нажми «Отменить».</p>');
+      html += faq('bell', 'Сообщения от бота',
         '<p>Бот присылает:</p><p>• напоминание вечером накануне смены;<br>• новые доп. смены;<br>• ответ на твою заявку;<br>• отмену доп. смены.</p>' +
         '<p>Проверь, что <b>уведомления бота не выключены</b> в Telegram и ты не заблокировал бота.</p>');
 
       html += '<div class="help-section-label">Частые вопросы</div>';
-      html += faq('❓', 'Не вижу своих смен',
+      html += faq('help', 'Не вижу своих смен',
         '<p>Проверь месяц — перелистни стрелками. Если месяц пустой, график ещё не составлен. Если смен нет совсем — обратись к руководителю: возможно, в системе другой номер телефона.</p>');
-      html += faq('❓', 'Время смены отличается от того, что говорил руководитель',
+      html += faq('help', 'Время смены отличается от того, что говорил руководитель',
         '<p>Руководитель вносит время по Москве, а ты видишь его по своему городу. Проверь, что в шапке выбран правильный город.</p>');
-      html += faq('❓', 'Смена в календаре телефона не обновилась',
+      html += faq('help', 'Смена в календаре телефона не обновилась',
         '<p>Телефон обновляет календарь по подписке сам и иногда с задержкой в несколько часов. Самое свежее расписание — всегда в приложении.</p>');
-      html += faq('❓', 'Пишет «Сессия устарела» или не открывается',
+      html += faq('help', 'Пишет «Сессия устарела» или не открывается',
         '<p>Закрой приложение и открой его заново через кнопку в боте.</p>');
-      html += faq('❓', 'Поменял номер телефона',
+      html += faq('help', 'Поменял номер телефона',
         '<p>Сообщи руководителю — он обновит номер в системе. После этого просто открой приложение.</p>');
 
       if (me && me.isAdmin) {
         html += '<div class="help-section-label">Руководителю</div>';
-        html += faq('✏️', 'Редактирование смен',
+        html += faq('pencil', 'Редактирование смен',
           '<ol class="steps"><li><b>«Управление»</b> → <b>«Редактировать расписание»</b> → выбери сотрудника.</li><li>Нажми на день, укажи время <b>по Москве</b> и сохрани.</li></ol>' +
           '<p><b>Черновик и публикация.</b> Всё, что ты меняешь в расписании, сначала попадает в <b>черновик</b>: сотрудники этого не видят. Когда график готов, нажми <b>«Опубликовать»</b> на жёлтой плашке — сотрудники увидят его в приложении, а бот пришлёт им сообщение («График на ноябрь готов» или список изменённых дней — в их часовом поясе). Если нужно, чтобы любые правки уходили сразу, включи переключатель <b>«Публиковать сразу»</b> во вкладке «Управление».</p>' +
           '<p><b>Шаблоны графика</b> («Управление» → «Шаблоны графика»): выбери сотрудников, способ — цикл (2/2, 3/3, 5/2…), дни недели (пн–пт) или копия недели — время смены и период. Перед записью приложение покажет, сколько дней изменится. По умолчанию занятые дни не затираются. Новый месяц в таблице создаётся сам.</p>' +
           '<p><b>Несколько смен в день</b> — «+ Добавить ещё смену». <b>Ночная смена</b> — выбери конец раньше начала (22:00 → 06:00). Есть время <b>24:00</b>.</p>' +
           '<p>В таблице: <b>09:00-18:00</b>, несколько смен — через точку с запятой: <b>07:00-11:00; 18:00-22:00</b>. Больничный — <b>Б</b>, отпуск — <b>О</b>.</p>');
-        html += faq('👥', 'Сотрудники',
-          '<p><b>«Управление» → «Сотрудники»</b>: добавить (＋), изменить имя и номер, отправить приглашение, убрать в архив.</p>' +
+        html += faq('users', 'Сотрудники',
+          '<p><b>«Управление» → «Сотрудники»</b>: добавить (кнопка «+»), изменить имя и номер, отправить приглашение, убрать в архив.</p>' +
           '<p>Статус <b>«Вход подтверждён»</b> — сотрудник открыл приложение и поделился номером. Город сотрудник выбирает сам.</p>');
-        html += faq('🎯', 'Доп. смены и заявки',
-          '<ol class="steps"><li><b>«Управление» → «Дополнительные смены» → ＋</b>.</li><li>Укажи дату, время по Москве и число мест — всем придёт сообщение.</li><li>Заявки подтверждай ✓ или отклоняй ✕ — сотрудник получит ответ от бота.</li></ol>' +
+        html += faq('star', 'Доп. смены и заявки',
+          '<ol class="steps"><li><b>«Управление» → «Дополнительные смены» → «+»</b>.</li><li>Укажи дату, время по Москве и число мест — всем придёт сообщение.</li><li>Заявки подтверждай галочкой или отклоняй крестиком — сотрудник получит ответ от бота.</li></ol>' +
           '<p>О каждой новой заявке бот пишет тебе сообщение.</p>');
-        html += faq('🟡', 'Кто может выйти',
+        html += faq('half', 'Кто может выйти',
           '<p>Во вкладке <b>«Управление»</b> — календарь доступности: число людей, готовых выйти в этот день. Нажми на день, чтобы увидеть имена и часы (по Москве).</p>');
       }
       html += '<div class="tz-note" style="text-align:center;margin-top:var(--space-5)">Turno · ритм команды</div>';
@@ -2439,12 +2501,12 @@
       return '<div class="shift-row"><div class="shift-row-fields">' +
         '<div><label>С</label><select class="sr-start">' + buildStartOptions(start) + '</select></div>' +
         '<div><label>До</label><select class="sr-end">' + buildEndOptions(end) + '</select></div>' +
-        '<button class="shift-row-remove" type="button" aria-label="Удалить смену">✕</button>' +
+        '<button class="shift-row-remove" type="button" aria-label="Удалить смену">' + ic('x') + '</button>' +
         '</div><div class="shift-row-note"></div></div>';
     }
     function wireShiftRow(row) {
       const s = row.querySelector('.sr-start'), e = row.querySelector('.sr-end'), n = row.querySelector('.shift-row-note');
-      const upd = () => { n.textContent = overnightNote(s.value, e.value); };
+      const upd = () => { n.innerHTML = overnightNote(s.value, e.value); };
       s.addEventListener('change', upd); e.addEventListener('change', upd); upd();
       row.querySelector('.shift-row-remove').addEventListener('click', () => row.remove());
     }
@@ -2649,13 +2711,13 @@
       let html = '';
       if (show) {
         if (auto) {
-          html = '<div class="pub-bar ok"><div class="pub-bar-text">⚡ Правки уходят сотрудникам сразу<small>Включён режим «Публиковать сразу»</small></div></div>';
+          html = '<div class="pub-bar ok"><div class="pub-bar-text">' + ic('zap') + 'Правки уходят сотрудникам сразу<small>Включён режим «Публиковать сразу»</small></div></div>';
         } else if (p.count) {
           html = '<div class="pub-bar"><div class="pub-bar-text"><b>Черновик: ' + p.count + ' ' + pluralRu(p.count, 'изменение', 'изменения', 'изменений') +
             '</b><small>Сотрудники этого пока не видят · ' + p.people + ' ' + pluralRu(p.people, 'сотрудник', 'сотрудника', 'сотрудников') +
             '</small></div><button type="button" data-pub-open="1">Опубликовать</button></div>';
         } else {
-          html = '<div class="pub-bar ok"><div class="pub-bar-text">✓ График опубликован<small>Сотрудники видят актуальную версию</small></div></div>';
+          html = '<div class="pub-bar ok"><div class="pub-bar-text">' + ic('checkCircle') + 'График опубликован<small>Сотрудники видят актуальную версию</small></div></div>';
         }
       }
       slots.forEach(el => { el.innerHTML = html; });
@@ -2884,7 +2946,7 @@
       let info = '<b>' + resp.willWrite + '</b> ' + pluralRu(resp.willWrite, 'день изменится', 'дня изменятся', 'дней изменятся') +
         ' у <b>' + resp.people + '</b> ' + pluralRu(resp.people, 'сотрудника', 'сотрудников', 'сотрудников') + '.';
       if (resp.busy) info += '<br>Пропущено занятых дней: ' + resp.busy + '.';
-      if (resp.noSheet) info += '<br>⚠️ ' + resp.noSheet + ' ' + pluralRu(resp.noSheet, 'день', 'дня', 'дней') + ' слишком далеко во времени — они не заполнятся.';
+      if (resp.noSheet) info += '<br>' + ic('alert') + ' ' + resp.noSheet + ' ' + pluralRu(resp.noSheet, 'день', 'дня', 'дней') + ' слишком далеко во времени — они не заполнятся.';
       const auto = adminData && adminData.autoPublish;
       info += auto ? '<br><br>Включён режим «Публиковать сразу»: сотрудники получат сообщения об изменениях.'
                    : '<br><br>Это попадёт в <b>черновик</b>. Сотрудники увидят график после кнопки «Опубликовать».';
@@ -3151,14 +3213,14 @@
           listHtml += '<div class="extra-card"><div class="extra-card-header"><div>' +
             '<div class="extra-card-date">' + formatDateRu(c.date) + '</div>' +
             '<div class="extra-card-time">' + escapeHtml(c.start) + '–' + escapeHtml(c.end) +
-            (isOvernight(c.start, c.end) ? ' 🌙' : '') + '</div>' +
+            (isOvernight(c.start, c.end) ? ' ' + ic('moon') : '') + '</div>' +
             '</div><span class="extra-card-places' + (sh.free > 0 ? '' : ' full') + '">' + escapeHtml(placesText) + '</span></div>';
           if (sh.myStatus === 'approved') {
-            listHtml += '<div class="extra-card-people">✅ <b>Подтверждено</b> — смена уже в твоём расписании</div>' +
+            listHtml += '<div class="extra-card-people">' + ic('checkCircle', 'i-brand') + ' <b>Подтверждено</b> — смена уже в твоём расписании</div>' +
               '<div class="extra-card-actions"><button class="extra-card-btn primary" data-action="add-calendar" data-shift-id="' + id + '">В Google Календарь</button>' +
               '<button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + id + '">Отменить</button></div>';
           } else if (sh.myStatus === 'pending') {
-            listHtml += '<div class="extra-card-people">⏳ <b>Ждёт подтверждения</b> — бот пришлёт ответ</div>' +
+            listHtml += '<div class="extra-card-people">' + ic('clock') + ' <b>Ждёт подтверждения</b> — бот пришлёт ответ</div>' +
               '<div class="extra-card-actions"><button class="extra-card-btn danger" data-action="cancel" data-shift-id="' + id + '">Отменить заявку</button></div>';
           } else if (sh.free > 0) {
             listHtml += '<div class="extra-card-actions"><button class="extra-card-btn primary" data-action="join" data-shift-id="' + id + '">Записаться</button></div>';
@@ -3241,17 +3303,17 @@
         const id = escapeHtml(sh.id);
         let people = '';
         if (pending.length) {
-          people += '<div class="extra-card-people" style="margin-bottom:6px;">⏳ <b>Ждут подтверждения:</b></div>';
+          people += '<div class="extra-card-people" style="margin-bottom:6px;">' + ic('clock') + ' <b>Ждут подтверждения:</b></div>';
           pending.forEach(p => {
             people += '<div class="admin-list-item" style="padding:6px 0;"><span class="admin-list-name">' + escapeHtml(p.name || p.phone) + '</span>' +
               '<span style="display:flex;gap:6px;">' +
-              '<button class="extra-card-btn primary small" data-approve-phone="' + escapeHtml(p.phone) + '" data-shift="' + id + '" aria-label="Подтвердить">✓</button>' +
-              '<button class="extra-card-btn danger small" data-reject-phone="' + escapeHtml(p.phone) + '" data-shift="' + id + '" aria-label="Отклонить">✕</button>' +
+              '<button class="extra-card-btn primary small" data-approve-phone="' + escapeHtml(p.phone) + '" data-shift="' + id + '" aria-label="Подтвердить">' + ic('check') + '</button>' +
+              '<button class="extra-card-btn danger small" data-reject-phone="' + escapeHtml(p.phone) + '" data-shift="' + id + '" aria-label="Отклонить">' + ic('x') + '</button>' +
               '</span></div>';
           });
         }
         if (approved.length) {
-          people += '<div class="extra-card-people" style="margin-top:10px;">✅ <b>Подтверждены:</b> ' +
+          people += '<div class="extra-card-people" style="margin-top:10px;">' + ic('checkCircle', 'i-brand') + ' <b>Подтверждены:</b> ' +
             approved.map(p => escapeHtml(p.name || p.phone)).join(', ') + '</div>';
         }
         if (!people) people = '<div class="extra-card-people">Пока никто не записался</div>';
@@ -3262,9 +3324,9 @@
         card.innerHTML = '<div class="extra-card-header"><div>' +
           '<div class="extra-card-date">' + formatDateRu(sh.date) + '</div>' +
           '<div class="extra-card-time">' + escapeHtml(sh.start) + '–' + escapeHtml(sh.end) + ' МСК' +
-          (isOvernight(sh.start, sh.end) ? ' 🌙' : '') + '</div>' +
+          (isOvernight(sh.start, sh.end) ? ' ' + ic('moon') : '') + '</div>' +
           '</div><span class="extra-card-places' + (sh.taken >= sh.places ? ' full' : '') + '">' + sh.taken + ' из ' + sh.places + '</span></div>' +
-          (isDeleted ? '<div class="extra-card-people">❌ Удалена</div>'
+          (isDeleted ? '<div class="extra-card-people">' + ic('xCircle') + ' Удалена</div>'
             : people + '<div class="extra-card-actions"><button class="extra-card-btn danger" data-delete-id="' + id + '">Удалить смену</button></div>');
         list.appendChild(card);
       });
@@ -3311,7 +3373,7 @@
         '<div class="popup-actions"><button class="popup-btn" id="extraCreateSubmit">Создать и разослать</button></div>');
       overlay.querySelector('#extraDate').value = addDays(nowAt(MSK_OFFSET).iso, 1);
       const sEl = overlay.querySelector('#extraStart'), eEl = overlay.querySelector('#extraEnd'), note = overlay.querySelector('#extraNote');
-      const upd = () => { note.textContent = overnightNote(sEl.value, eEl.value); };
+      const upd = () => { note.innerHTML = overnightNote(sEl.value, eEl.value); };
       sEl.addEventListener('change', upd); eEl.addEventListener('change', upd); upd();
 
       overlay.querySelector('#extraCreateSubmit').addEventListener('click', async e => {

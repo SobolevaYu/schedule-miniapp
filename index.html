@@ -7,15 +7,23 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Turno</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // Тема — из настроек Telegram (а не телефона), до первой отрисовки, чтобы не мигало
+    (function () {
+      var w = window.Telegram && window.Telegram.WebApp, dark = false;
+      try { dark = w && w.colorScheme ? w.colorScheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
   <style>
     :root{
-      --brand:#10B981;--brand-dark:#059669;--brand-light:#34D399;
-      --shift-bg-light:linear-gradient(160deg,rgba(16,185,129,.22) 0%,rgba(16,185,129,.10) 100%);
-      --shift-bg-dark:linear-gradient(160deg,rgba(16,185,129,.32) 0%,rgba(16,185,129,.18) 100%);
-      --shift-border:rgba(16,185,129,.45);--shift-text-light:#064E3B;--shift-text-dark:#6EE7B7;
+      --brand:#0E6B73;--brand-dark:#0A555C;--brand-light:#5CCFD6;
+      --shift-bg-light:linear-gradient(160deg,rgba(14,107,115,.22) 0%,rgba(14,107,115,.10) 100%);
+      --shift-bg-dark:linear-gradient(160deg,rgba(14,107,115,.32) 0%,rgba(14,107,115,.18) 100%);
+      --shift-border:rgba(14,107,115,.45);--shift-text-light:#0A5258;--shift-text-dark:#7FD6DC;
       --sick-bg-light:linear-gradient(160deg,rgba(200,180,160,.22) 0%,rgba(200,180,160,.10) 100%);
       --sick-bg-dark:linear-gradient(160deg,rgba(200,180,160,.28) 0%,rgba(200,180,160,.16) 100%);
       --sick-border:rgba(180,160,140,.50);--sick-text-light:#6B5A48;--sick-text-dark:#D4C4B0;
@@ -25,8 +33,8 @@
       --avail-bg-light:linear-gradient(160deg,rgba(250,204,21,.28) 0%,rgba(250,204,21,.12) 100%);
       --avail-bg-dark:linear-gradient(160deg,rgba(250,204,21,.32) 0%,rgba(250,204,21,.16) 100%);
       --avail-border:rgba(250,204,21,.65);--avail-text-light:#78350F;--avail-text-dark:#FDE68A;
-      --blob-1-light:rgba(16,185,129,.22);--blob-3-light:rgba(99,102,241,.14);
-      --blob-1-dark:rgba(16,185,129,.18);--blob-3-dark:rgba(99,102,241,.12);
+      --blob-1-light:rgba(14,107,115,.22);--blob-3-light:rgba(99,102,241,.14);
+      --blob-1-dark:rgba(14,107,115,.18);--blob-3-dark:rgba(99,102,241,.12);
       --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;
       --space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;
       --radius-sm:8px;--radius-md:12px;--radius-lg:16px;
@@ -34,7 +42,7 @@
       --shadow-sm:0 1px 2px rgba(15,23,42,.04);
       --shadow-md:0 4px 12px rgba(15,23,42,.06);
       --shadow-lg:0 12px 32px rgba(15,23,42,.10);
-      --grad-primary:linear-gradient(135deg,#10B981 0%,#059669 100%);
+      --grad-primary:linear-gradient(135deg,#0E6B73 0%,#0A555C 100%);
       --grad-surface-light:linear-gradient(160deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,.50) 100%);
       --grad-surface-dark:linear-gradient(160deg,rgba(30,41,59,.60) 0%,rgba(30,41,59,.45) 100%);
     }
@@ -47,7 +55,6 @@
       padding:var(--space-5);padding-bottom:148px;min-height:100vh;width:100%;
       overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.4;
     }
-    @media (prefers-color-scheme:dark){body{color:var(--tg-theme-text-color,#F1F5F9)}}
 
     .header{margin-bottom:var(--space-7)}
     .header-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-2)}
@@ -55,31 +62,29 @@
     .header-actions{display:flex;align-items:center;gap:var(--space-2);flex-shrink:0}
     .header-icon-btn{
       width:34px;height:34px;border-radius:var(--radius-pill);
-      background:rgba(16,185,129,.12);
+      background:rgba(14,107,115,.12);
       backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);
-      border:1px solid rgba(16,185,129,.28);color:var(--brand-dark);cursor:pointer;
+      border:1px solid rgba(14,107,115,.28);color:var(--brand-dark);cursor:pointer;
       display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;
       transition:transform .15s ease,background .2s ease,box-shadow .2s ease;
       -webkit-tap-highlight-color:transparent;box-shadow:var(--shadow-sm);
     }
-    .header-icon-btn:hover{background:rgba(16,185,129,.18)}
-    .header-icon-btn:active{transform:scale(.9);box-shadow:0 0 0 5px rgba(16,185,129,.10)}
+    .header-icon-btn:hover{background:rgba(14,107,115,.18)}
+    .header-icon-btn:active{transform:scale(.9);box-shadow:0 0 0 5px rgba(14,107,115,.10)}
     .header-icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     .header-icon-btn .icon-sound-off{display:none}
     .header-icon-btn.muted .icon-sound-on{display:none}
     .header-icon-btn.muted .icon-sound-off{display:block}
-    @media (prefers-color-scheme:dark){
-      .header-icon-btn{background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.32);color:var(--brand-light)}
-    }
+    
     .header-date{font-size:14px;font-weight:500;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3);letter-spacing:.1px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-    @media (prefers-color-scheme:dark){.header-date{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .city-chip{
       display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:var(--radius-pill);
-      background:rgba(16,185,129,.10);border:1px solid rgba(16,185,129,.28);color:var(--brand-dark);
+      background:rgba(14,107,115,.10);border:1px solid rgba(14,107,115,.28);color:var(--brand-dark);
       font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;
     }
     .city-chip svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    @media (prefers-color-scheme:dark){.city-chip{color:var(--brand-light)}}
+    
     .header-today{
       display:flex;align-items:center;gap:var(--space-3);
       padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);
@@ -88,19 +93,12 @@
       border:1px solid;line-height:1.3;
     }
     .header-today svg{width:20px;height:20px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-    .header-today.shift{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.32);color:#065F46}
+    .header-today.shift{background:rgba(14,107,115,.12);border-color:rgba(14,107,115,.32);color:#0A5258}
     .header-today.sick{background:rgba(200,180,160,.16);border-color:rgba(180,160,140,.42);color:#6B5A48}
     .header-today.vacation{background:rgba(139,130,255,.14);border-color:rgba(139,130,255,.38);color:#4C3FB8}
     .header-today.dayoff{background:rgba(148,163,184,.10);border-color:rgba(148,163,184,.22);color:var(--tg-theme-hint-color,#64748B)}
-    @media (prefers-color-scheme:dark){
-      .header-today.shift{color:#6EE7B7}
-      .header-today.sick{color:#D4C4B0}
-      .header-today.vacation{color:#B0A6FF}
-      .header-today.dayoff{color:var(--tg-theme-hint-color,#94A3B8)}
-    }
 
     .subtitle{font-size:14px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-5);font-weight:500}
-    @media (prefers-color-scheme:dark){.subtitle{color:var(--tg-theme-hint-color,#94A3B8)}}
 
     .phone-form{
       background:var(--grad-surface-light);
@@ -109,20 +107,17 @@
       padding:var(--space-6) var(--space-5);margin-bottom:var(--space-4);
       text-align:center;box-shadow:var(--shadow-md);
     }
-    @media (prefers-color-scheme:dark){
-      .phone-form{background:var(--grad-surface-dark);border-color:rgba(148,163,184,.15)}
-    }
+    
     .phone-form .hint{font-size:14px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-4);line-height:1.5}
     .phone-form button{
       width:100%;padding:14px;background:var(--grad-primary);color:#fff;border:none;
       border-radius:var(--radius-lg);font-size:15px;font-weight:600;cursor:pointer;
-      margin-bottom:var(--space-2);box-shadow:0 4px 14px rgba(16,185,129,.30);
+      margin-bottom:var(--space-2);box-shadow:0 4px 14px rgba(14,107,115,.30);
       font-family:inherit;transition:transform .15s ease,box-shadow .2s ease;
     }
-    .phone-form button:active{transform:scale(.98);box-shadow:0 0 0 6px rgba(16,185,129,.15)}
+    .phone-form button:active{transform:scale(.98);box-shadow:0 0 0 6px rgba(14,107,115,.15)}
     .phone-form button:disabled{opacity:.6}
     .phone-form .form-msg{font-size:13px;line-height:1.5;margin-top:var(--space-3);color:#DC2626}
-    @media (prefers-color-scheme:dark){.phone-form .form-msg{color:#FCA5A5}}
 
     .month-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3);gap:var(--space-2)}
     .month-title{font-size:18px;font-weight:700;letter-spacing:-.4px;flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -135,17 +130,15 @@
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
       font-family:inherit;transition:transform .15s ease,background .2s ease;
     }
-    .month-nav:active{transform:scale(.9);background:rgba(16,185,129,.15)}
-    @media (prefers-color-scheme:dark){
-      .month-nav{background:rgba(30,41,59,.55);border-color:rgba(148,163,184,.15);color:var(--tg-theme-text-color,#F1F5F9)}
-    }
+    .month-nav:active{transform:scale(.9);background:rgba(14,107,115,.15)}
+    
     .today-btn{
-      background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.32);
+      background:rgba(14,107,115,.12);border:1px solid rgba(14,107,115,.32);
       border-radius:var(--radius-md);padding:0 var(--space-3);height:36px;
       font-size:12px;font-weight:600;color:var(--brand);cursor:pointer;flex-shrink:0;
       font-family:inherit;transition:transform .15s ease,background .2s ease;
     }
-    .today-btn:active{transform:scale(.92);background:rgba(16,185,129,.20)}
+    .today-btn:active{transform:scale(.92);background:rgba(14,107,115,.20)}
 
     .calendar{
       background:var(--grad-surface-light);
@@ -153,13 +146,11 @@
       border:1px solid rgba(255,255,255,.5);border-radius:var(--radius-2xl);
       padding:var(--space-3);width:100%;max-width:100%;overflow:hidden;box-shadow:var(--shadow-md);
     }
-    @media (prefers-color-scheme:dark){
-      .calendar{background:var(--grad-surface-dark);border-color:rgba(148,163,184,.15)}
-    }
+    
     .weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
     .weekdays{margin-bottom:var(--space-2)}
     .weekday{text-align:center;font-size:11px;color:var(--tg-theme-hint-color,#64748B);text-transform:uppercase;font-weight:600;padding:var(--space-1) 0;letter-spacing:.5px}
-    @media (prefers-color-scheme:dark){.weekday{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .days{width:100%;touch-action:pan-y;-webkit-user-select:none;user-select:none}
     .day{
       aspect-ratio:1;border-radius:var(--radius-md);padding:3px;
@@ -169,10 +160,8 @@
       min-width:0;overflow:hidden;position:relative;
       transition:transform .12s ease,box-shadow .2s ease;
     }
-    .day:active{transform:scale(.94);box-shadow:0 0 0 4px rgba(16,185,129,.10)}
-    @media (prefers-color-scheme:dark){
-      .day{background:rgba(15,23,42,.4);border-color:rgba(148,163,184,.12);color:var(--tg-theme-text-color,#F1F5F9)}
-    }
+    .day:active{transform:scale(.94);box-shadow:0 0 0 4px rgba(14,107,115,.10)}
+    
     .day-num{font-size:11px;font-weight:600;line-height:1;letter-spacing:-.2px}
     .day-time{font-size:9px;line-height:1.05;font-weight:600;text-align:center;word-break:break-word;overflow-wrap:anywhere}
     .day-more{font-size:9px;font-weight:800;text-align:center;line-height:1;margin-top:1px}
@@ -186,30 +175,21 @@
     @keyframes slideFromLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
     @keyframes fadeOnly{from{opacity:0}to{opacity:1}}
     .day.today{
-      box-shadow:inset 0 0 0 1.5px var(--brand),0 0 0 4px rgba(16,185,129,.10);
-      background:linear-gradient(180deg,rgba(16,185,129,.06) 0%,rgba(16,185,129,0) 100%),rgba(255,255,255,.5);
+      box-shadow:inset 0 0 0 1.5px var(--brand),0 0 0 4px rgba(14,107,115,.10);
+      background:linear-gradient(180deg,rgba(14,107,115,.06) 0%,rgba(14,107,115,0) 100%),rgba(255,255,255,.5);
     }
-    @media (prefers-color-scheme:dark){
-      .day.today{box-shadow:inset 0 0 0 1.5px var(--brand-light),0 0 0 4px rgba(52,211,153,.15);background:linear-gradient(180deg,rgba(52,211,153,.08) 0%,rgba(52,211,153,0) 100%),rgba(15,23,42,.4)}
-    }
+    
     .day.shift{background:var(--shift-bg-light);border-color:var(--shift-border);color:var(--shift-text-light)}
     .day.sick{background:var(--sick-bg-light);border-color:var(--sick-border);color:var(--sick-text-light)}
     .day.vacation{background:var(--vac-bg-light);border-color:var(--vac-border);color:var(--vac-text-light)}
     .day.available,.day.has-people{background:var(--avail-bg-light);border-color:var(--avail-border);color:var(--avail-text-light)}
-    @media (prefers-color-scheme:dark){
-      .day.shift{background:var(--shift-bg-dark);color:var(--shift-text-dark)}
-      .day.sick{background:var(--sick-bg-dark);color:var(--sick-text-dark)}
-      .day.vacation{background:var(--vac-bg-dark);color:var(--vac-text-dark)}
-      .day.available,.day.has-people{background:var(--avail-bg-dark);color:var(--avail-text-dark)}
-    }
+    
     .night-icon{display:inline-block;width:10px;height:10px;margin-left:3px;vertical-align:middle}
     .night-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .day.shift.night{background:linear-gradient(135deg,rgba(16,185,129,.20) 0%,rgba(59,130,246,.16) 100%);border-color:rgba(16,185,129,.42)}
-    @media (prefers-color-scheme:dark){
-      .day.shift.night{background:linear-gradient(135deg,rgba(16,185,129,.30) 0%,rgba(99,102,241,.24) 100%);border-color:rgba(52,211,153,.48)}
-    }
+    .day.shift.night{background:linear-gradient(135deg,rgba(14,107,115,.20) 0%,rgba(59,130,246,.16) 100%);border-color:rgba(14,107,115,.42)}
+    
     .legend{margin-top:var(--space-3);display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-4);font-size:11px;color:var(--tg-theme-hint-color,#64748B);line-height:1.3}
-    @media (prefers-color-scheme:dark){.legend{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .legend-item{display:flex;align-items:center;gap:var(--space-2);font-weight:500}
     .legend-color{width:14px;height:14px;border-radius:4px;border:1px solid rgba(148,163,184,.3)}
     .legend-icon{width:12px;height:12px}
@@ -222,7 +202,7 @@
       font-size:14px;line-height:1.5;color:#DC2626;
       display:flex;flex-direction:column;gap:var(--space-3);
     }
-    @media (prefers-color-scheme:dark){.init-error{background:rgba(239,68,68,.12);color:#FCA5A5}}
+    
     .init-error button{
       align-self:flex-start;padding:8px 16px;border:none;border-radius:var(--radius-md);
       background:var(--grad-primary);color:#fff;font-weight:600;font-family:inherit;cursor:pointer;
@@ -230,14 +210,9 @@
 
     .banner{border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);font-size:14px;line-height:1.4;display:flex;align-items:center;gap:var(--space-3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-weight:500}
     .banner svg{width:20px;height:20px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-    .banner.shift{background:rgba(16,185,129,.14);border:1px solid rgba(16,185,129,.34);color:#065F46}
+    .banner.shift{background:rgba(14,107,115,.14);border:1px solid rgba(14,107,115,.34);color:#0A5258}
     .banner.sick{background:rgba(200,180,160,.18);border:1px solid rgba(180,160,140,.42);color:#6B5A48}
     .banner.vacation{background:rgba(139,130,255,.16);border:1px solid rgba(139,130,255,.38);color:#4C3FB8}
-    @media (prefers-color-scheme:dark){
-      .banner.shift{color:#6EE7B7}
-      .banner.sick{color:#D4C4B0}
-      .banner.vacation{color:#B0A6FF}
-    }
 
     .popup-overlay{
       position:fixed;inset:0;background:rgba(15,23,42,.5);
@@ -257,30 +232,28 @@
       animation:slideUp .22s cubic-bezier(.32,.72,0,1);
       max-height:85vh;overflow-y:auto;box-shadow:0 -4px 24px rgba(0,0,0,.15);
     }
-    @media (prefers-color-scheme:dark){
-      .popup{background:rgba(15,23,42,.94);border-color:rgba(148,163,184,.15)}
-    }
+    
     @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
     .popup-title{font-size:20px;font-weight:700;margin-bottom:var(--space-2);letter-spacing:-.3px;line-height:1.2}
     .popup-info{font-size:14px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-5);line-height:1.5}
-    @media (prefers-color-scheme:dark){.popup-info{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .popup-hint{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin:-8px 0 var(--space-4);line-height:1.4}
     .popup-btn{
       width:100%;padding:14px;background:var(--grad-primary);color:#fff;border:none;
       border-radius:var(--radius-lg);font-size:15px;font-weight:600;cursor:pointer;
-      margin-bottom:var(--space-2);box-shadow:0 4px 14px rgba(16,185,129,.28);
+      margin-bottom:var(--space-2);box-shadow:0 4px 14px rgba(14,107,115,.28);
       font-family:inherit;transition:transform .15s ease,box-shadow .2s ease;
     }
-    .popup-btn:active{transform:scale(.98);box-shadow:0 0 0 6px rgba(16,185,129,.15)}
+    .popup-btn:active{transform:scale(.98);box-shadow:0 0 0 6px rgba(14,107,115,.15)}
     .popup-btn:disabled{opacity:.6}
     .popup-btn.google{background:linear-gradient(135deg,#4285F4 0%,#3367D6 100%);box-shadow:0 4px 14px rgba(66,133,244,.28)}
     .popup-btn.apple{background:linear-gradient(135deg,#1F2937 0%,#000 100%);box-shadow:0 4px 14px rgba(0,0,0,.28)}
     .popup-btn.danger{background:linear-gradient(135deg,#EF4444 0%,#DC2626 100%);box-shadow:0 4px 14px rgba(239,68,68,.28)}
     .popup-btn.sick{background:linear-gradient(135deg,#C8B4A0 0%,#A89480 100%);color:#3D3227}
     .popup-btn.vac{background:linear-gradient(135deg,#8B82FF 0%,#6E63E6 100%)}
-    .popup-btn.secondary{background:transparent;color:var(--tg-theme-link-color,var(--brand));font-weight:500;margin-bottom:0;box-shadow:none;border:1px solid rgba(16,185,129,.22)}
-    .popup-btn.secondary:active{box-shadow:0 0 0 4px rgba(16,185,129,.10)}
-    .popup-btn.outline{background:transparent;color:var(--brand);box-shadow:none;border:1px dashed rgba(16,185,129,.5)}
+    .popup-btn.secondary{background:transparent;color:var(--tg-theme-link-color,var(--brand));font-weight:500;margin-bottom:0;box-shadow:none;border:1px solid rgba(14,107,115,.22)}
+    .popup-btn.secondary:active{box-shadow:0 0 0 4px rgba(14,107,115,.10)}
+    .popup-btn.outline{background:transparent;color:var(--brand);box-shadow:none;border:1px dashed rgba(14,107,115,.5)}
 
     .time-fields{display:flex;gap:var(--space-3);margin-bottom:var(--space-4)}
     .time-fields>div{flex:1}
@@ -291,11 +264,9 @@
       background:rgba(255,255,255,.7);color:var(--tg-theme-text-color,#0F172A);
       font-weight:600;font-family:inherit;
     }
-    @media (prefers-color-scheme:dark){
-      .time-fields select,.shift-row select{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9)}
-    }
+    
     .shift-rows{margin-bottom:var(--space-3)}
-    .shift-row{padding:var(--space-3);border:1px solid rgba(16,185,129,.2);border-radius:var(--radius-lg);margin-bottom:var(--space-2)}
+    .shift-row{padding:var(--space-3);border:1px solid rgba(14,107,115,.2);border-radius:var(--radius-lg);margin-bottom:var(--space-2)}
     .shift-row-fields{display:flex;gap:var(--space-2);align-items:flex-end}
     .shift-row-fields>div{flex:1;min-width:0}
     .shift-row-remove{
@@ -303,19 +274,17 @@
       background:transparent;color:#DC2626;font-size:18px;cursor:pointer;font-family:inherit;
     }
     .shift-row-note{font-size:12px;color:#4F46E5;margin-top:6px;min-height:15px}
-    @media (prefers-color-scheme:dark){.shift-row-note{color:#A5B4FC}}
 
     .city-list{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3)}
     .city-btn{
       width:100%;padding:14px var(--space-4);border-radius:var(--radius-lg);font-size:15px;font-weight:600;
-      border:1px solid rgba(16,185,129,.28);background:transparent;color:var(--tg-theme-text-color,#0F172A);
+      border:1px solid rgba(14,107,115,.28);background:transparent;color:var(--tg-theme-text-color,#0F172A);
       text-align:left;cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;align-items:center;
     }
-    .city-btn.active{background:rgba(16,185,129,.14);border-color:var(--brand)}
+    .city-btn.active{background:rgba(14,107,115,.14);border-color:var(--brand)}
     .city-btn span{font-size:12px;font-weight:500;color:var(--tg-theme-hint-color,#64748B)}
-    @media (prefers-color-scheme:dark){.city-btn{color:var(--tg-theme-text-color,#F1F5F9)}}
 
-    .shift-card{padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);border:1px solid rgba(16,185,129,.25);margin-bottom:var(--space-3)}
+    .shift-card{padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);border:1px solid rgba(14,107,115,.25);margin-bottom:var(--space-3)}
     .shift-card-time{font-size:17px;font-weight:700;margin-bottom:var(--space-2)}
     .shift-card-sub{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3)}
     .shift-card .popup-btn{margin-bottom:0}
@@ -329,16 +298,16 @@
       margin-bottom:env(safe-area-inset-bottom,0px);
     }
     .tabs.visible{display:flex}
-    @media (prefers-color-scheme:dark){.tabs{background:rgba(30,41,59,.85);border-color:rgba(148,163,184,.15)}}
+    
     .tab{flex:1;text-align:center;padding:var(--space-2) var(--space-1);cursor:pointer;font-size:11px;font-weight:500;color:var(--tg-theme-hint-color,#64748B);user-select:none;border-radius:var(--radius-lg);transition:background .2s,color .2s}
-    @media (prefers-color-scheme:dark){.tab{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .tab-icon{width:22px;height:22px;display:block;margin:0 auto var(--space-1);transition:transform .2s ease}
     .tab-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-    .tab.active{color:var(--brand);font-weight:600;background:rgba(16,185,129,.12)}
+    .tab.active{color:var(--brand);font-weight:600;background:rgba(14,107,115,.12)}
     .tab.active .tab-icon{transform:scale(1.08)}
 
     .pub-bar{border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:var(--space-3);font-size:14px;line-height:1.4;display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid rgba(245,158,11,.5);background:rgba(245,158,11,.10)}
-    .pub-bar.ok{border-color:rgba(16,185,129,.30);background:rgba(16,185,129,.07)}
+    .pub-bar.ok{border-color:rgba(14,107,115,.30);background:rgba(14,107,115,.07)}
     .pub-bar-text{flex:1;min-width:0}
     .pub-bar-text small,.check-row small{display:block;color:var(--tg-theme-hint-color,#64748B);font-size:12px;font-weight:400;margin-top:2px}
     .pub-bar button{flex-shrink:0;padding:9px 14px;border:none;border-radius:12px;background:var(--grad-primary);color:#fff;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer}
@@ -352,40 +321,38 @@
     .tpl-label{display:block;font-size:13px;font-weight:600;margin:16px 0 6px}
     .tpl-row{display:flex;gap:10px}.tpl-row>div{flex:1;min-width:0}
     .tpl-input{width:100%;padding:11px 12px;border-radius:var(--radius-lg);border:1px solid rgba(148,163,184,.4);font-size:15px;font-family:inherit;background:var(--tg-theme-bg-color,#fff);color:var(--tg-theme-text-color,#0F172A);box-sizing:border-box;min-height:44px}
-    @media (prefers-color-scheme:dark){.tpl-input{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .people-pick{max-height:200px;overflow:auto;border:1px solid rgba(148,163,184,.3);border-radius:var(--radius-lg);padding:4px 12px}
     .tab-content{display:none}
     .tab-content.active{display:block;animation:fadeInContent .25s ease-out}
     @keyframes fadeInContent{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-    .info-block{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);font-size:13px;line-height:1.5;color:var(--tg-theme-hint-color,#475569)}
-    @media (prefers-color-scheme:dark){.info-block{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.20);color:var(--tg-theme-hint-color,#94A3B8)}}
+    .info-block{background:rgba(14,107,115,.06);border:1px solid rgba(14,107,115,.16);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);font-size:13px;line-height:1.5;color:var(--tg-theme-hint-color,#475569)}
 
     .admin-list-item{padding:var(--space-3) var(--space-1);border-bottom:1px solid rgba(148,163,184,.15);font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:var(--space-3)}
     .admin-list-item:last-child{border-bottom:none}
     .admin-list-name{font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .admin-list-time{color:var(--tg-theme-hint-color,#64748B);font-size:14px;font-weight:500;flex-shrink:0}
-    @media (prefers-color-scheme:dark){.admin-list-time{color:var(--tg-theme-hint-color,#94A3B8)}}
 
     .toast{
       position:fixed;top:var(--space-4);left:50%;
       transform:translateX(-50%) translateY(-120%);
       background:rgba(255,255,255,.94);
       backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
-      border:1px solid rgba(16,185,129,.35);border-radius:var(--radius-lg);
+      border:1px solid rgba(14,107,115,.35);border-radius:var(--radius-lg);
       padding:var(--space-3) var(--space-4);min-width:260px;max-width:calc(100% - 32px);
       box-shadow:var(--shadow-lg);z-index:2000;display:flex;align-items:center;gap:var(--space-3);
       transition:transform .35s cubic-bezier(.32,.72,0,1),opacity .35s ease-out;
       opacity:0;pointer-events:none;
     }
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-    @media (prefers-color-scheme:dark){.toast{background:rgba(30,41,59,.94);border-color:rgba(52,211,153,.4)}}
-    .toast-icon{width:36px;height:36px;border-radius:var(--radius-md);background:var(--grad-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(16,185,129,.32)}
+    
+    .toast-icon{width:36px;height:36px;border-radius:var(--radius-md);background:var(--grad-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(14,107,115,.32)}
     .toast-icon svg{width:20px;height:20px;stroke:#fff;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
     .toast-text{flex:1;min-width:0}
     .toast-title{font-size:15px;font-weight:700;color:var(--tg-theme-text-color,#0F172A);margin-bottom:2px}
     .toast-sub{font-size:13px;color:var(--tg-theme-hint-color,#64748B);line-height:1.3}
-    @media (prefers-color-scheme:dark){.toast-title{color:var(--tg-theme-text-color,#F1F5F9)}.toast-sub{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .toast.toast-error{border-color:rgba(239,68,68,.42);box-shadow:0 8px 32px rgba(239,68,68,.22)}
     .toast.toast-error .toast-icon{background:linear-gradient(135deg,#EF4444 0%,#DC2626 100%)}
 
@@ -401,9 +368,7 @@
     }
     .edit-back:active{transform:scale(.9)}
     .edit-back svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    @media (prefers-color-scheme:dark){
-      .edit-back{background:rgba(30,41,59,.55);border-color:rgba(148,163,184,.15);color:var(--tg-theme-text-color,#F1F5F9)}
-    }
+    
     .edit-title{font-size:18px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.3px}
 
     .employees-list{display:flex;flex-direction:column;gap:var(--space-2)}
@@ -415,29 +380,23 @@
       border:1px solid rgba(255,255,255,.5);box-shadow:var(--shadow-sm);cursor:pointer;
       transition:transform .12s ease,background .15s ease,box-shadow .2s ease;
     }
-    .employee-item:active{transform:scale(.98);background:rgba(16,185,129,.10);box-shadow:0 0 0 4px rgba(16,185,129,.10)}
-    @media (prefers-color-scheme:dark){
-      .employee-item{background:var(--grad-surface-dark);border-color:rgba(148,163,184,.15)}
-      .employee-item:active{background:rgba(16,185,129,.15)}
-    }
+    .employee-item:active{transform:scale(.98);background:rgba(14,107,115,.10);box-shadow:0 0 0 4px rgba(14,107,115,.10)}
+    
     .employee-name{font-size:15px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .employee-arrow{width:20px;height:20px;color:var(--tg-theme-hint-color,#94A3B8);flex-shrink:0}
     .employee-arrow svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
     .admin-action-btn{
       display:flex;align-items:center;justify-content:center;gap:var(--space-2);width:100%;
-      padding:14px var(--space-4);background:rgba(16,185,129,.10);
+      padding:14px var(--space-4);background:rgba(14,107,115,.10);
       backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);
-      border:1.5px solid rgba(16,185,129,.42);border-radius:var(--radius-lg);
+      border:1.5px solid rgba(14,107,115,.42);border-radius:var(--radius-lg);
       font-size:15px;font-weight:600;color:var(--brand);cursor:pointer;margin-bottom:var(--space-4);
       font-family:inherit;transition:transform .15s ease,background .15s ease,box-shadow .2s ease;
-      box-shadow:0 2px 10px rgba(16,185,129,.12);
+      box-shadow:0 2px 10px rgba(14,107,115,.12);
     }
-    .admin-action-btn:active{transform:scale(.98);background:rgba(16,185,129,.18);box-shadow:0 0 0 5px rgba(16,185,129,.10)}
-    @media (prefers-color-scheme:dark){
-      .admin-action-btn{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.5);color:var(--brand-light)}
-      .admin-action-btn:active{background:rgba(52,211,153,.20)}
-    }
+    .admin-action-btn:active{transform:scale(.98);background:rgba(14,107,115,.18);box-shadow:0 0 0 5px rgba(14,107,115,.10)}
+    
     .admin-action-icon{width:18px;height:18px;flex-shrink:0}
     .admin-action-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
@@ -445,9 +404,8 @@
     .help-block:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
     .help-block-title{font-size:15px;font-weight:700;margin-bottom:var(--space-2);color:var(--tg-theme-text-color,#0F172A);display:flex;align-items:center;gap:var(--space-2)}
     .help-block-title svg{width:18px;height:18px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-    @media (prefers-color-scheme:dark){.help-block-title{color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .help-block-text{font-size:14px;line-height:1.55;color:var(--tg-theme-hint-color,#64748B)}
-    @media (prefers-color-scheme:dark){.help-block-text{color:var(--tg-theme-hint-color,#94A3B8)}}
 
     #splash{
       position:fixed;inset:0;z-index:99999;isolation:isolate;
@@ -456,7 +414,7 @@
       padding-bottom:calc(var(--space-6) + env(safe-area-inset-bottom,0px));
       overflow:hidden;transition:opacity .6s cubic-bezier(.4,0,.6,1);background:#F8FAFC;
     }
-    @media (prefers-color-scheme:dark){#splash{background:#050810}}
+    
     #splash.hide{opacity:0;pointer-events:none}
     .splash-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:360px;text-align:center}
     .splash-error{
@@ -467,21 +425,21 @@
       border:1px solid rgba(239,68,68,.22);box-shadow:0 12px 40px rgba(239,68,68,.10);
       text-align:center;max-width:340px;
     }
-    @media (prefers-color-scheme:dark){.splash-error{background:rgba(30,41,59,.9);border-color:rgba(239,68,68,.32)}}
+    
     #splash.timed-out .splash-inner,#splash.timed-out .splash-blob{display:none}
     #splash.timed-out .splash-error{display:flex}
     .splash-error-icon{width:48px;height:48px;color:#EF4444}
     .splash-error-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .splash-error-title{font-size:17px;font-weight:700;color:#DC2626;margin:0;letter-spacing:-.2px}
     .splash-error-text{font-size:14px;color:#64748B;line-height:1.5;margin:0}
-    @media (prefers-color-scheme:dark){.splash-error-text{color:#94A3B8}}
+    
     .splash-retry{
-      padding:var(--space-3) var(--space-5);background:linear-gradient(135deg,#10B981 0%,#059669 100%);
+      padding:var(--space-3) var(--space-5);background:linear-gradient(135deg,#0E6B73 0%,#0A555C 100%);
       color:#fff;border:none;border-radius:var(--radius-md);font-size:15px;font-weight:600;cursor:pointer;
-      box-shadow:0 6px 18px rgba(16,185,129,.28);font-family:inherit;
+      box-shadow:0 6px 18px rgba(14,107,115,.28);font-family:inherit;
       transition:transform .15s ease,box-shadow .2s ease;
     }
-    .splash-retry:active{transform:scale(.97);box-shadow:0 0 0 6px rgba(16,185,129,.15)}
+    .splash-retry:active{transform:scale(.97);box-shadow:0 0 0 6px rgba(14,107,115,.15)}
     @media (prefers-reduced-motion:reduce){
       .splash-shine{display:none}
       #splash{transition-duration:.3s}
@@ -496,10 +454,6 @@
       transition:border-color .2s ease,background .2s ease;
     }
     .employees-search input:focus{outline:none;border-color:var(--brand);background:rgba(255,255,255,.85)}
-    @media (prefers-color-scheme:dark){
-      .employees-search input{background:rgba(15,23,42,.5);color:var(--tg-theme-text-color,#F1F5F9);border-color:rgba(148,163,184,.15)}
-      .employees-search input:focus{background:rgba(15,23,42,.7)}
-    }
 
     .employee-admin-item{
       display:flex;align-items:center;gap:var(--space-3);
@@ -509,19 +463,16 @@
       border:1px solid rgba(255,255,255,.5);box-shadow:var(--shadow-sm);cursor:pointer;
       transition:transform .12s ease,background .15s ease,box-shadow .2s ease;
     }
-    .employee-admin-item:active{transform:scale(.98);background:rgba(16,185,129,.10);box-shadow:0 0 0 4px rgba(16,185,129,.10)}
-    @media (prefers-color-scheme:dark){
-      .employee-admin-item{background:var(--grad-surface-dark);border-color:rgba(148,163,184,.15)}
-      .employee-admin-item:active{background:rgba(16,185,129,.15)}
-    }
-    .employee-avatar{width:40px;height:40px;border-radius:var(--radius-pill);background:linear-gradient(135deg,#10B981 0%,#34D399 100%);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(16,185,129,.25)}
+    .employee-admin-item:active{transform:scale(.98);background:rgba(14,107,115,.10);box-shadow:0 0 0 4px rgba(14,107,115,.10)}
+    
+    .employee-avatar{width:40px;height:40px;border-radius:var(--radius-pill);background:linear-gradient(135deg,#0E6B73 0%,#5CCFD6 100%);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(14,107,115,.25)}
     .employee-avatar.inactive{background:linear-gradient(135deg,#94A3B8 0%,#CBD5E1 100%);box-shadow:none}
     .employee-admin-info{flex:1;min-width:0}
     .employee-admin-name{font-size:15px;font-weight:600;line-height:1.3;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .employee-admin-meta{font-size:12px;color:var(--tg-theme-hint-color,#64748B);display:flex;align-items:center;gap:var(--space-2);line-height:1.3;flex-wrap:wrap}
-    @media (prefers-color-scheme:dark){.employee-admin-meta{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .employee-status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-    .employee-status-dot.online{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.15)}
+    .employee-status-dot.online{background:#0E6B73;box-shadow:0 0 0 3px rgba(14,107,115,.15)}
     .employee-status-dot.offline{background:#94A3B8}
     .employee-status-dot.inactive{background:#CBD5E1}
     .employee-admin-arrow{width:18px;height:18px;color:var(--tg-theme-hint-color,#94A3B8);flex-shrink:0}
@@ -530,7 +481,7 @@
     .archive-section{margin-top:var(--space-5);border-top:1px solid rgba(148,163,184,.15);padding-top:var(--space-3)}
     .archive-toggle{width:100%;display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-1);background:transparent;border:none;cursor:pointer;color:var(--tg-theme-hint-color,#64748B);font-size:13px;font-weight:600;font-family:inherit;text-align:left;-webkit-tap-highlight-color:transparent}
     .archive-toggle:active{opacity:.7}
-    @media (prefers-color-scheme:dark){.archive-toggle{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .archive-count{background:rgba(148,163,184,.2);padding:1px 8px;border-radius:var(--radius-pill);font-size:11px;font-weight:700}
     .archive-chevron{width:14px;height:14px;margin-left:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s ease}
     .archive-chevron.open{transform:rotate(180deg)}
@@ -538,68 +489,61 @@
 
     .employee-card-body{display:flex;flex-direction:column;gap:var(--space-4)}
     .employee-card-header{display:flex;flex-direction:column;align-items:center;gap:var(--space-3);padding:var(--space-5) var(--space-4);border-radius:var(--radius-xl);background:var(--grad-surface-light);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.5);box-shadow:var(--shadow-md);text-align:center}
-    @media (prefers-color-scheme:dark){.employee-card-header{background:var(--grad-surface-dark);border-color:rgba(148,163,184,.15)}}
+    
     .employee-card-header .employee-avatar{width:64px;height:64px;font-size:24px}
     .employee-card-name{font-size:20px;font-weight:700;letter-spacing:-.3px;line-height:1.2}
     .employee-card-phone{font-size:14px;color:var(--tg-theme-hint-color,#64748B);font-weight:500}
-    @media (prefers-color-scheme:dark){.employee-card-phone{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .employee-card-status{display:inline-flex;align-items:center;gap:var(--space-2);padding:6px var(--space-3);border-radius:var(--radius-pill);font-size:12px;font-weight:600;line-height:1}
-    .employee-card-status.active{background:rgba(16,185,129,.12);color:#059669}
+    .employee-card-status.active{background:rgba(14,107,115,.12);color:#0A555C}
     .employee-card-status.inactive{background:rgba(148,163,184,.18);color:#64748B}
-    @media (prefers-color-scheme:dark){
-      .employee-card-status.active{color:#6EE7B7}
-      .employee-card-status.inactive{color:#94A3B8}
-    }
+    
     .employee-card-actions{display:flex;flex-direction:column;gap:var(--space-2)}
     .employee-card-action-btn{width:100%;padding:14px var(--space-4);border:none;border-radius:var(--radius-lg);font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,background .2s ease;display:flex;align-items:center;justify-content:center;gap:var(--space-2);text-align:center}
     .employee-card-action-btn:active{transform:scale(.98)}
     .employee-card-action-btn svg{width:18px;height:18px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .employee-card-action-btn.primary{background:var(--grad-primary);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.28)}
-    .employee-card-action-btn.primary:active{box-shadow:0 0 0 6px rgba(16,185,129,.15)}
-    .employee-card-action-btn.secondary{background:transparent;color:var(--brand);border:1px solid rgba(16,185,129,.28)}
-    .employee-card-action-btn.secondary:active{background:rgba(16,185,129,.08)}
+    .employee-card-action-btn.primary{background:var(--grad-primary);color:#fff;box-shadow:0 4px 14px rgba(14,107,115,.28)}
+    .employee-card-action-btn.primary:active{box-shadow:0 0 0 6px rgba(14,107,115,.15)}
+    .employee-card-action-btn.secondary{background:transparent;color:var(--brand);border:1px solid rgba(14,107,115,.28)}
+    .employee-card-action-btn.secondary:active{background:rgba(14,107,115,.08)}
     .employee-card-action-btn.danger{background:transparent;color:#DC2626;border:1px solid rgba(239,68,68,.28)}
     .employee-card-action-btn.danger:active{background:rgba(239,68,68,.08)}
 
     .form-field{margin-bottom:var(--space-4)}
     .form-field label{display:block;font-size:13px;font-weight:500;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-2)}
-    @media (prefers-color-scheme:dark){.form-field label{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .form-field input,.form-field select{width:100%;padding:14px var(--space-4);border:1px solid rgba(148,163,184,.3);border-radius:var(--radius-md);font-size:15px;background:rgba(255,255,255,.7);color:var(--tg-theme-text-color,#0F172A);font-family:inherit;transition:border-color .2s ease}
     .form-field input:focus,.form-field select:focus{outline:none;border-color:var(--brand)}
-    @media (prefers-color-scheme:dark){
-      .form-field input,.form-field select{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9);border-color:rgba(148,163,184,.2)}
-    }
+    
     .form-error{color:#DC2626;font-size:13px;margin-top:var(--space-2);min-height:18px;line-height:1.3}
 
-    .invite-preview{padding:var(--space-4);background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:var(--radius-md);font-size:13px;line-height:1.6;color:var(--tg-theme-hint-color,#475569);white-space:pre-wrap;word-break:break-word;max-height:240px;overflow-y:auto}
-    @media (prefers-color-scheme:dark){.invite-preview{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.2);color:var(--tg-theme-hint-color,#94A3B8)}}
+    .invite-preview{padding:var(--space-4);background:rgba(14,107,115,.06);border:1px solid rgba(14,107,115,.15);border-radius:var(--radius-md);font-size:13px;line-height:1.6;color:var(--tg-theme-hint-color,#475569);white-space:pre-wrap;word-break:break-word;max-height:240px;overflow-y:auto}
 
     .search-empty{text-align:center;padding:var(--space-6) var(--space-4);color:var(--tg-theme-hint-color,#64748B);font-size:14px;line-height:1.5}
-    @media (prefers-color-scheme:dark){.search-empty{color:var(--tg-theme-hint-color,#94A3B8)}}
 
     .extra-banner{margin-top:var(--space-3);margin-bottom:var(--space-3);padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(250,204,21,.22) 0%,rgba(250,204,21,.10) 100%);border:1px solid rgba(250,204,21,.6);color:#78350F;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:transform .15s ease;box-shadow:var(--shadow-sm)}
     .extra-banner:active{transform:scale(.98)}
-    @media (prefers-color-scheme:dark){.extra-banner{color:#FDE68A}}
+    
     .extra-banner-text{display:flex;align-items:center;gap:var(--space-2);flex:1;min-width:0}
     .extra-banner-count{background:rgba(250,204,21,.5);padding:2px 10px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;flex-shrink:0}
     .extra-card{padding:var(--space-4);border-radius:var(--radius-lg);background:var(--grad-surface-light);border:1px solid rgba(250,204,21,.4);margin-bottom:var(--space-3)}
-    @media (prefers-color-scheme:dark){.extra-card{background:var(--grad-surface-dark)}}
+    
     .extra-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-3);margin-bottom:var(--space-2)}
     .extra-card-date{font-size:16px;font-weight:700;color:var(--tg-theme-text-color,#0F172A);line-height:1.3}
-    @media (prefers-color-scheme:dark){.extra-card-date{color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .extra-card-time{font-size:14px;color:var(--tg-theme-hint-color,#64748B);margin-top:4px;font-weight:500}
-    .extra-card-places{font-size:12px;font-weight:700;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(16,185,129,.15);color:var(--brand);white-space:nowrap;flex-shrink:0}
+    .extra-card-places{font-size:12px;font-weight:700;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(14,107,115,.15);color:var(--brand);white-space:nowrap;flex-shrink:0}
     .extra-card-places.full{background:rgba(239,68,68,.12);color:#DC2626}
     .extra-card-people{font-size:12px;color:var(--tg-theme-hint-color,#64748B);margin-bottom:var(--space-3);line-height:1.5}
     .extra-card-people b{color:var(--tg-theme-text-color,#0F172A)}
-    @media (prefers-color-scheme:dark){.extra-card-people b{color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .extra-card-actions{display:flex;gap:var(--space-2);flex-wrap:wrap}
     .extra-card-btn{flex:1;min-width:120px;padding:10px;border-radius:var(--radius-md);font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:transform .15s ease}
     .extra-card-btn:active{transform:scale(.97)}
-    .extra-card-btn.primary{background:var(--grad-primary);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.28)}
+    .extra-card-btn.primary{background:var(--grad-primary);color:#fff;box-shadow:0 4px 14px rgba(14,107,115,.28)}
     .extra-card-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
     .extra-card-btn.danger{background:transparent;color:#DC2626;border:1px solid rgba(239,68,68,.4)}
-    .extra-card-btn.secondary{background:transparent;color:var(--brand);border:1px solid rgba(16,185,129,.3)}
+    .extra-card-btn.secondary{background:transparent;color:var(--brand);border:1px solid rgba(14,107,115,.3)}
     .extra-card-btn.small{flex:0 0 auto;min-width:auto;padding:6px 12px;font-size:12px}
     .extra-empty{text-align:center;padding:var(--space-5);color:var(--tg-theme-hint-color,#64748B);font-size:14px}
     .extra-create-form{display:flex;flex-direction:column;gap:var(--space-3)}
@@ -612,7 +556,7 @@
       background:var(--tg-theme-bg-color,#F5F7FA);
       padding:calc(var(--space-5) + env(safe-area-inset-top,0px)) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom,0px));
       animation:fadeIn .25s ease-out}
-    @media (prefers-color-scheme:dark){.onb{background:var(--tg-theme-bg-color,#0F172A)}}
+    
     .onb-top{display:flex;justify-content:space-between;align-items:center;min-height:32px}
     .onb-step{font-size:13px;font-weight:600;color:var(--tg-theme-hint-color,#64748B)}
     .onb-skip{background:none;border:none;color:var(--tg-theme-hint-color,#64748B);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:6px}
@@ -620,12 +564,12 @@
     .onb-track{display:flex;width:100%;transition:transform .35s cubic-bezier(.32,.72,0,1)}
     .onb-slide{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 var(--space-2)}
     .onb-emoji{width:112px;height:112px;border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:56px;
-      background:linear-gradient(160deg,rgba(16,185,129,.18),rgba(99,102,241,.12));margin-bottom:var(--space-6);box-shadow:var(--shadow-md)}
+      background:linear-gradient(160deg,rgba(14,107,115,.18),rgba(99,102,241,.12));margin-bottom:var(--space-6);box-shadow:var(--shadow-md)}
     .onb-title{font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1.2;margin-bottom:var(--space-3)}
     .onb-text{font-size:15px;line-height:1.55;color:var(--tg-theme-hint-color,#475569);max-width:340px}
-    @media (prefers-color-scheme:dark){.onb-text{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .onb-text b{color:var(--tg-theme-text-color,#0F172A)}
-    @media (prefers-color-scheme:dark){.onb-text b{color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .onb-legend{display:flex;flex-direction:column;gap:8px;margin-top:var(--space-4);text-align:left;font-size:14px}
     .onb-legend div{display:flex;align-items:center;gap:10px}
     .onb-chip{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1px solid}
@@ -641,22 +585,22 @@
 
     /* ── Подсказка на главном экране ── */
     .tip-card{display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);
-      border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(16,185,129,.10));
+      border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(14,107,115,.10));
       border:1px solid rgba(99,102,241,.28);animation:fadeInContent .3s ease-out}
     .tip-emoji{font-size:24px;line-height:1;flex-shrink:0;margin-top:2px}
     .tip-body{flex:1;min-width:0}
     .tip-title{font-size:14px;font-weight:700;margin-bottom:2px}
     .tip-text{font-size:13px;line-height:1.45;color:var(--tg-theme-hint-color,#475569)}
-    @media (prefers-color-scheme:dark){.tip-text{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .tip-action{margin-top:var(--space-2);background:none;border:none;padding:0;color:#4F46E5;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
-    @media (prefers-color-scheme:dark){.tip-action{color:#A5B4FC}}
+    
     .tip-close{background:none;border:none;color:var(--tg-theme-hint-color,#94A3B8);font-size:16px;cursor:pointer;padding:0 2px;line-height:1;font-family:inherit}
 
     /* ── Кнопка «Календарь телефона» ── */
     .cal-connect{display:flex;align-items:center;gap:var(--space-3);width:100%;margin-top:var(--space-4);padding:var(--space-3) var(--space-4);
-      border-radius:var(--radius-lg);border:1px solid rgba(16,185,129,.3);background:var(--grad-surface-light);cursor:pointer;
+      border-radius:var(--radius-lg);border:1px solid rgba(14,107,115,.3);background:var(--grad-surface-light);cursor:pointer;
       font-family:inherit;text-align:left;color:var(--tg-theme-text-color,#0F172A);box-shadow:var(--shadow-sm)}
-    @media (prefers-color-scheme:dark){.cal-connect{background:var(--grad-surface-dark);color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .cal-connect:active{transform:scale(.98)}
     .cal-connect-icon{font-size:24px}
     .cal-connect-text{flex:1;min-width:0}
@@ -668,27 +612,27 @@
     .steps li{counter-increment:st;position:relative;padding:0 0 var(--space-3) 38px;font-size:14px;line-height:1.5}
     .steps li::before{content:counter(st);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;
       background:var(--grad-primary);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
-    .path{display:inline;font-weight:600;background:rgba(16,185,129,.12);padding:1px 6px;border-radius:6px}
+    .path{display:inline;font-weight:600;background:rgba(14,107,115,.12);padding:1px 6px;border-radius:6px}
     .sub-head{font-size:15px;font-weight:700;margin:var(--space-4) 0 var(--space-3)}
 
     /* ── Вкладка «Помощь» ── */
-    .help-hero{padding:var(--space-5);border-radius:var(--radius-xl);background:linear-gradient(135deg,rgba(16,185,129,.16),rgba(99,102,241,.12));
-      border:1px solid rgba(16,185,129,.25);margin-bottom:var(--space-4)}
+    .help-hero{padding:var(--space-5);border-radius:var(--radius-xl);background:linear-gradient(135deg,rgba(14,107,115,.16),rgba(99,102,241,.12));
+      border:1px solid rgba(14,107,115,.25);margin-bottom:var(--space-4)}
     .help-hero-title{font-size:18px;font-weight:700;margin-bottom:6px}
     .help-hero-text{font-size:14px;line-height:1.5;color:var(--tg-theme-hint-color,#475569);margin-bottom:var(--space-4)}
-    @media (prefers-color-scheme:dark){.help-hero-text{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .help-hero .popup-btn{margin-bottom:var(--space-2)}
     .faq{border-radius:var(--radius-lg);background:var(--grad-surface-light);border:1px solid rgba(148,163,184,.18);margin-bottom:var(--space-2);overflow:hidden}
-    @media (prefers-color-scheme:dark){.faq{background:var(--grad-surface-dark)}}
+    
     .faq summary{list-style:none;cursor:pointer;padding:14px var(--space-4);font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px}
     .faq summary::-webkit-details-marker{display:none}
     .faq summary::after{content:'';margin-left:auto;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);opacity:.5;transition:transform .2s}
     .faq[open] summary::after{transform:rotate(-135deg)}
     .faq-body{padding:0 var(--space-4) var(--space-4);font-size:14px;line-height:1.55;color:var(--tg-theme-hint-color,#475569)}
-    @media (prefers-color-scheme:dark){.faq-body{color:var(--tg-theme-hint-color,#94A3B8)}}
+    
     .faq-body p{margin-bottom:var(--space-2)}
     .faq-body b{color:var(--tg-theme-text-color,#0F172A)}
-    @media (prefers-color-scheme:dark){.faq-body b{color:var(--tg-theme-text-color,#F1F5F9)}}
+    
     .faq-body .popup-btn{margin-top:var(--space-2)}
     .help-section-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tg-theme-hint-color,#64748B);margin:var(--space-5) 0 var(--space-2) var(--space-1)}
     /* ═══════════════════════════════════════════════════════════
@@ -723,8 +667,7 @@
       --grad-surface-dark:linear-gradient(var(--card),var(--card));
       --shadow-sm:none;--shadow-md:none;--shadow-lg:0 8px 30px rgba(14,27,22,.14);
     }
-    @media (prefers-color-scheme:dark){
-      :root{
+    :root[data-theme="dark"]{
         --paper:#0B1310;--card:#121C17;--ink:#E9F0EC;--muted:#8C9B94;--line:#22322B;
         --brand:#12896A;--brand-dark:#0E7058;--brand-text:#4AD7A8;--brand-light:#4AD7A8;
         --soft:#12302A;--soft-strong:#1D4A3E;
@@ -739,7 +682,6 @@
         --tg-theme-button-color:#12896A !important;--tg-theme-secondary-bg-color:#121C17 !important;
         --shadow-lg:0 8px 30px rgba(0,0,0,.45);
       }
-    }
     *{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
     html,body{background:var(--paper)}
     body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,system-ui,sans-serif;
@@ -903,8 +845,8 @@
     #splash{background:var(--paper)}
     .splash-inner{align-items:center}
     .splash-wordmark{font-size:64px;font-weight:700;letter-spacing:-.055em;line-height:1;color:var(--ink);margin:0;opacity:0;animation:riseIn .6s cubic-bezier(.22,1,.36,1) .1s forwards}
-    .splash-rota{width:168px;margin:26px 0 20px;--rh:9px;--rg:8px;--base:420ms}
-    .splash-sub{font-size:14px;font-weight:500;letter-spacing:-.005em;color:var(--muted);margin:0;opacity:0;animation:riseIn .6s cubic-bezier(.22,1,.36,1) 1.5s forwards}
+    .splash-rota{width:168px;margin:26px 0 20px;--rh:9px;--rg:8px;--base:60ms}
+    .splash-sub{font-size:14px;font-weight:500;letter-spacing:-.005em;color:var(--muted);margin:0;opacity:0;animation:riseIn .5s cubic-bezier(.22,1,.36,1) .35s forwards}
     .splash-error{background:var(--card);border:1px solid var(--line);box-shadow:none}
     .splash-error-title{color:var(--danger)}
 
@@ -926,7 +868,7 @@
       .rota-row i{animation:none;transform:none}
       .splash-wordmark,.splash-sub{animation:none;opacity:1}
     }
-    :root{color-scheme:light dark}
+    :root{color-scheme:light}:root[data-theme="dark"]{color-scheme:dark}
     .header-row h1{font-size:26px}
     .tip-emoji{display:none}
     .subtitle{margin-bottom:10px}
@@ -959,6 +901,89 @@
     .gate-title{font-size:28px;font-weight:650}
     .gate-mark{font-weight:650}
     .day .night-icon{position:absolute;top:5px;right:5px;width:9px;height:9px;margin:0}
+
+    /* ═══════════════════════════════════════════════════════════
+       ДИЗАЙН v4 — петроль. Тема берётся из Telegram (атрибут data-theme на <html>).
+       Акцентный цвет только у главной кнопки и у «сегодня / моя смена».
+       ═══════════════════════════════════════════════════════════ */
+    :root{
+      --paper:#F3F5F5;--card:#FFFFFF;--ink:#0E1A1D;--muted:#5E7075;--line:#E0E7E8;
+      --brand:#0E6B73;--brand-dark:#0A555C;--brand-text:#0E6B73;--brand-light:#0E6B73;
+      --soft:#DDEEEF;--soft-strong:#B5DADC;
+      --shift-bg:#DDEEEF;--shift-fg:#0A5258;
+      --night-bg:var(--shift-bg);--night-fg:var(--shift-fg);
+      --tg-theme-bg-color:#F3F5F5 !important;--tg-theme-text-color:#0E1A1D !important;
+      --tg-theme-hint-color:#5E7075 !important;--tg-theme-link-color:#0E6B73 !important;
+      --tg-theme-button-color:#0E6B73 !important;--tg-theme-secondary-bg-color:#FFFFFF !important;
+    }
+    :root[data-theme="dark"]{
+      --paper:#0A1214;--card:#111B1E;--ink:#E8F0F1;--muted:#8A9CA0;--line:#20302F;
+      --brand:#126F78;--brand-dark:#0E5D65;--brand-text:#5CCFD6;--brand-light:#5CCFD6;
+      --soft:#12292D;--soft-strong:#1C4146;
+      --shift-bg:#12292D;--shift-fg:#7FD6DC;
+      --night-bg:var(--shift-bg);--night-fg:var(--shift-fg);
+      --tg-theme-bg-color:#0A1214 !important;--tg-theme-text-color:#E8F0F1 !important;
+      --tg-theme-hint-color:#8A9CA0 !important;--tg-theme-link-color:#5CCFD6 !important;
+      --tg-theme-button-color:#126F78 !important;--tg-theme-secondary-bg-color:#111B1E !important;
+    }
+
+    /* поля: фон по теме; 16px — чтобы iPhone не приближал экран при вводе */
+    .form-field input,.form-field select,.time-fields select,.shift-row select,.tpl-input,.employees-search input{
+      background:var(--card);color:var(--ink);border:1px solid var(--line);font-size:16px}
+    .form-field input:focus,.form-field select:focus,.employees-search input:focus,.tpl-input:focus{background:var(--card);border-color:var(--brand-text);outline:none}
+    .employee-admin-item,.employee-card-header{border:1px solid var(--line);box-shadow:none}
+    .employee-admin-item:active{background:var(--soft)}
+    .employee-avatar{background:var(--soft);color:var(--shift-fg);box-shadow:none}
+    .employee-avatar.inactive{background:var(--line);color:var(--muted)}
+    .employee-card-status.active{background:var(--soft);color:var(--shift-fg)}
+    .employee-card-action-btn.primary{background:var(--brand);box-shadow:none}
+    .employee-card-action-btn.secondary{border-color:var(--line);color:var(--brand-text)}
+    .employee-card-action-btn.danger{border-color:var(--line);color:var(--danger)}
+    .employee-status-dot.online{background:var(--brand-text);box-shadow:none}
+    .form-error,.init-error{color:var(--danger)}
+
+    /* шапка: кнопка звука с увеличенной зоной нажатия */
+    .header-icon-btn{position:relative}
+    .header-icon-btn::before{content:'';position:absolute;inset:-5px}
+    .company-chip{display:inline-flex;align-items:center;gap:4px;background:transparent;border:none;padding:0;color:var(--muted);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+
+    /* нижние вкладки — настоящие кнопки */
+    button.tab{border:0;font:inherit;font-size:11px;-webkit-tap-highlight-color:transparent}
+    .tab:focus-visible,.popup-btn:focus-visible,.day:focus-visible{outline:2px solid var(--brand-text);outline-offset:2px}
+
+    /* итог месяца под календарём */
+    .month-sum{display:flex;gap:16px;margin:12px 4px 0;font-size:13px;color:var(--muted)}
+    .month-sum b{color:var(--ink);font-weight:600;font-size:15px;margin-right:4px}
+
+    /* окна: крестик сверху, главная кнопка — внизу, у большого пальца */
+    .popup-x{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:none;background:var(--paper);color:var(--muted);
+      font-size:15px;line-height:1;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center}
+    .popup-x::before{content:'';position:absolute;inset:-6px}
+    .popup-title{padding-right:40px}
+    .popup-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+    .popup-actions .popup-btn{margin-bottom:0}
+    .popup-pair{display:flex;gap:8px}
+    .popup-pair .popup-btn{flex:1;min-height:44px;font-size:15px}
+    .popup-link{display:block;width:100%;background:none;border:none;padding:10px;font:inherit;font-size:15px;font-weight:500;color:var(--danger);cursor:pointer;text-align:center}
+    .popup-link:disabled{opacity:.5}
+    .popup-btn.ghost{background:transparent;color:var(--brand-text);border:1px solid var(--line);box-shadow:none}
+
+    /* системная кнопка «Назад» Telegram заменяет свою стрелку */
+    body.tg-back .edit-back{display:none}
+    body.tg-back .edit-header{min-height:38px}
+
+    .stale-note{font-size:12px;color:var(--muted);margin:6px 4px 0}
+
+    /* маленькие экраны (iPhone SE и подобные): больше места клеткам календаря */
+    @media (max-width:350px){
+      body{padding-left:12px;padding-right:12px}
+      .calendar{padding:10px 4px 8px}
+      .weekdays,.days{gap:2px}
+      .day{padding:4px 1px 3px}
+      .day-time{font-size:9px;letter-spacing:-.04em}
+      .month-header{gap:6px}
+      .today-btn{padding:0 8px}
+    }
   </style>
 </head>
 <body>
@@ -995,15 +1020,9 @@
             <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
           </svg>
         </button>
-        <button class="header-icon-btn" id="helpBtn" aria-label="Инструкция">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-        </button>
       </div>
     </div>
-    <div class="header-date"><span id="headerDate">—</span><button class="city-chip" id="cityChip" style="display:none"></button></div>
+    <div class="header-date"><span id="headerDate">—</span><button class="city-chip" id="cityChip" style="display:none"></button><button class="company-chip" id="companyChip" style="display:none"></button></div>
     <div class="header-today" id="headerToday" style="display:none"></div>
   </div>
   <p class="subtitle" id="pageSubtitle" style="display:none"></p>
@@ -1038,6 +1057,7 @@
         </div>
         <div class="days" id="days"></div>
       </div>
+      <div class="month-sum" id="monthSum"></div>
       <div class="legend">
         <div class="legend-item"><div class="legend-color l-shift"></div>Смена</div>
         <div class="legend-item"><div class="legend-color l-sick"></div>Больничный</div>
@@ -1201,20 +1221,20 @@
     <div class="employee-card-body" id="employeeCardBody"></div>
   </div>
 
-  <div class="tabs" id="tabsBar">
-    <div class="tab active" data-tab="schedule">
+  <nav class="tabs" id="tabsBar" aria-label="Разделы">
+    <button type="button" class="tab active" data-tab="schedule">
       <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Расписание
-    </div>
-    <div class="tab" data-tab="availability">
-      <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18" fill="currentColor" stroke="none" opacity=".15"/></svg></span>Доступность
-    </div>
-    <div class="tab" data-tab="admin" id="tabAdminBtn" style="display:none">
-      <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4 4 5-7 5 7 4-4v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z"/></svg></span>Админ
-    </div>
-    <div class="tab" data-tab="help">
+    </button>
+    <button type="button" class="tab" data-tab="availability">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18" fill="currentColor" stroke="none" opacity=".15"/></svg></span>Подработка
+    </button>
+    <button type="button" class="tab" data-tab="admin" id="tabAdminBtn" style="display:none">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4 4 5-7 5 7 4-4v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z"/></svg></span>Управление
+    </button>
+    <button type="button" class="tab" data-tab="help">
       <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Помощь
-    </div>
-  </div>
+    </button>
+  </nav>
 
   <script>
   (function () {
@@ -1223,16 +1243,17 @@
     // ═══════════════════════════════════════════════════════════
     // КОНФИГ — единственная настройка
     // ═══════════════════════════════════════════════════════════
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';   // ← URL Apps Script Web App
+    const WEB_APP_URL = 'заглушка';   // ← URL Apps Script Web App
     const BOT_LINK    = 'https://t.me/miniwfm_bot';
 
     const CONFIG_READY = /^https:\/\/\S+/.test(WEB_APP_URL);
     const MSK_OFFSET = 180;   // всё время на сервере — по Москве
-    const CACHE_KEY = 'turno_cache_v2';
-    const CACHE_TTL = 15 * 60 * 1000;
+    const CACHE_KEY = 'turno_cache_v3';
+    const CACHE_TTL = 7 * 24 * 3600 * 1000;   // показываем сохранённое сразу, а свежее подгружаем в фоне
+    const COMPANY_KEY = 'turno_company';
 
-    // Должно совпадать с CITIES на сервере
-    const CITIES = {
+    // Список городов приходит с сервера; здесь — запасной вариант
+    let CITIES = {
       moscow:      { name: 'Москва',          offset: 180 },
       spb:         { name: 'Санкт-Петербург', offset: 180 },
       ivanovo:     { name: 'Иваново',         offset: 180 },
@@ -1245,7 +1266,37 @@
     // ═══════════════════════════════════════════════════════════
     const __SPLASH_T0 = Date.now();
     const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-    if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
+    function tgAtLeast(v) { try { return !!(tg && tg.isVersionAtLeast && tg.isVersionAtLeast(v)); } catch (e) { return false; } }
+    if (tg) {
+      try { tg.ready(); tg.expand(); } catch (e) {}
+      // Свайп вниз по календарю не должен закрывать приложение
+      try { if (tgAtLeast('7.7') && tg.disableVerticalSwipes) tg.disableVerticalSwipes(); } catch (e) {}
+    }
+
+    // Тема и цвет «рамки» Telegram (шапка, фон, нижняя панель) — как у приложения
+    function applyTheme() {
+      let dark = false;
+      try { dark = tg && tg.colorScheme ? tg.colorScheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim();
+      if (!tg || !bg) return;
+      try { if (tgAtLeast('6.1')) { tg.setHeaderColor(bg); tg.setBackgroundColor(bg); } } catch (e) {}
+      try { if (tgAtLeast('7.10') && tg.setBottomBarColor) tg.setBottomBarColor(bg); } catch (e) {}
+    }
+    applyTheme();
+    if (tg) { try { tg.onEvent('themeChanged', applyTheme); } catch (e) {} }
+
+    // Отчёт о сбоях: пишется в лист «Ошибки» на сервере (не больше 5 за сеанс)
+    let __errSent = 0;
+    function reportError(msg) {
+      if (__errSent >= 5 || !CONFIG_READY) return;
+      __errSent++;
+      try {
+        postToServer({ action: 'log_error', msg: String(msg || '').slice(0, 500), ua: navigator.userAgent.slice(0, 200) }).catch(() => {});
+      } catch (e) {}
+    }
+    window.addEventListener('error', e => reportError((e.message || 'error') + ' @' + (e.lineno || 0) + ':' + (e.colno || 0)));
+    window.addEventListener('unhandledrejection', e => reportError('promise: ' + ((e.reason && (e.reason.stack || e.reason.message)) || e.reason)));
 
     const ICONS = {
       bell:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
@@ -1275,7 +1326,8 @@
       contact_mismatch: 'Можно поделиться только своим номером',
       bad_time: 'Проверьте время смены', invalid_time: 'Проверьте время смены',
       bad_date: 'Неверная дата', invalid_date: 'Неверная дата',
-      no_month_sheet: 'Нет листа-месяца для этой даты',
+      no_month_sheet: 'Эта дата слишком далеко — график можно вести на год вперёд',
+      choose_company: 'Выберите компанию',
       no_day_column: 'Этого дня нет в листе-месяце',
       no_places: 'Мест больше нет',
       duplicate: 'Такая доп. смена уже есть',
@@ -1400,6 +1452,9 @@
     let myAvail = [];             // по Москве: { date, start, end }
     let allExtraShifts = [];      // по Москве
     let adminData = null;         // { employees, shifts, availability } — только у руководителя
+    let myCompany = null;         // { id, name }
+    let myCompanies = [];         // если человек работает в нескольких компаниях
+    let __cacheTime = 0;
     let allExtraShiftsAdmin = [];
     let currentEditPhone = null;
 
@@ -1428,7 +1483,8 @@
     // Каждый запрос подписан Telegram — сервер сам определяет, кто вы
     async function postToServer(payload) {
       if (!CONFIG_READY) throw new Error('Приложение не настроено');
-      const body = Object.assign({}, payload, { initData: getTgInitData() });
+      // company — только подсказка: сервер проверяет, что вы правда в этой компании
+      const body = Object.assign({ company: safeLS.get(COMPANY_KEY) || '' }, payload, { initData: getTgInitData() });
       const res = await fetchWithTimeout(WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1439,21 +1495,40 @@
       try { return JSON.parse(text); } catch (e) { throw new Error('Сервер вернул не JSON'); }
     }
 
+    // Загрузка данных: при сбое сети — одна повторная попытка (только для чтения, не для записи)
+    async function fetchBootstrap() {
+      try { return await postToServer({ action: 'bootstrap' }); }
+      catch (e) {
+        await new Promise(r => setTimeout(r, 1200));
+        return postToServer({ action: 'bootstrap' });
+      }
+    }
+
     function applyData(resp) {
       me = resp.me || null;
       myShifts = resp.shifts || [];
       myAvail = resp.availability || [];
       allExtraShifts = resp.extra || [];
       adminData = resp.admin || null;
+      if (resp.cities && typeof resp.cities === 'object') CITIES = resp.cities;
+      myCompany = resp.company || null;
+      myCompanies = resp.companies || [];
+      if (myCompany && myCompany.id) safeLS.set(COMPANY_KEY, myCompany.id);
     }
 
+    // В кэш на телефоне не попадают данные руководителя (телефоны всей команды)
     function saveCache(resp) {
-      safeLS.set(CACHE_KEY, JSON.stringify({ uid: getTgUserId(), time: Date.now(), data: resp }));
+      const copy = Object.assign({}, resp);
+      delete copy.admin;
+      safeLS.set(CACHE_KEY, JSON.stringify({ uid: getTgUserId(), company: (resp.company && resp.company.id) || '', time: Date.now(), data: copy }));
     }
     function loadCache() {
       try {
         const c = JSON.parse(safeLS.get(CACHE_KEY) || 'null');
         if (!c || c.uid !== getTgUserId() || !c.data || Date.now() - c.time > CACHE_TTL) return null;
+        const hint = safeLS.get(COMPANY_KEY) || '';
+        if (hint && c.company && c.company !== hint) return null;
+        __cacheTime = c.time;
         return c.data;
       } catch (e) { return null; }
     }
@@ -1462,9 +1537,13 @@
     // ДАННЫЕ В МЕСТНОМ ВРЕМЕНИ СОТРУДНИКА
     // ═══════════════════════════════════════════════════════════
     // Смены пользователя: { [местная дата]: [ {kind, start, end, extra, orig} ] }
+    // Результат запоминается, пока не изменились смены или город — отрисовка вызывает его много раз
+    let __entriesMemo = { src: null, len: -1, off: null, map: null };
     function myEntriesByDate() {
-      const map = {};
       const off = myOffset();
+      const m = __entriesMemo;
+      if (m.src === myShifts && m.len === myShifts.length && m.off === off) return m.map;
+      const map = {};
       myShifts.forEach(s => {
         if (s.status === 'Б' || s.status === 'О') {
           (map[s.date] = map[s.date] || []).push({ kind: s.status === 'Б' ? 'sick' : 'vacation', orig: s });
@@ -1475,6 +1554,7 @@
         (map[c.date] = map[c.date] || []).push({ kind: 'shift', start: c.start, end: c.end, extra: !!s.extra, orig: s });
       });
       Object.keys(map).forEach(k => map[k].sort((a, b) => String(a.start || '').localeCompare(String(b.start || ''))));
+      __entriesMemo = { src: myShifts, len: myShifts.length, off: off, map: map };
       return map;
     }
     function myAvailByDate() {
@@ -1574,9 +1654,9 @@
       if (shifts.some(s => s.extra)) html += '<span class="day-star">★</span>';
       if (shifts.length > 1) {
         // Несколько смен: начало первой и счётчик остальных — помещается в маленькую клетку
-        html += '<div class="day-time">' + first.start + icon + '</div><div class="day-more">+' + (shifts.length - 1) + '</div>';
+        html += '<div class="day-time">' + escapeHtml(first.start) + icon + '</div><div class="day-more">+' + (shifts.length - 1) + '</div>';
       } else {
-        html += '<div class="day-time">' + first.start + '<br>' + first.end + icon + '</div>';
+        html += '<div class="day-time">' + escapeHtml(first.start) + '<br>' + escapeHtml(first.end) + icon + '</div>';
       }
       div.innerHTML = html;
     }
@@ -1614,6 +1694,12 @@
         chip.innerHTML = ICONS.pin + escapeHtml(k ? CITIES[k].name : 'Выбрать город');
         chip.style.display = 'inline-flex';
       }
+      // Человек работает в нескольких компаниях — показываем, в какой он сейчас
+      const cchip = document.getElementById('companyChip');
+      if (me && myCompany && myCompanies.length > 1) {
+        cchip.textContent = myCompany.name + ' ▾';
+        cchip.style.display = 'inline-flex';
+      } else cchip.style.display = 'none';
 
       const todayEl = document.getElementById('headerToday');
       if (!me) { todayEl.style.display = 'none'; return; }
@@ -1686,11 +1772,29 @@
         const div = newDayDiv(cell);
         if (cell.date && byDate[cell.date]) {
           fillDayEntries(div, cell.num, byDate[cell.date]);
+          div.setAttribute('role', 'button');
+          div.tabIndex = 0;
           div.addEventListener('click', () => showDayPopup(cell.date, byDate[cell.date]));
         }
         frag.appendChild(div);
       });
       cont.appendChild(frag);
+      renderMonthSummary(byDate, y, m);
+    }
+
+    // Итог месяца: сколько смен и часов — сотрудники считают это ради зарплаты
+    function renderMonthSummary(byDate, y, m) {
+      const el = document.getElementById('monthSum');
+      if (!el) return;
+      const prefix = y + '-' + pad2(m + 1) + '-';
+      let count = 0, mins = 0;
+      Object.keys(byDate).forEach(d => {
+        if (d.indexOf(prefix) !== 0) return;
+        byDate[d].forEach(e => { if (e.kind === 'shift') { count++; mins += slotDuration(e.start, e.end); } });
+      });
+      if (!count) { el.innerHTML = ''; return; }
+      const hrs = String(Math.round(mins / 30) / 2).replace('.', ',');
+      el.innerHTML = '<span><b>' + count + '</b>' + pluralRu(count, 'смена', 'смены', 'смен') + '</span><span><b>' + hrs + '</b>ч</span>';
     }
 
     function renderAvailabilityCalendar() {
@@ -1758,10 +1862,19 @@
       cont.appendChild(frag);
     }
 
+    // Перерисовываем только то, что сейчас на экране; остальное — при переходе на вкладку
+    function activeScreen() {
+      const el = document.querySelector('.tab-content.active');
+      return el ? el.id : '';
+    }
     function renderAll() {
-      renderHeader(); renderBanner(); renderCalendar();
-      renderAvailabilityCalendar(); renderExtraShiftsBanner(); renderTip();
-      if (adminData) { renderAdminCalendar(); renderEditCalendar(); }
+      renderHeader();
+      const scr = activeScreen();
+      if (scr === 'tabSchedule' || !scr) { renderBanner(); renderCalendar(); renderExtraShiftsBanner(); renderTip(); }
+      else if (scr === 'tabAvailability') renderAvailabilityCalendar();
+      else if (scr === 'tabAdmin' && adminData) renderAdminCalendar();
+      else if (scr === 'tabEditEmployeeCalendar' && adminData) renderEditCalendar();
+      document.getElementById('tabAdminBtn').style.display = me && me.isAdmin && adminData ? '' : 'none';
       renderPubBars();
     }
 
@@ -1770,14 +1883,20 @@
     // ═══════════════════════════════════════════════════════════
     function closeAllPopups() { document.querySelectorAll('.popup-overlay').forEach(o => o.remove()); }
 
+    // Окно снизу. Закрывается крестиком, тапом мимо окна или системной кнопкой «Назад».
+    // Поэтому отдельные кнопки «Отмена»/«Закрыть» не нужны — главная кнопка стоит последней, у пальца.
     function openPopup(html, opts) {
       closeAllPopups();
+      const locked = !!(opts && opts.locked);
       const overlay = document.createElement('div');
       overlay.className = 'popup-overlay';
-      overlay.innerHTML = '<div class="popup">' + html + '</div>';
+      if (locked) overlay.dataset.locked = '1';
+      overlay.innerHTML = '<div class="popup" role="dialog" aria-modal="true">' +
+        (locked ? '' : '<button type="button" class="popup-x" aria-label="Закрыть">✕</button>') + html + '</div>';
       document.body.appendChild(overlay);
-      if (!(opts && opts.locked)) {
+      if (!locked) {
         overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+        overlay.querySelector('.popup-x').addEventListener('click', () => overlay.remove());
       }
       return overlay;
     }
@@ -1876,11 +1995,9 @@
             (isOvernight(s.start, s.end) ? ' · окончание на следующий день' : '') + '</div>' +
             '<button class="popup-btn google" data-gcal="' + i + '">Добавить в Google Calendar</button></div>';
         });
-        html += '<button class="popup-btn apple" id="addApple">📲 Все смены — в календарь телефона</button>';
+        html += '<div class="popup-actions"><button class="popup-btn apple" id="addApple">📲 Все смены — в календарь телефона</button></div>';
       }
-      html += '<button class="popup-btn secondary" id="closePopup">Закрыть</button>';
       const overlay = openPopup(html);
-      overlay.querySelector('#closePopup').addEventListener('click', () => overlay.remove());
 
       const shifts = entries.filter(e => e.kind === 'shift');
       overlay.querySelectorAll('[data-gcal]').forEach(btn => {
@@ -1903,60 +2020,52 @@
           '<div><label for="availStart">С</label><select id="availStart">' + buildStartOptions(defStart) + '</select></div>' +
           '<div><label for="availEnd">До</label><select id="availEnd">' + buildEndOptions(defEnd) + '</select></div>' +
         '</div><div class="popup-hint" id="availNote"></div>' +
-        '<button class="popup-btn" id="saveAvail">Сохранить</button>';
-      if (existing) html += '<button class="popup-btn danger" id="deleteAvail">Удалить отметку</button>';
-      html += '<button class="popup-btn secondary" id="closeAvailPopup">Отмена</button>';
+        (existing ? '<button type="button" class="popup-link" id="deleteAvail">Удалить отметку</button>' : '') +
+        '<div class="popup-actions"><button class="popup-btn" id="saveAvail">Сохранить</button></div>';
       const overlay = openPopup(html);
       const sEl = overlay.querySelector('#availStart'), eEl = overlay.querySelector('#availEnd');
       const note = overlay.querySelector('#availNote');
       const upd = () => { note.textContent = overnightNote(sEl.value, eEl.value); };
       sEl.addEventListener('change', upd); eEl.addEventListener('change', upd); upd();
-      overlay.querySelector('#closeAvailPopup').addEventListener('click', () => overlay.remove());
 
-      overlay.querySelector('#saveAvail').addEventListener('click', async e => {
-        const btn = e.currentTarget;
-        const s = sEl.value, en = eEl.value;
-        if (!slotDuration(s, en)) { showToast('Ошибка', 'Начало и конец совпадают', true); return; }
-        const msk = convertSlot(localDate, s, en, myOffset(), MSK_OFFSET);
-        btn.disabled = true; btn.textContent = 'Сохраняем…';
-        try {
-          // Если отметка «переехала» на другую московскую дату — убираем старую
-          if (existing && existing.orig.date !== msk.date) {
-            const d = await postToServer({ action: 'save_availability', date: existing.orig.date, start_time: '', end_time: '' });
-            if (!d || !d.ok) throw new Error(errText(d && d.error));
-          }
-          const resp = await postToServer({ action: 'save_availability', date: msk.date, start_time: msk.start, end_time: msk.end });
-          if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
-        } catch (err) {
-          showToast('Ошибка', err.message || 'Сервер недоступен', true);
-          btn.disabled = false; btn.textContent = 'Сохранить';
-          return;
-        }
-        myAvail = myAvail.filter(a => !(existing && a === existing.orig) && a.date !== msk.date);
-        myAvail.push({ date: msk.date, start: msk.start, end: msk.end });
+      // Сохраняем «оптимистично»: календарь меняется сразу, сервер догоняет в фоне.
+      // Если сервер ответил ошибкой — возвращаем как было и говорим об этом.
+      const commit = (next, okTitle, okSub, request) => {
+        const prev = myAvail;
+        myAvail = next;
         syncAdminAvailability();
         overlay.remove();
-        renderAvailabilityCalendar(); renderAdminCalendar();
-        showToast('Сохранено', formatDateRu(localDate) + ' · ' + s + '–' + en);
+        renderAvailabilityCalendar();
+        showToast(okTitle, okSub);
+        request().catch(err => {
+          myAvail = prev;
+          syncAdminAvailability();
+          renderAvailabilityCalendar();
+          showToast('Не сохранилось', (err && err.message) || 'Сервер недоступен', true);
+        });
+      };
+      const send = async payload => {
+        const r = await postToServer(Object.assign({ action: 'save_availability' }, payload));
+        if (!r || !r.ok) throw new Error(errText(r && r.error));
+      };
+
+      overlay.querySelector('#saveAvail').addEventListener('click', () => {
+        const s = sEl.value, en = eEl.value;
+        if (!slotDuration(s, en)) { showToast('Проверьте время', 'Начало и конец совпадают', true); return; }
+        const msk = convertSlot(localDate, s, en, myOffset(), MSK_OFFSET);
+        const next = myAvail.filter(a => !(existing && a === existing.orig) && a.date !== msk.date)
+          .concat([{ date: msk.date, start: msk.start, end: msk.end }]);
+        commit(next, 'Сохранено', formatDateRu(localDate) + ' · ' + s + '–' + en, async () => {
+          // Если отметка «переехала» на другую московскую дату — убираем старую
+          if (existing && existing.orig.date !== msk.date) await send({ date: existing.orig.date, start_time: '', end_time: '' });
+          await send({ date: msk.date, start_time: msk.start, end_time: msk.end });
+        });
       });
 
       if (existing) {
-        overlay.querySelector('#deleteAvail').addEventListener('click', async e => {
-          const btn = e.currentTarget;
-          btn.disabled = true; btn.textContent = 'Удаляем…';
-          try {
-            const resp = await postToServer({ action: 'save_availability', date: existing.orig.date, start_time: '', end_time: '' });
-            if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
-          } catch (err) {
-            showToast('Ошибка', err.message || 'Не удалось удалить', true);
-            btn.disabled = false; btn.textContent = 'Удалить отметку';
-            return;
-          }
-          myAvail = myAvail.filter(a => a !== existing.orig);
-          syncAdminAvailability();
-          overlay.remove();
-          renderAvailabilityCalendar(); renderAdminCalendar();
-          showToast('Удалено', formatDateRu(localDate) + ' · отметка снята');
+        overlay.querySelector('#deleteAvail').addEventListener('click', () => {
+          commit(myAvail.filter(a => a !== existing.orig), 'Удалено', formatDateRu(localDate) + ' · отметка снята',
+            () => send({ date: existing.orig.date, start_time: '', end_time: '' }));
         });
       }
     }
@@ -1978,9 +2087,7 @@
           escapeHtml(CITIES[k].name) + '<span>' + (diff === 0 ? 'МСК' : 'МСК+' + diff) + '</span></button>';
       });
       html += '</div>';
-      if (!mandatory) html += '<button class="popup-btn secondary" id="closeCity">Отмена</button>';
       const overlay = openPopup(html, { locked: mandatory });
-      if (!mandatory) overlay.querySelector('#closeCity').addEventListener('click', () => overlay.remove());
 
       overlay.querySelectorAll('[data-city]').forEach(btn => {
         btn.addEventListener('click', async () => {
@@ -2003,6 +2110,42 @@
           if (mandatory) maybeShowOnboarding();
         });
       });
+    }
+
+    // Выбор компании — если человек работает в нескольких местах
+    function showCompanyPicker(list, mandatory) {
+      const current = myCompany && myCompany.id;
+      let html = '<div class="popup-title">Где вы работаете сейчас?</div>' +
+        '<div class="popup-info">Вы есть в нескольких компаниях. Расписание каждой — отдельно. Переключиться можно в любой момент — нажмите на название в шапке.</div>' +
+        '<div class="city-list">';
+      (list || []).forEach(c => {
+        html += '<button class="city-btn' + (c.id === current ? ' active' : '') + '" data-company="' + escapeHtml(c.id) + '">' + escapeHtml(c.name) + '</button>';
+      });
+      html += '</div>';
+      const overlay = openPopup(html, { locked: mandatory });
+      overlay.querySelectorAll('[data-company]').forEach(btn => btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-company');
+        overlay.querySelectorAll('[data-company]').forEach(b => { b.disabled = true; });
+        btn.textContent = 'Загружаем…';
+        const ok = await switchCompany(id);
+        if (ok) overlay.remove();
+        else overlay.querySelectorAll('[data-company]').forEach(b => { b.disabled = false; });
+      }));
+    }
+    async function switchCompany(id) {
+      const prevId = safeLS.get(COMPANY_KEY) || '';
+      safeLS.set(COMPANY_KEY, id);
+      let resp;
+      try { resp = await fetchBootstrap(); }
+      catch (e) {
+        if (prevId) safeLS.set(COMPANY_KEY, prevId);
+        showToast('Нет связи', 'Попробуйте ещё раз', true);
+        return false;
+      }
+      if (resp && resp.ok && months.schedule) switchTab('schedule');
+      const ok = handleAuthResponse(resp);
+      if (ok) { initMonths(); renderAll(); }
+      return ok;
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2052,12 +2195,12 @@
         { e: '👋', t: 'Добро пожаловать в Turno', x: 'Здесь твоё расписание смен. Время показано <b>по твоему городу — ' + escapeHtml(city) + '</b>. Пролистай — за минуту покажем, что умеет приложение.' },
         { e: '📅', t: 'Как читать календарь', x: 'Нажми на любой день со сменой — откроются подробности.', legend: true },
         { e: '📲', t: 'Смены в календаре телефона', x: 'Подключи календарь <b>один раз</b> — все смены сами появятся в календаре iPhone и будут обновляться, когда меняется график. Телефон напомнит о смене за 2 часа.', cal: true },
-        { e: '🟡', t: 'Хочешь подработку?', x: 'Во вкладке <b>«Доступность»</b> отметь дни и часы, когда можешь выйти. Руководитель увидит и сможет позвать тебя на смену.' },
+        { e: '🟡', t: 'Хочешь подработку?', x: 'Во вкладке <b>«Подработка»</b> отметь дни и часы, когда можешь выйти. Руководитель увидит и сможет позвать тебя на смену.' },
         { e: '🎯', t: 'Дополнительные смены', x: 'Когда нужны люди, на главном экране появится <b>жёлтая плашка</b>. Запишись — бот сообщит, подтвердили ли заявку. Подтверждённая смена появится в календаре со звёздочкой ★.' },
         { e: '🔔', t: 'Бот напомнит', x: 'Вечером накануне смены бот пришлёт напоминание. <b>Не отключай уведомления бота</b> в Telegram.<br><br>Вся инструкция — во вкладке <b>«Помощь»</b> внизу экрана.' }
       ];
       if (me && me.isAdmin) {
-        slides.splice(5, 0, { e: '🛠', t: 'Для руководителя', x: 'Во вкладке <b>«Админ»</b> — расписание (время вносится по Москве) с <b>шаблонами</b> и <b>публикацией</b>: правки сначала в черновике, сотрудникам они уходят после кнопки «Опубликовать». Там же сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
+        slides.splice(5, 0, { e: '🛠', t: 'Для руководителя', x: 'Во вкладке <b>«Управление»</b> — расписание (время вносится по Москве) с <b>шаблонами</b> и <b>публикацией</b>: правки сначала в черновике, сотрудникам они уходят после кнопки «Опубликовать». Там же сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
       }
       return slides;
     }
@@ -2179,23 +2322,21 @@
           '<li>Нажми <b>«Добавить в Google Calendar»</b>.</li></ol>';
       } else {
         html += '<div class="popup-info">Подключается <b>один раз</b>. После этого все смены — и новые, и изменённые — сами появятся в календаре телефона, а телефон напомнит о смене за 2 часа.</div>' +
-          '<button class="popup-btn" id="calCopy">📋 Скопировать ссылку</button>' +
           '<div class="sub-head">📱 iPhone</div><ol class="steps">' +
-            '<li>Нажми <b>«Скопировать ссылку»</b> выше.</li>' +
+            '<li>Нажми <b>«Скопировать ссылку»</b> внизу.</li>' +
             '<li>Открой <span class="path">Настройки</span> → <span class="path">Приложения</span> → <span class="path">Календарь</span> → <b>Учётные записи</b>.<br><small>На старых iOS: Настройки → Календарь → Учётные записи.</small></li>' +
             '<li>Нажми <b>«Добавить учётную запись»</b> → <b>«Другое»</b> → пункт про <b>календарь по подписке</b>.</li>' +
             '<li>Вставь ссылку в поле <b>«Сервер»</b> → <b>«Далее»</b> → <b>«Сохранить»</b>. Готово!</li>' +
           '</ol>' +
           '<div class="sub-head">🤖 Android (Google Календарь)</div><ol class="steps">' +
-            '<li>Скопируй ссылку кнопкой выше и перешли её себе.</li>' +
+            '<li>Скопируй ссылку кнопкой внизу и перешли её себе.</li>' +
             '<li>На компьютере открой <b>calendar.google.com</b> → слева <b>«Другие календари»</b> → <b>＋</b> → <b>добавить по URL</b>.</li>' +
             '<li>Вставь ссылку и добавь календарь — смены появятся и в Google Календаре на телефоне.</li>' +
           '</ol>' +
-          '<div class="popup-hint" style="margin-top:0">Телефон обновляет такой календарь сам, иногда с задержкой в несколько часов. Самое свежее расписание — всегда в приложении.</div>';
+          '<div class="popup-hint" style="margin-top:0">Телефон обновляет такой календарь сам, иногда с задержкой в несколько часов. Самое свежее расписание — всегда в приложении.</div>' +
+          '<div class="popup-actions"><button class="popup-btn" id="calCopy">📋 Скопировать ссылку</button></div>';
       }
-      html += '<button class="popup-btn secondary" id="calClose">Закрыть</button>';
       const overlay = openPopup(html);
-      overlay.querySelector('#calClose').addEventListener('click', () => overlay.remove());
       const copy = overlay.querySelector('#calCopy');
       if (copy) copy.addEventListener('click', async () => {
         const ok = await copyToClipboard(url);
@@ -2219,7 +2360,9 @@
       let html = '<div class="help-hero"><div class="help-hero-title">Как пользоваться Turno</div>' +
         '<div class="help-hero-text">Здесь собрано всё, что умеет приложение. Нажми на раздел, чтобы раскрыть.</div>' +
         '<button class="popup-btn" data-help="onboarding">▶️ Пройти знакомство заново</button>' +
-        '<button class="popup-btn outline" data-help="calendar" style="margin-bottom:0">📲 Подключить календарь телефона</button></div>';
+        '<button class="popup-btn outline" data-help="calendar" style="margin-bottom:0">📲 Подключить календарь телефона</button>' +
+        (myCompanies.length > 1 ? '<button class="popup-btn ghost" data-help="company" style="margin:8px 0 0">🏢 Сменить компанию · сейчас ' + escapeHtml(myCompany ? myCompany.name : '') + '</button>' : '') +
+        '</div>';
 
       html += '<div class="help-section-label">Сотруднику</div>';
       html += faq('📅', 'Расписание и обозначения',
@@ -2235,7 +2378,7 @@
         '<p><b>По одной смене:</b> нажми на день → «Добавить в Google Calendar».</p>' +
         '<button class="popup-btn" data-help="calendar">Подключить календарь</button>');
       html += faq('🟡', 'Подработка: отметить, когда могу выйти',
-        '<ol class="steps"><li>Открой вкладку <b>«Доступность»</b>.</li><li>Нажми на день, когда можешь выйти.</li><li>Укажи часы <b>по своему времени</b> и нажми «Сохранить».</li></ol>' +
+        '<ol class="steps"><li>Открой вкладку <b>«Подработка»</b>.</li><li>Нажми на день, когда можешь выйти.</li><li>Укажи часы <b>по своему времени</b> и нажми «Сохранить».</li></ol>' +
         '<p>Отмеченные дни подсвечиваются жёлтым. Чтобы убрать отметку — нажми на день → «Удалить отметку».</p>');
       html += faq('🎯', 'Дополнительные смены',
         '<p>Когда руководителю нужны люди, на главном экране появляется <b>жёлтая плашка «Дополнительные смены»</b>, а бот присылает сообщение.</p>' +
@@ -2260,19 +2403,19 @@
       if (me && me.isAdmin) {
         html += '<div class="help-section-label">Руководителю</div>';
         html += faq('✏️', 'Редактирование смен',
-          '<ol class="steps"><li><b>«Админ»</b> → <b>«Редактировать расписание»</b> → выбери сотрудника.</li><li>Нажми на день, укажи время <b>по Москве</b> и сохрани.</li></ol>' +
-          '<p><b>Черновик и публикация.</b> Всё, что ты меняешь в расписании, сначала попадает в <b>черновик</b>: сотрудники этого не видят. Когда график готов, нажми <b>«Опубликовать»</b> на жёлтой плашке — сотрудники увидят его в приложении, а бот пришлёт им сообщение («График на ноябрь готов» или список изменённых дней — в их часовом поясе). Если нужно, чтобы любые правки уходили сразу, включи переключатель <b>«Публиковать сразу»</b> во вкладке «Админ».</p>' +
-          '<p><b>Шаблоны графика</b> («Админ» → «Шаблоны графика»): выбери сотрудников, способ — цикл (2/2, 3/3, 5/2…), дни недели (пн–пт) или копия недели — время смены и период. Перед записью приложение покажет, сколько дней изменится. По умолчанию занятые дни не затираются. Лист-месяц (например, «Декабрь_2026») должен уже быть в таблице.</p>' +
+          '<ol class="steps"><li><b>«Управление»</b> → <b>«Редактировать расписание»</b> → выбери сотрудника.</li><li>Нажми на день, укажи время <b>по Москве</b> и сохрани.</li></ol>' +
+          '<p><b>Черновик и публикация.</b> Всё, что ты меняешь в расписании, сначала попадает в <b>черновик</b>: сотрудники этого не видят. Когда график готов, нажми <b>«Опубликовать»</b> на жёлтой плашке — сотрудники увидят его в приложении, а бот пришлёт им сообщение («График на ноябрь готов» или список изменённых дней — в их часовом поясе). Если нужно, чтобы любые правки уходили сразу, включи переключатель <b>«Публиковать сразу»</b> во вкладке «Управление».</p>' +
+          '<p><b>Шаблоны графика</b> («Управление» → «Шаблоны графика»): выбери сотрудников, способ — цикл (2/2, 3/3, 5/2…), дни недели (пн–пт) или копия недели — время смены и период. Перед записью приложение покажет, сколько дней изменится. По умолчанию занятые дни не затираются. Новый месяц в таблице создаётся сам.</p>' +
           '<p><b>Несколько смен в день</b> — «+ Добавить ещё смену». <b>Ночная смена</b> — выбери конец раньше начала (22:00 → 06:00). Есть время <b>24:00</b>.</p>' +
           '<p>В таблице: <b>09:00-18:00</b>, несколько смен — через точку с запятой: <b>07:00-11:00; 18:00-22:00</b>. Больничный — <b>Б</b>, отпуск — <b>О</b>.</p>');
         html += faq('👥', 'Сотрудники',
-          '<p><b>«Админ» → «Сотрудники»</b>: добавить (＋), изменить имя и номер, отправить приглашение, убрать в архив.</p>' +
+          '<p><b>«Управление» → «Сотрудники»</b>: добавить (＋), изменить имя и номер, отправить приглашение, убрать в архив.</p>' +
           '<p>Статус <b>«Вход подтверждён»</b> — сотрудник открыл приложение и поделился номером. Город сотрудник выбирает сам.</p>');
         html += faq('🎯', 'Доп. смены и заявки',
-          '<ol class="steps"><li><b>«Админ» → «Дополнительные смены» → ＋</b>.</li><li>Укажи дату, время по Москве и число мест — всем придёт сообщение.</li><li>Заявки подтверждай ✓ или отклоняй ✕ — сотрудник получит ответ от бота.</li></ol>' +
+          '<ol class="steps"><li><b>«Управление» → «Дополнительные смены» → ＋</b>.</li><li>Укажи дату, время по Москве и число мест — всем придёт сообщение.</li><li>Заявки подтверждай ✓ или отклоняй ✕ — сотрудник получит ответ от бота.</li></ol>' +
           '<p>О каждой новой заявке бот пишет тебе сообщение.</p>');
         html += faq('🟡', 'Кто может выйти',
-          '<p>Во вкладке <b>«Админ»</b> — календарь доступности: число людей, готовых выйти в этот день. Нажми на день, чтобы увидеть имена и часы (по Москве).</p>');
+          '<p>Во вкладке <b>«Управление»</b> — календарь доступности: число людей, готовых выйти в этот день. Нажми на день, чтобы увидеть имена и часы (по Москве).</p>');
       }
       html += '<div class="tz-note" style="text-align:center;margin-top:var(--space-5)">Turno · ритм команды</div>';
       el.innerHTML = html;
@@ -2282,6 +2425,7 @@
         if (a === 'onboarding') showOnboarding();
         else if (a === 'calendar') showCalendarConnect();
         else if (a === 'city') showCityPicker(false);
+        else if (a === 'company') showCompanyPicker(myCompanies, false);
       }));
     }
 
@@ -2315,12 +2459,11 @@
       let html = '<div class="popup-title">' + formatDateRu(mskDate) + '</div>' +
         '<div class="popup-info">' + escapeHtml(getNameForPhone(currentEditPhone)) + ' · ' + escapeHtml(current) + '<br>Время — по Москве</div>' +
         '<div class="shift-rows" id="shiftRows">' + rows.map(r => shiftRowHtml(r.start, r.end)).join('') + '</div>' +
-        '<button class="popup-btn outline" id="addShiftRow">+ Добавить ещё смену в этот день</button>' +
-        '<button class="popup-btn" id="saveEditShift">Сохранить</button>' +
-        '<button class="popup-btn sick" id="setSick">Больничный</button>' +
-        '<button class="popup-btn vac" id="setVacation">Отпуск</button>';
-      if (entries.length) html += '<button class="popup-btn danger" id="deleteShift">Очистить день</button>';
-      html += '<button class="popup-btn secondary" id="closeEditPopup">Отмена</button>';
+        '<button class="popup-btn outline" id="addShiftRow">+ Ещё смена в этот день</button>' +
+        '<div class="popup-pair"><button class="popup-btn sick" id="setSick">Больничный</button>' +
+        '<button class="popup-btn vac" id="setVacation">Отпуск</button></div>' +
+        (entries.length ? '<button type="button" class="popup-link" id="deleteShift">Очистить день</button>' : '') +
+        '<div class="popup-actions"><button class="popup-btn" id="saveEditShift">Сохранить</button></div>';
 
       const overlay = openPopup(html);
       const rowsEl = overlay.querySelector('#shiftRows');
@@ -2330,13 +2473,9 @@
         rowsEl.insertAdjacentHTML('beforeend', shiftRowHtml('09:00', '18:00'));
         wireShiftRow(rowsEl.lastElementChild);
       });
-      overlay.querySelector('#closeEditPopup').addEventListener('click', () => overlay.remove());
-
-      const run = async (btn, payload) => {
-        const all = overlay.querySelectorAll('button');
-        all.forEach(b => { b.disabled = true; });
-        const ok = await saveShiftChange(currentEditPhone, mskDate, payload);
-        if (ok) overlay.remove(); else all.forEach(b => { b.disabled = false; });
+      const run = (btn, payload) => {
+        overlay.remove();
+        saveShiftChange(currentEditPhone, mskDate, payload);
       };
 
       overlay.querySelector('#saveEditShift').addEventListener('click', e => {
@@ -2355,33 +2494,35 @@
       if (del) del.addEventListener('click', e => run(e.currentTarget, { status: 'DELETE' }));
     }
 
-    async function saveShiftChange(phone, date, payload) {
-      let resp;
-      try {
-        resp = await postToServer(Object.assign({ action: 'update_shift', phone: phone, date: date }, payload));
-      } catch (e) {
-        showToast('Ошибка сети', String(e.message || e).substring(0, 80), true);
-        return false;
-      }
-      if (!resp || !resp.ok) { showToast('Ошибка', errText(resp && resp.error), true); return false; }
-
-      // Обновляем данные на экране без перезагрузки
-      adminData.shifts = adminData.shifts.filter(s => !(s.phone === phone && s.date === date));
+    // Сохранение «оптимистично»: календарь меняется сразу, сервер догоняет в фоне.
+    // Если сервер ответил ошибкой — возвращаем этот день как был и подтягиваем свежие данные.
+    function saveShiftChange(phone, date, payload) {
+      const same = s => s.phone === phone && s.date === date;
+      const before = adminData.shifts.filter(same);
       const fresh = [];
       if (payload.status === 'Б' || payload.status === 'О') fresh.push({ date: date, start: '', end: '', status: payload.status });
       else if (payload.shifts) payload.shifts.forEach(s => fresh.push({ date: date, start: s.start, end: s.end, status: '' }));
-      fresh.forEach(s => adminData.shifts.push(Object.assign({ phone: phone }, s)));
-      if (resp.pending) adminData.pending = resp.pending;
-      if (resp.published && me && phone === me.phone) {
-        myShifts = myShifts.filter(s => s.extra || s.date !== date).concat(fresh);
-      }
+      adminData.shifts = adminData.shifts.filter(s => !same(s)).concat(fresh.map(s => Object.assign({ phone: phone }, s)));
+      const auto = !!adminData.autoPublish;
+      if (auto && me && phone === me.phone) myShifts = myShifts.filter(s => s.extra || s.date !== date).concat(fresh);
 
       let msg = 'смена снята';
       if (payload.status === 'Б') msg = 'больничный';
       else if (payload.status === 'О') msg = 'отпуск';
       else if (payload.shifts) msg = payload.shifts.map(s => s.start + '–' + s.end).join(', ') + ' МСК';
-      showToast(resp.published ? 'Опубликовано' : 'Сохранено в черновик', formatDateRu(date) + ' · ' + msg);
+      showToast(auto ? 'Опубликовано' : 'Сохранено в черновик', formatDateRu(date) + ' · ' + msg);
       renderAll();
+
+      postToServer(Object.assign({ action: 'update_shift', phone: phone, date: date }, payload)).then(resp => {
+        if (!resp || !resp.ok) throw new Error(errText(resp && resp.error));
+        if (resp.pending) adminData.pending = resp.pending;
+        renderPubBars();
+      }).catch(err => {
+        adminData.shifts = adminData.shifts.filter(s => !same(s)).concat(before);
+        renderAll();
+        showToast('Не сохранилось', formatDateRu(date) + ' · ' + ((err && err.message) || 'сервер недоступен'), true);
+        refreshData(true);
+      });
       return true;
     }
 
@@ -2396,9 +2537,7 @@
             '</span><span class="admin-list-time">' + escapeHtml(p.start) + '–' + escapeHtml(p.end) + '</span></div>'
           ).join('');
       const overlay = openPopup('<div class="popup-title">' + formatDateRu(mskDate) + '</div>' +
-        '<div class="popup-info">Могут выйти · время по Москве</div>' + listHtml +
-        '<button class="popup-btn secondary" id="closeAdminPopup" style="margin-top:16px;">Закрыть</button>');
-      overlay.querySelector('#closeAdminPopup').addEventListener('click', () => overlay.remove());
+        '<div class="popup-info">Могут выйти · время по Москве</div>' + listHtml);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2410,6 +2549,37 @@
       const el = document.getElementById(id);
       if (el) el.classList.add('active');
       window.scrollTo(0, 0);
+      syncBackButton();
+    }
+
+    // ── Системная кнопка «Назад» Telegram ──
+    // Закрывает открытое окно, а на вложенных экранах руководителя возвращает на шаг назад.
+    const BACK_ROUTES = {
+      tabTemplates: () => closeTemplates(),
+      tabEditEmployees: () => closeEditEmployees(),
+      tabEditEmployeeCalendar: () => closeEmployeeCalendar(),
+      tabEmployeesAdmin: () => closeEmployeesAdmin(),
+      tabExtraShiftsAdmin: () => closeExtraShiftsAdmin(),
+      tabEmployeeCardAdmin: () => showTabContent('tabEmployeesAdmin')
+    };
+    const HAS_TG_BACK = !!(tg && tg.BackButton && tgAtLeast('6.1'));
+    function openPopupEl() { return document.querySelector('.popup-overlay:not([data-locked="1"])'); }
+    function syncBackButton() {
+      if (!HAS_TG_BACK) return;
+      const need = !!openPopupEl() || !!BACK_ROUTES[activeScreen()];
+      try { need ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {}
+    }
+    function onBackPressed() {
+      const pop = openPopupEl();
+      if (pop) { pop.remove(); return; }
+      const fn = BACK_ROUTES[activeScreen()];
+      if (fn) fn();
+    }
+    if (HAS_TG_BACK) {
+      document.body.classList.add('tg-back');
+      try { tg.BackButton.onClick(onBackPressed); } catch (e) {}
+      // Окна открываются и закрываются в разных местах — следим за ними централизованно
+      new MutationObserver(syncBackButton).observe(document.body, { childList: true });
     }
     function setSubtitle(text, visible) {
       const el = document.getElementById('pageSubtitle');
@@ -2500,13 +2670,12 @@
         '<div class="popup-info">Сотрудники увидят изменения в приложении, а бот пришлёт сообщение: про новый месяц — «График готов», про правки — список изменённых дней.</div>' +
         months +
         '<label class="check-row"><input type="checkbox" id="pubNotify" checked><span>Отправить уведомления в Telegram</span></label>' +
-        '<button class="popup-btn" id="pubAll">Опубликовать всё</button>';
+        '<div class="popup-actions">';
       if (p.months.length > 1) {
-        p.months.forEach(m => { html += '<button class="popup-btn secondary" style="margin-bottom:8px" data-pub-month="' + m.ym + '">Только ' + escapeHtml(monthLabel(m.ym)) + '</button>'; });
+        p.months.forEach(m => { html += '<button class="popup-btn ghost" data-pub-month="' + m.ym + '">Только ' + escapeHtml(monthLabel(m.ym)) + '</button>'; });
       }
-      html += '<button class="popup-btn secondary" id="pubCancel">Отмена</button>';
+      html += '<button class="popup-btn" id="pubAll">Опубликовать всё</button></div>';
       const overlay = openPopup(html);
-      overlay.querySelector('#pubCancel').addEventListener('click', () => overlay.remove());
       const run = async (month) => {
         const notify = overlay.querySelector('#pubNotify').checked;
         overlay.querySelectorAll('button').forEach(b => { b.disabled = true; });
@@ -2522,9 +2691,10 @@
         }
         overlay.remove();
         if (adminData) adminData.pending = resp.pending || { count: 0, people: 0, months: [] };
-        let sub = notify ? ('Уведомлено: ' + (resp.notified || 0)) : 'Без уведомлений';
+        const n = resp.notified || 0;
+        let sub = notify ? ('Бот написал ' + n + ' ' + pluralRu(n, 'сотруднику', 'сотрудникам', 'сотрудникам')) : 'Без уведомлений';
         if (notify && resp.noTg) sub += ' · не заходили в бот: ' + resp.noTg;
-        showToast('Опубликовано', sub);
+        showToast('График опубликован', sub);
         renderAll();
         refreshData(true);
       };
@@ -2711,14 +2881,15 @@
       let info = '<b>' + resp.willWrite + '</b> ' + pluralRu(resp.willWrite, 'день изменится', 'дня изменятся', 'дней изменятся') +
         ' у <b>' + resp.people + '</b> ' + pluralRu(resp.people, 'сотрудника', 'сотрудников', 'сотрудников') + '.';
       if (resp.busy) info += '<br>Пропущено занятых дней: ' + resp.busy + '.';
-      if (resp.noSheet) info += '<br>⚠️ Для ' + resp.noSheet + ' ' + pluralRu(resp.noSheet, 'дня', 'дней', 'дней') + ' нет листа-месяца в таблице — они не заполнятся.';
+      if (resp.noSheet) info += '<br>⚠️ ' + resp.noSheet + ' ' + pluralRu(resp.noSheet, 'день', 'дня', 'дней') + ' слишком далеко во времени — они не заполнятся.';
       const auto = adminData && adminData.autoPublish;
       info += auto ? '<br><br>Включён режим «Публиковать сразу»: сотрудники получат сообщения об изменениях.'
                    : '<br><br>Это попадёт в <b>черновик</b>. Сотрудники увидят график после кнопки «Опубликовать».';
       const overlay = openPopup('<div class="popup-title">Применить шаблон?</div><div class="popup-info">' + info + '</div>' +
-        (resp.willWrite ? '<button class="popup-btn" id="tplGo">Применить</button>' : '') +
-        '<button class="popup-btn secondary" id="tplNo">' + (resp.willWrite ? 'Отмена' : 'Понятно') + '</button>');
-      overlay.querySelector('#tplNo').addEventListener('click', () => overlay.remove());
+        '<div class="popup-actions">' + (resp.willWrite ? '<button class="popup-btn" id="tplGo">Применить</button>'
+          : '<button class="popup-btn ghost" id="tplNo">Понятно</button>') + '</div>');
+      const no = overlay.querySelector('#tplNo');
+      if (no) no.addEventListener('click', () => overlay.remove());
       const go = overlay.querySelector('#tplGo');
       if (!go) return;
       go.addEventListener('click', async () => {
@@ -2737,10 +2908,16 @@
     // ═══════════════════════════════════════════════════════════
     // МОДУЛЬ СОТРУДНИКОВ
     // ═══════════════════════════════════════════════════════════
-    const EMPLOYEE_INVITE_TEXT =
-      'Привет! Это приложение для контроля расписания твоих смен.\n\n' +
-      'Открой бота, нажми «Моё расписание», поделись номером телефона и выбери свой город — и увидишь свои смены.\n\n' +
-      BOT_LINK;
+    // Текст приглашения: со ссылкой прямо в вашу компанию, если она настроена на сервере (APP_LINK)
+    function inviteText() {
+      const link = adminData && adminData.inviteLink;
+      if (link) {
+        return 'Привет! Это приложение для контроля расписания твоих смен.\n\n' +
+          'Открой ссылку, поделись номером телефона и выбери свой город — и увидишь свои смены.\n\n' + link;
+      }
+      return 'Привет! Это приложение для контроля расписания твоих смен.\n\n' +
+        'Открой бота, нажми «Моё расписание», поделись номером телефона и выбери свой город — и увидишь свои смены.\n\n' + BOT_LINK;
+    }
 
     let __employeesCache = [];
     let __employeesSearchQuery = '';
@@ -2849,12 +3026,11 @@
         '<button class="employee-card-action-btn secondary" id="empInviteBtn"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Приглашение</button>';
       if (emp.active) html += '<button class="employee-card-action-btn danger" id="empArchiveBtn"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>В архив</button>';
       else html += '<button class="employee-card-action-btn secondary" id="empRestoreBtn"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Вернуть из архива</button>';
-      html += '<button class="employee-card-action-btn secondary" id="empCloseCardBtn">Закрыть</button></div>';
+      html += '</div>';
       body.innerHTML = html;
 
       document.getElementById('empEditBtn').addEventListener('click', () => showEmployeeFormAdmin(emp));
       document.getElementById('empInviteBtn').addEventListener('click', showInviteModalAdmin);
-      document.getElementById('empCloseCardBtn').addEventListener('click', () => showTabContent('tabEmployeesAdmin'));
       const arch = document.getElementById('empArchiveBtn');
       if (arch) arch.addEventListener('click', async () => {
         if (!(await askConfirm('Переместить сотрудника в архив?'))) return;
@@ -2896,9 +3072,7 @@
         '<div class="form-field"><label for="empFormPhone">Телефон</label>' +
           '<input type="tel" id="empFormPhone" placeholder="+7 900 000-00-00" value="' + (isEdit ? escapeHtml(existing.phone || '') : '') + '" /></div>' +
         '<div class="form-error" id="empFormError"></div>' +
-        '<button class="popup-btn" id="empFormSubmit">' + btnText + '</button>' +
-        '<button class="popup-btn secondary" id="empFormCancel">Отмена</button>');
-      overlay.querySelector('#empFormCancel').addEventListener('click', () => overlay.remove());
+        '<div class="popup-actions"><button class="popup-btn" id="empFormSubmit">' + btnText + '</button></div>');
 
       overlay.querySelector('#empFormSubmit').addEventListener('click', async e => {
         const btn = e.currentTarget;
@@ -2931,14 +3105,13 @@
     }
 
     function showInviteModalAdmin() {
+      const text = inviteText();
       const overlay = openPopup('<div class="popup-title">Приглашение</div>' +
         '<div class="popup-info">Скопируй текст и отправь сотруднику.</div>' +
-        '<div class="invite-preview">' + escapeHtml(EMPLOYEE_INVITE_TEXT) + '</div>' +
-        '<button class="popup-btn" id="inviteCopyBtn" style="margin-top:16px;">Скопировать текст</button>' +
-        '<button class="popup-btn secondary" id="inviteCloseBtn">Закрыть</button>');
-      overlay.querySelector('#inviteCloseBtn').addEventListener('click', () => overlay.remove());
+        '<div class="invite-preview">' + escapeHtml(text) + '</div>' +
+        '<div class="popup-actions"><button class="popup-btn" id="inviteCopyBtn">Скопировать текст</button></div>');
       overlay.querySelector('#inviteCopyBtn').addEventListener('click', async () => {
-        const ok = await copyToClipboard(EMPLOYEE_INVITE_TEXT);
+        const ok = await copyToClipboard(text);
         showToast(ok ? 'Скопировано' : 'Не удалось', ok ? 'Отправь сотруднику' : 'Скопируй вручную', !ok);
       });
     }
@@ -2992,9 +3165,7 @@
       }
 
       const overlay = openPopup('<div class="popup-title">Дополнительные смены</div>' +
-        '<div class="popup-info">Запишись, если можешь выйти · ' + escapeHtml(tzLabel().replace(/^Время/, 'время')) + '</div>' + listHtml +
-        '<button class="popup-btn secondary" id="closeExtraPopup" style="margin-top:16px;">Закрыть</button>');
-      overlay.querySelector('#closeExtraPopup').addEventListener('click', () => overlay.remove());
+        '<div class="popup-info">Запишись, если можешь выйти · ' + escapeHtml(tzLabel().replace(/^Время/, 'время')) + '</div>' + listHtml);
 
       overlay.querySelectorAll('[data-action]').forEach(btn => {
         btn.addEventListener('click', async () => {
@@ -3134,9 +3305,7 @@
           '<div class="form-field"><label for="extraPlaces">Количество мест</label><input type="number" id="extraPlaces" min="1" max="100" value="1" /></div>' +
         '</div>' +
         '<div class="form-error" id="extraFormError"></div>' +
-        '<button class="popup-btn" id="extraCreateSubmit">Создать и разослать</button>' +
-        '<button class="popup-btn secondary" id="extraCreateCancel">Отмена</button>');
-      overlay.querySelector('#extraCreateCancel').addEventListener('click', () => overlay.remove());
+        '<div class="popup-actions"><button class="popup-btn" id="extraCreateSubmit">Создать и разослать</button></div>');
       overlay.querySelector('#extraDate').value = addDays(nowAt(MSK_OFFSET).iso, 1);
       const sEl = overlay.querySelector('#extraStart'), eEl = overlay.querySelector('#extraEnd'), note = overlay.querySelector('#extraNote');
       const upd = () => { note.textContent = overnightNote(sEl.value, eEl.value); };
@@ -3172,10 +3341,9 @@
     // ═══════════════════════════════════════════════════════════
     const ENTRY_SOUND_DISABLED = 'turno_entry_sound_disabled';
 
+    // Звук включён, пока человек сам его не выключил кнопкой в шапке
     function isEntrySoundEnabled() {
-      if (safeLS.get(ENTRY_SOUND_DISABLED) === '1') return false;
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-      return true;
+      return safeLS.get(ENTRY_SOUND_DISABLED) !== '1';
     }
     function updateSoundToggleUI() {
       const btn = document.getElementById('soundToggleBtn');
@@ -3186,7 +3354,16 @@
     }
     function setEntrySoundEnabled(enabled) {
       enabled ? safeLS.del(ENTRY_SOUND_DISABLED) : safeLS.set(ENTRY_SOUND_DISABLED, '1');
+      cloudSet(ENTRY_SOUND_DISABLED, enabled ? '0' : '1');   // настройка переживёт переустановку Telegram
       updateSoundToggleUI();
+    }
+    // Настройка из облака Telegram — если человек менял её на другом устройстве
+    function syncSoundFromCloud() {
+      cloudGet(ENTRY_SOUND_DISABLED).then(v => {
+        if (v !== '0' && v !== '1') return;
+        if (v === '1') safeLS.set(ENTRY_SOUND_DISABLED, '1'); else safeLS.del(ENTRY_SOUND_DISABLED);
+        updateSoundToggleUI();
+      });
     }
 
     function playEntrySound() {
@@ -3228,8 +3405,16 @@
           setTimeout(() => { try { ctx.close(); } catch (e) {} }, 2800);
         } catch (e) { try { ctx.close(); } catch (e2) {} }
       };
+      const close = () => { try { ctx.close(); } catch (e) {} };
       if (ctx.state === 'suspended' && ctx.resume) {
-        ctx.resume().then(play).catch(() => { try { ctx.close(); } catch (e) {} });
+        // Telegram на iPhone часто не даёт играть звук до первого касания.
+        // Ждём касание 3 секунды; позже звук уже неуместен — не играем.
+        let done = false;
+        const finish = () => { done = true; document.removeEventListener('pointerdown', unlock, true); };
+        const unlock = () => { if (done) return; finish(); ctx.resume().then(play).catch(close); };
+        document.addEventListener('pointerdown', unlock, true);
+        setTimeout(() => { if (!done) { finish(); close(); } }, 3000);
+        ctx.resume().then(() => { if (!done && ctx.state === 'running') { finish(); play(); } }).catch(() => {});
       } else {
         play();
       }
@@ -3264,7 +3449,7 @@
     }
     function ensureSplashMinTime() {
       const elapsed = Date.now() - __SPLASH_T0;
-      return new Promise(r => setTimeout(r, Math.max(0, 3400 - elapsed)));
+      return new Promise(r => setTimeout(r, Math.max(0, 900 - elapsed)));
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -3333,7 +3518,9 @@
         return true;
       }
       const code = resp && resp.error;
-      if (code === 'need_contact') {
+      if (code === 'choose_company') {
+        showCompanyPicker(resp.companies || [], true);
+      } else if (code === 'need_contact') {
         showPhoneForm('');
       } else if (code === 'not_employee') {
         showPhoneForm('Номер ' + escapeHtml(resp.phone || '') + ' не найден среди сотрудников. Обратитесь к руководителю, чтобы он добавил вас в систему.');
@@ -3351,7 +3538,6 @@
       document.getElementById('tabsBar').classList.add('visible');
       document.getElementById('initError').style.display = 'none';
       document.getElementById('calendarWrap').style.display = 'block';
-      document.getElementById('tabAdminBtn').style.display = me && me.isAdmin ? 'block' : 'none';
       if (!months.schedule) initMonths();
       const activeTab = document.querySelector('.tab.active');
       if (!document.querySelector('.tab-content.active') || (activeTab && activeTab.dataset.tab === 'schedule')) {
@@ -3380,19 +3566,24 @@
       }
       if (!tg || !getTgInitData()) {
         await ensureSplashMinTime(); hideSplash();
-        showFatal('Откройте приложение через Telegram-бота: <a href="' + BOT_LINK + '" style="color:#10B981">' + escapeHtml(BOT_LINK.replace('https://', '')) + '</a>');
+        showFatal('Откройте приложение через Telegram-бота: <a href="' + BOT_LINK + '" style="color:#0E6B73">' + escapeHtml(BOT_LINK.replace('https://', '')) + '</a>');
         return;
       }
 
-      // Мгновенный показ из кэша этого же пользователя
+      syncSoundFromCloud();
+
+      // Мгновенный показ из кэша этого же пользователя — свежие данные догрузятся в фоне
       const cached = loadCache();
-      if (cached) { applyData(cached); showApp(); }
+      if (cached) { applyData(cached); showApp(); hideSplash(); }
 
       try {
-        const resp = await postToServer({ action: 'bootstrap' });
+        const resp = await fetchBootstrap();
         if (resp && resp.ok) {
           saveCache(resp); applyData(resp); showApp();
           if (!myCityKey()) showCityPicker(true); else maybeShowOnboarding();
+        } else if (cached && resp && (resp.error === 'busy' || resp.error === 'server_error')) {
+          // Сервер временно не ответил — оставляем сохранённое расписание на экране
+          showToast('Не удалось обновить', 'Показано расписание на ' + timeHM(__cacheTime), true);
         } else {
           safeLS.del(CACHE_KEY);
           handleAuthResponse(resp);
@@ -3403,11 +3594,15 @@
           showTabContent('tabSchedule');
           showInitError(String(e.message || e).substring(0, 120), () => location.reload());
         } else {
-          showToast('Нет связи', 'Показаны сохранённые данные', true);
+          showToast('Нет связи', 'Показано расписание на ' + timeHM(__cacheTime), true);
         }
       }
       await ensureSplashMinTime();
       hideSplash();
+    }
+    function timeHM(ms) {
+      const d = new Date(ms || Date.now());
+      return pad2(d.getHours()) + ':' + pad2(d.getMinutes());
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -3457,7 +3652,7 @@
           try { if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); } catch (e) {}
           if (target === 'schedule') {
             showTabContent('tabSchedule'); setSubtitle('', false);
-            renderHeader(); renderBanner(); renderCalendar(); renderExtraShiftsBanner();
+            renderHeader(); renderBanner(); renderCalendar(); renderExtraShiftsBanner(); renderTip();
           } else if (target === 'availability') {
             showTabContent('tabAvailability'); setSubtitle('Когда ты можешь выйти', true);
             renderAvailabilityCalendar();
@@ -3475,9 +3670,12 @@
     function wireButtons() {
       document.getElementById('soundToggleBtn').addEventListener('click', e => {
         e.stopPropagation();
-        setEntrySoundEnabled(!isEntrySoundEnabled());
+        const on = !isEntrySoundEnabled();
+        setEntrySoundEnabled(on);
+        if (on) playEntrySound();     // сразу слышно, что включилось
+        showToast(on ? 'Звук входа включён' : 'Звук входа выключен', on ? 'Будет звучать при открытии' : 'Включить — той же кнопкой');
       });
-      document.getElementById('helpBtn').addEventListener('click', () => { if (me) switchTab('help'); });
+      document.getElementById('companyChip').addEventListener('click', () => { if (myCompanies.length > 1) showCompanyPicker(myCompanies, false); });
       document.getElementById('calConnectBtn').addEventListener('click', showCalendarConnect);
       document.getElementById('cityChip').addEventListener('click', () => { if (me) showCityPicker(false); });
       document.getElementById('sharePhone').addEventListener('click', shareContact);

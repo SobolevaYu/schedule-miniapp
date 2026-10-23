@@ -1149,6 +1149,10 @@
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></span>
       Шаблоны графика
     </button>
+    <button class="admin-action-btn" id="breaksBtn">
+      <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      Перерывы и чистые часы
+    </button>
     <button class="admin-action-btn" id="extraShiftsAdminBtn">
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/></svg></span>
       Дополнительные смены
@@ -1491,6 +1495,18 @@
       if (isNaN(S) || !dur) return false;
       return S + dur > 22 * 60 || S < 6 * 60;
     }
+    // Чистое время смены: длительность минус перерывы по правилам компании (приходят с сервера).
+    // Берётся правило с самым большим порогом, которого смена достигает.
+    function netMinutes(start, end) {
+      const dur = slotDuration(start, end);
+      if (!dur) return 0;
+      const r = breakRules.find(x => dur >= x.min);
+      return Math.max(0, dur - (r ? r.brk : 0));
+    }
+    function hoursText(minutes) {
+      return String(Math.round(minutes / 60 * 100) / 100).replace('.', ',');
+    }
+
     // Сегодняшняя дата и время в часовом поясе со смещением offset (минуты)
     function nowAt(offset) {
       const d = new Date(Date.now() + offset * 60000);
@@ -1519,6 +1535,7 @@
     let adminData = null;         // { employees, shifts, availability } — только у руководителя
     let myCompany = null;         // { id, name }
     let myCompanies = [];         // если человек работает в нескольких компаниях
+    let breakRules = [];          // [{min, brk}] — перерывы, которые вычитаются из часов
     let __cacheTime = 0;
     let allExtraShiftsAdmin = [];
     let currentEditPhone = null;
@@ -1578,6 +1595,7 @@
       if (resp.cities && typeof resp.cities === 'object') CITIES = resp.cities;
       myCompany = resp.company || null;
       myCompanies = resp.companies || [];
+      breakRules = Array.isArray(resp.breakRules) ? resp.breakRules.slice().sort((a, b) => b.min - a.min) : [];
       if (myCompany && myCompany.id) safeLS.set(COMPANY_KEY, myCompany.id);
     }
 
@@ -1795,8 +1813,8 @@
       const sh = (entries || []).filter(e => e.kind === 'shift');
       if (!sh.length) return { cls: 'dayoff', main: 'Выходной', sub: nextShiftLine(byDate, todayIso) };
       let mins = 0;
-      sh.forEach(s => { mins += slotDuration(s.start, s.end); });
-      const hrs = String(Math.round(mins / 30) / 2).replace('.', ',');
+      sh.forEach(s => { mins += netMinutes(s.start, s.end); });
+      const hrs = hoursText(mins);
       const night = sh.some(s => isNightShift(s.start, s.end));
       return {
         cls: 'shift' + (sh.length > 1 ? ' multi' : ''),
@@ -1855,11 +1873,11 @@
       let count = 0, mins = 0;
       Object.keys(byDate).forEach(d => {
         if (d.indexOf(prefix) !== 0) return;
-        byDate[d].forEach(e => { if (e.kind === 'shift') { count++; mins += slotDuration(e.start, e.end); } });
+        byDate[d].forEach(e => { if (e.kind === 'shift') { count++; mins += netMinutes(e.start, e.end); } });
       });
       if (!count) { el.innerHTML = ''; return; }
-      const hrs = String(Math.round(mins / 30) / 2).replace('.', ',');
-      el.innerHTML = '<span><b>' + count + '</b>' + pluralRu(count, 'смена', 'смены', 'смен') + '</span><span><b>' + hrs + '</b>ч</span>';
+      el.innerHTML = '<span><b>' + count + '</b>' + pluralRu(count, 'смена', 'смены', 'смен') + '</span><span><b>' + hoursText(mins) + '</b>ч' +
+        (breakRules.length ? ' без перерывов' : '') + '</span>';
     }
 
     function renderAvailabilityCalendar() {
@@ -2432,7 +2450,7 @@
       html += '<div class="help-section-label">Сотруднику</div>';
       html += faq('calendar', 'Расписание и обозначения',
         '<p>На главном экране — календарь твоих смен. Нажми на день, чтобы увидеть подробности. Листай месяцы стрелками или свайпом, кнопка <b>«Сегодня»</b> вернёт к текущему месяцу.</p>' +
-        '<p>Вверху — плашки <b>«Сегодня»</b> и <b>«Завтра»</b> с твоими сменами.</p>' + LEGEND_HTML, true);
+        '<p>Вверху — плашки <b>«Сегодня»</b> и <b>«Завтра»</b> с твоими сменами. Под календарём — сколько за месяц смен и <b>чистых часов</b>: перерывы по регламенту компании уже вычтены.</p>' + LEGEND_HTML, true);
       html += faq('globe', 'Город и время',
         '<p>Время смен показано <b>по твоему городу</b> (сейчас: ' + escapeHtml(city) + ').</p>' +
         '<p>Переехал или выбрал не тот город — нажми на город в шапке экрана.</p>' +
@@ -2774,6 +2792,72 @@
       adminData.autoPublish = !!on;
       showToast(on ? 'Публикуем сразу' : 'Режим черновика', on ? 'Каждая правка сразу уходит сотрудникам' : 'Правки копятся до кнопки «Опубликовать»');
       renderPubBars();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ПЕРЕРЫВЫ (руководитель): какие перерывы вычитать из часов
+    // ═══════════════════════════════════════════════════════════
+    function breakRowHtml(min, brk) {
+      let opts = '';
+      for (let m = 120; m <= 1440; m += 30) {
+        opts += '<option value="' + m + '"' + (m === min ? ' selected' : '') + '>от ' + hoursText(m) + ' ч</option>';
+      }
+      return '<div class="shift-row brk-row"><div class="shift-row-fields">' +
+        '<div><label>Смена</label><select class="br-min">' + opts + '</select></div>' +
+        '<div><label>Перерывы, мин</label><input type="number" class="tpl-input br-brk" min="0" max="300" step="5" value="' + brk + '" inputmode="numeric"></div>' +
+        '<button class="shift-row-remove" type="button" aria-label="Удалить правило">' + ic('x') + '</button>' +
+        '</div><div class="shift-row-note br-note"></div></div>';
+    }
+    function showBreakRulesPopup() {
+      if (!requireAdmin()) return;
+      const rules = breakRules.length ? breakRules : [{ min: 720, brk: 60 }];
+      const overlay = openPopup('<div class="popup-title">Перерывы и чистые часы</div>' +
+        '<div class="popup-info">Перерывы вычитаются из часов: в карточке «Сегодня», в итоге месяца и в сообщении бота «График готов». Для каждой смены берётся правило с самым большим подходящим порогом.</div>' +
+        '<div class="shift-rows" id="brkRows">' + rules.map(r => breakRowHtml(r.min, r.brk)).join('') + '</div>' +
+        '<button class="popup-btn outline" id="brkAdd">+ Ещё правило</button>' +
+        '<div class="popup-hint" style="margin:10px 0 0">Например: от 11 ч — 90 мин (2 × 30 + 3 × 10); от 5 ч — 75 мин (30 + 3 × 10 + 15); от 4 ч — 15 мин. Короче самого маленького порога — перерывы не вычитаются. По ТК РФ вычитать можно только перерывы, закреплённые в правилах внутреннего распорядка.</div>' +
+        '<div class="popup-actions"><button class="popup-btn" id="brkSave">Сохранить</button></div>');
+      const rowsEl = overlay.querySelector('#brkRows');
+      const wire = row => {
+        const upd = () => {
+          const m = +row.querySelector('.br-min').value, b = +row.querySelector('.br-brk').value || 0;
+          const net = Math.max(0, m - b);
+          row.querySelector('.br-note').textContent = 'Смена ' + hoursText(m) + ' ч → ' + hoursText(net) + ' ч чистыми';
+        };
+        row.querySelector('.br-min').addEventListener('change', upd);
+        row.querySelector('.br-brk').addEventListener('input', upd);
+        row.querySelector('.shift-row-remove').addEventListener('click', () => row.remove());
+        upd();
+      };
+      rowsEl.querySelectorAll('.brk-row').forEach(wire);
+      overlay.querySelector('#brkAdd').addEventListener('click', () => {
+        if (rowsEl.children.length >= 6) { showToast('Не больше 6 правил', '', true); return; }
+        rowsEl.insertAdjacentHTML('beforeend', breakRowHtml(480, 60));
+        wire(rowsEl.lastElementChild);
+      });
+      overlay.querySelector('#brkSave').addEventListener('click', async e => {
+        const btn = e.currentTarget;
+        const list = [], seen = {};
+        for (const row of rowsEl.querySelectorAll('.brk-row')) {
+          const min = +row.querySelector('.br-min').value, brk = Math.round(+row.querySelector('.br-brk').value || 0);
+          if (brk < 0 || brk >= min || brk > 300) { showToast('Проверьте перерывы', 'Перерывы должны быть меньше самой смены', true); return; }
+          if (seen[min]) { showToast('Два правила с одним порогом', 'Оставьте одно', true); return; }
+          seen[min] = true;
+          list.push({ min: min, brk: brk });
+        }
+        btn.disabled = true; btn.textContent = 'Сохраняем…';
+        let resp;
+        try { resp = await postToServer({ action: 'set_break_rules', rules: list }); } catch (err) { resp = null; }
+        if (!resp || !resp.ok) {
+          showToast('Не сохранилось', errText(resp && resp.error) || 'Сервер недоступен', true);
+          btn.disabled = false; btn.textContent = 'Сохранить';
+          return;
+        }
+        breakRules = (resp.breakRules || list).slice().sort((a, b) => b.min - a.min);
+        overlay.remove();
+        renderAll();
+        showToast('Сохранено', breakRules.length ? 'Часы считаются без перерывов' : 'Перерывы не вычитаются');
+      });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -3763,6 +3847,7 @@
       wireTemplates();
       document.getElementById('employeesAdminBtn').addEventListener('click', openEmployeesAdmin);
       document.getElementById('extraShiftsAdminBtn').addEventListener('click', openExtraShiftsAdmin);
+      document.getElementById('breaksBtn').addEventListener('click', showBreakRulesPopup);
 
       document.getElementById('editBackBtn').addEventListener('click', closeEditEmployees);
       document.getElementById('editCalendarBackBtn').addEventListener('click', closeEmployeeCalendar);

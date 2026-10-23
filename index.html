@@ -345,6 +345,23 @@
     .tab.active{color:var(--brand);font-weight:600;background:rgba(16,185,129,.12)}
     .tab.active .tab-icon{transform:scale(1.08)}
 
+    .pub-bar{border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:var(--space-3);font-size:14px;line-height:1.4;display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid rgba(245,158,11,.5);background:rgba(245,158,11,.10)}
+    .pub-bar.ok{border-color:rgba(16,185,129,.30);background:rgba(16,185,129,.07)}
+    .pub-bar-text{flex:1;min-width:0}
+    .pub-bar-text small,.check-row small{display:block;color:var(--tg-theme-hint-color,#64748B);font-size:12px;font-weight:400;margin-top:2px}
+    .pub-bar button{flex-shrink:0;padding:9px 14px;border:none;border-radius:12px;background:var(--grad-primary);color:#fff;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer}
+    .check-row{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;font-size:15px;line-height:1.35;cursor:pointer}
+    .popup .check-row{margin:8px 0 12px}
+    .check-row input{width:20px;height:20px;margin-top:1px;flex-shrink:0;accent-color:var(--brand)}
+    .toggle-row{margin-bottom:var(--space-3);padding:10px 14px;border:1px solid rgba(148,163,184,.25);border-radius:var(--radius-lg)}
+    .chip-row{display:flex;flex-wrap:wrap;gap:6px}
+    .chip{padding:8px 13px;border-radius:999px;border:1px solid rgba(148,163,184,.45);font-size:14px;background:transparent;color:inherit;font-family:inherit;cursor:pointer}
+    .chip.on{background:var(--brand);color:#fff;border-color:transparent;font-weight:600}
+    .tpl-label{display:block;font-size:13px;font-weight:600;margin:16px 0 6px}
+    .tpl-row{display:flex;gap:10px}.tpl-row>div{flex:1;min-width:0}
+    .tpl-input{width:100%;padding:11px 12px;border-radius:var(--radius-lg);border:1px solid rgba(148,163,184,.4);font-size:15px;font-family:inherit;background:var(--tg-theme-bg-color,#fff);color:var(--tg-theme-text-color,#0F172A);box-sizing:border-box;min-height:44px}
+    @media (prefers-color-scheme:dark){.tpl-input{background:rgba(15,23,42,.6);color:var(--tg-theme-text-color,#F1F5F9)}}
+    .people-pick{max-height:200px;overflow:auto;border:1px solid rgba(148,163,184,.3);border-radius:var(--radius-lg);padding:4px 12px}
     .tab-content{display:none}
     .tab-content.active{display:block;animation:fadeInContent .25s ease-out}
     @keyframes fadeInContent{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -834,6 +851,8 @@
 
   <div class="tab-content" id="tabAdmin">
     <div class="info-block">Нажми на день — увидишь, кто может выйти на подработку. Всё время здесь — <b>по Москве</b>.</div>
+    <div class="pub-slot"></div>
+    <label class="check-row toggle-row"><input type="checkbox" id="autoPubToggle"><span>Публиковать сразу<small>Без черновика: каждая правка сразу уходит сотрудникам, и бот сообщает об изменениях</small></span></label>
     <button class="admin-action-btn" id="employeesAdminBtn">
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
       Сотрудники
@@ -841,6 +860,10 @@
     <button class="admin-action-btn" id="editScheduleBtn">
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
       Редактировать расписание
+    </button>
+    <button class="admin-action-btn" id="templatesBtn">
+      <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></span>
+      Шаблоны графика
     </button>
     <button class="admin-action-btn" id="extraShiftsAdminBtn">
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/></svg></span>
@@ -862,11 +885,22 @@
     </div>
   </div>
 
+  <div class="tab-content" id="tabTemplates">
+    <div class="edit-header">
+      <button class="edit-back" id="templatesBackBtn" aria-label="Назад">‹</button>
+      <div class="edit-title">Шаблоны графика</div>
+    </div>
+    <div class="pub-slot"></div>
+    <div class="info-block">Заполни график на месяц за минуту: «2/2», «пн–пт» или повтор прошлой недели. Время — <b>по Москве</b>. Перед записью покажу, сколько дней изменится.</div>
+    <div id="tplForm"></div>
+  </div>
+
   <div class="tab-content" id="tabEditEmployees">
     <div class="edit-header">
       <button class="edit-back" id="editBackBtn" aria-label="Назад">‹</button>
       <div class="edit-title">Редактирование расписания</div>
     </div>
+    <div class="pub-slot"></div>
     <div class="info-block">Выбери сотрудника, чтобы посмотреть и изменить его смены. Время вносится <b>по Москве</b> — каждый сотрудник увидит его в своём часовом поясе.</div>
     <div id="employeesList" class="employees-list"></div>
   </div>
@@ -876,6 +910,7 @@
       <button class="edit-back" id="editCalendarBackBtn" aria-label="Назад">‹</button>
       <div class="edit-title" id="editCalendarTitle">Сотрудник</div>
     </div>
+    <div class="pub-slot"></div>
     <div class="month-header">
       <button class="month-nav" id="prevMonthEdit" aria-label="Предыдущий месяц">‹</button>
       <div class="month-title" id="monthTitleEdit">—</div>
@@ -956,7 +991,7 @@
     // ═══════════════════════════════════════════════════════════
     // КОНФИГ — единственная настройка
     // ═══════════════════════════════════════════════════════════
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';   // ← URL Apps Script Web App
+    const WEB_APP_URL = 'заглушка';   // ← URL Apps Script Web App
     const BOT_LINK    = 'https://t.me/miniwfm_bot';
 
     const CONFIG_READY = /^https:\/\/\S+/.test(WEB_APP_URL);
@@ -1016,6 +1051,9 @@
       request_not_found: 'Заявка не найдена',
       phone_taken: 'Этот номер уже есть у другого сотрудника',
       invalid_phone: 'Неверный номер телефона', empty_name: 'Введите имя',
+      bad_range: 'Период — от 1 до 62 дней', bad_cycle: 'Проверьте число рабочих и выходных дней',
+      no_people: 'Выберите сотрудников', no_days: 'Выберите дни недели', bad_month: 'Неверный месяц',
+      too_many: 'Слишком много изменений за раз — сузьте период или список', bad_mode: 'Неверный способ заполнения',
       not_found: 'Не найдено', server_error: 'Ошибка сервера'
     };
     function errText(code) { return ERRORS[code] || ('Ошибка: ' + String(code || 'неизвестно')); }
@@ -1466,6 +1504,7 @@
       renderHeader(); renderBanner(); renderCalendar();
       renderAvailabilityCalendar(); renderExtraShiftsBanner(); renderTip();
       if (adminData) { renderAdminCalendar(); renderEditCalendar(); }
+      renderPubBars();
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -1760,7 +1799,7 @@
         { e: '🔔', t: 'Бот напомнит', x: 'Вечером накануне смены бот пришлёт напоминание. <b>Не отключай уведомления бота</b> в Telegram.<br><br>Вся инструкция — во вкладке <b>«Помощь»</b> внизу экрана.' }
       ];
       if (me && me.isAdmin) {
-        slides.splice(5, 0, { e: '🛠', t: 'Для руководителя', x: 'Во вкладке <b>«Админ»</b> — редактирование смен (время вносится по Москве), сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
+        slides.splice(5, 0, { e: '🛠', t: 'Для руководителя', x: 'Во вкладке <b>«Админ»</b> — расписание (время вносится по Москве) с <b>шаблонами</b> и <b>публикацией</b>: правки сначала в черновике, сотрудникам они уходят после кнопки «Опубликовать». Там же сотрудники, доп. смены и заявки. Подробности — во вкладке «Помощь».' });
       }
       return slides;
     }
@@ -1964,6 +2003,8 @@
         html += '<div class="help-section-label">Руководителю</div>';
         html += faq('✏️', 'Редактирование смен',
           '<ol class="steps"><li><b>«Админ»</b> → <b>«Редактировать расписание»</b> → выбери сотрудника.</li><li>Нажми на день, укажи время <b>по Москве</b> и сохрани.</li></ol>' +
+          '<p><b>Черновик и публикация.</b> Всё, что ты меняешь в расписании, сначала попадает в <b>черновик</b>: сотрудники этого не видят. Когда график готов, нажми <b>«Опубликовать»</b> на жёлтой плашке — сотрудники увидят его в приложении, а бот пришлёт им сообщение («График на ноябрь готов» или список изменённых дней — в их часовом поясе). Если нужно, чтобы любые правки уходили сразу, включи переключатель <b>«Публиковать сразу»</b> во вкладке «Админ».</p>' +
+          '<p><b>Шаблоны графика</b> («Админ» → «Шаблоны графика»): выбери сотрудников, способ — цикл (2/2, 3/3, 5/2…), дни недели (пн–пт) или копия недели — время смены и период. Перед записью приложение покажет, сколько дней изменится. По умолчанию занятые дни не затираются. Лист-месяц (например, «Декабрь_2026») должен уже быть в таблице.</p>' +
           '<p><b>Несколько смен в день</b> — «+ Добавить ещё смену». <b>Ночная смена</b> — выбери конец раньше начала (22:00 → 06:00). Есть время <b>24:00</b>.</p>' +
           '<p>В таблице: <b>09:00-18:00</b>, несколько смен — через точку с запятой: <b>07:00-11:00; 18:00-22:00</b>. Больничный — <b>Б</b>, отпуск — <b>О</b>.</p>');
         html += faq('👥', 'Сотрудники',
@@ -2072,7 +2113,8 @@
       if (payload.status === 'Б' || payload.status === 'О') fresh.push({ date: date, start: '', end: '', status: payload.status });
       else if (payload.shifts) payload.shifts.forEach(s => fresh.push({ date: date, start: s.start, end: s.end, status: '' }));
       fresh.forEach(s => adminData.shifts.push(Object.assign({ phone: phone }, s)));
-      if (me && phone === me.phone) {
+      if (resp.pending) adminData.pending = resp.pending;
+      if (resp.published && me && phone === me.phone) {
         myShifts = myShifts.filter(s => s.extra || s.date !== date).concat(fresh);
       }
 
@@ -2080,7 +2122,7 @@
       if (payload.status === 'Б') msg = 'больничный';
       else if (payload.status === 'О') msg = 'отпуск';
       else if (payload.shifts) msg = payload.shifts.map(s => s.start + '–' + s.end).join(', ') + ' МСК';
-      showToast('Сохранено', formatDateRu(date) + ' · ' + msg);
+      showToast(resp.published ? 'Опубликовано' : 'Сохранено в черновик', formatDateRu(date) + ' · ' + msg);
       renderAll();
       return true;
     }
@@ -2152,6 +2194,285 @@
           '</div><div class="employee-arrow">' + ICONS.arrowRight + '</div>';
         item.addEventListener('click', () => openEmployeeCalendar(emp.phone, emp.name));
         list.appendChild(item);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ЧЕРНОВИК И ПУБЛИКАЦИЯ ГРАФИКА (руководитель)
+    // ═══════════════════════════════════════════════════════════
+    function pluralRu(n, one, few, many) {
+      const a = Math.abs(n) % 100, b = a % 10;
+      if (a > 10 && a < 20) return many;
+      if (b > 1 && b < 5) return few;
+      if (b === 1) return one;
+      return many;
+    }
+    function pendingInfo() { return (adminData && adminData.pending) || { count: 0, people: 0, months: [] }; }
+    function monthLabel(ym) { const p = ym.split('-').map(Number); return MONTHS_NOM[p[1] - 1] + ' ' + p[0]; }
+
+    function renderPubBars() {
+      const slots = document.querySelectorAll('.pub-slot');
+      const show = !!(me && me.isAdmin && adminData);
+      const p = pendingInfo();
+      const auto = !!(adminData && adminData.autoPublish);
+      let html = '';
+      if (show) {
+        if (auto) {
+          html = '<div class="pub-bar ok"><div class="pub-bar-text">⚡ Правки уходят сотрудникам сразу<small>Включён режим «Публиковать сразу»</small></div></div>';
+        } else if (p.count) {
+          html = '<div class="pub-bar"><div class="pub-bar-text"><b>Черновик: ' + p.count + ' ' + pluralRu(p.count, 'изменение', 'изменения', 'изменений') +
+            '</b><small>Сотрудники этого пока не видят · ' + p.people + ' ' + pluralRu(p.people, 'сотрудник', 'сотрудника', 'сотрудников') +
+            '</small></div><button type="button" data-pub-open="1">Опубликовать</button></div>';
+        } else {
+          html = '<div class="pub-bar ok"><div class="pub-bar-text">✓ График опубликован<small>Сотрудники видят актуальную версию</small></div></div>';
+        }
+      }
+      slots.forEach(el => { el.innerHTML = html; });
+      const tg2 = document.getElementById('autoPubToggle');
+      if (tg2) tg2.checked = auto;
+    }
+
+    function showPublishPopup() {
+      const p = pendingInfo();
+      if (!p.count) { showToast('Всё опубликовано', 'Нечего отправлять'); return; }
+      const months = p.months.map(m =>
+        '<div class="admin-list-item"><span class="admin-list-name">' + escapeHtml(monthLabel(m.ym)) + (m.isNew ? ' · новый месяц' : '') +
+        '</span><span class="admin-list-time">' + m.count + ' ' + pluralRu(m.count, 'день', 'дня', 'дней') + '</span></div>').join('');
+      let html = '<div class="popup-title">Опубликовать график</div>' +
+        '<div class="popup-info">Сотрудники увидят изменения в приложении, а бот пришлёт сообщение: про новый месяц — «График готов», про правки — список изменённых дней.</div>' +
+        months +
+        '<label class="check-row"><input type="checkbox" id="pubNotify" checked><span>Отправить уведомления в Telegram</span></label>' +
+        '<button class="popup-btn" id="pubAll">Опубликовать всё</button>';
+      if (p.months.length > 1) {
+        p.months.forEach(m => { html += '<button class="popup-btn secondary" style="margin-bottom:8px" data-pub-month="' + m.ym + '">Только ' + escapeHtml(monthLabel(m.ym)) + '</button>'; });
+      }
+      html += '<button class="popup-btn secondary" id="pubCancel">Отмена</button>';
+      const overlay = openPopup(html);
+      overlay.querySelector('#pubCancel').addEventListener('click', () => overlay.remove());
+      const run = async (month) => {
+        const notify = overlay.querySelector('#pubNotify').checked;
+        overlay.querySelectorAll('button').forEach(b => { b.disabled = true; });
+        overlay.querySelector('#pubAll').textContent = 'Публикуем…';
+        let resp;
+        try { resp = await postToServer({ action: 'publish_schedule', month: month || '', notify: notify }); }
+        catch (e) { showToast('Ошибка сети', 'Попробуйте ещё раз', true); overlay.querySelectorAll('button').forEach(b => { b.disabled = false; }); overlay.querySelector('#pubAll').textContent = 'Опубликовать всё'; return; }
+        if (!resp || !resp.ok) {
+          showToast('Ошибка', errText(resp && resp.error), true);
+          overlay.querySelectorAll('button').forEach(b => { b.disabled = false; });
+          overlay.querySelector('#pubAll').textContent = 'Опубликовать всё';
+          return;
+        }
+        overlay.remove();
+        if (adminData) adminData.pending = resp.pending || { count: 0, people: 0, months: [] };
+        let sub = notify ? ('Уведомлено: ' + (resp.notified || 0)) : 'Без уведомлений';
+        if (notify && resp.noTg) sub += ' · не заходили в бот: ' + resp.noTg;
+        showToast('Опубликовано', sub);
+        renderAll();
+        refreshData(true);
+      };
+      overlay.querySelector('#pubAll').addEventListener('click', () => run(''));
+      overlay.querySelectorAll('[data-pub-month]').forEach(b => b.addEventListener('click', () => run(b.getAttribute('data-pub-month'))));
+    }
+
+    async function setAutoPublish(on, box) {
+      let resp;
+      try { resp = await postToServer({ action: 'set_publish_mode', auto: !!on }); } catch (e) { resp = null; }
+      if (!resp || !resp.ok) { showToast('Ошибка', 'Не удалось переключить режим', true); box.checked = !on; return; }
+      adminData.autoPublish = !!on;
+      showToast(on ? 'Публикуем сразу' : 'Режим черновика', on ? 'Каждая правка сразу уходит сотрудникам' : 'Правки копятся до кнопки «Опубликовать»');
+      renderPubBars();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ШАБЛОНЫ ГРАФИКА
+    // ═══════════════════════════════════════════════════════════
+    const TPL_DAYS = [[1, 'Пн'], [2, 'Вт'], [3, 'Ср'], [4, 'Чт'], [5, 'Пт'], [6, 'Сб'], [7, 'Вс']];
+    const tpl = { mode: 'cycle', work: 2, off: 2, days: [1, 2, 3, 4, 5], shifts: [{ start: '09:00', end: '18:00' }],
+      from: '', to: '', first: '', src: '', overwrite: 'empty', alternate: true, people: {} };
+
+    function monthBoundsIso(y, m0) {   // m0: 0..11
+      const last = new Date(Date.UTC(y, m0 + 1, 0)).getUTCDate();
+      return [y + '-' + pad2(m0 + 1) + '-01', y + '-' + pad2(m0 + 1) + '-' + pad2(last)];
+    }
+    function mondayOfIso(iso) {
+      const p = iso.split('-').map(Number);
+      const wd = new Date(Date.UTC(p[0], p[1] - 1, p[2])).getUTCDay();
+      return addDays(iso, -((wd + 6) % 7));
+    }
+
+    function openTemplates() {
+      if (!requireAdmin()) return;
+      const now = nowAt(MSK_OFFSET);
+      const b = now.d > 20 ? monthBoundsIso(now.m === 11 ? now.y + 1 : now.y, (now.m + 1) % 12) : monthBoundsIso(now.y, now.m);
+      tpl.from = now.d > 20 ? b[0] : addDays(now.iso, 1);
+      if (tpl.from > b[1]) tpl.from = b[0];
+      tpl.to = b[1];
+      tpl.first = tpl.from;
+      tpl.src = mondayOfIso(addDays(tpl.from, -7));
+      tpl.people = {};
+      (adminData.employees || []).forEach(e => { tpl.people[e.phone] = true; });
+      showTabContent('tabTemplates');
+      setSubtitle('', false);
+      renderTemplates();
+    }
+    function closeTemplates() { showTabContent('tabAdmin'); setSubtitle('Кто может выйти', true); }
+
+    function tplCollectShifts() {
+      const rows = document.querySelectorAll('#tplShiftRows .shift-row');
+      if (!rows.length) return;
+      tpl.shifts = Array.from(rows).map(r => ({ start: r.querySelector('.sr-start').value, end: r.querySelector('.sr-end').value }));
+    }
+
+    function renderTemplates() {
+      const root = document.getElementById('tplForm');
+      const emps = (adminData.employees || []).slice().sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+      const chosen = emps.filter(e => tpl.people[e.phone]).length;
+      const chip = (on, attr, label) => '<button type="button" class="chip' + (on ? ' on' : '') + '" ' + attr + '>' + label + '</button>';
+
+      let h = '<div class="tpl-label">Кому (' + chosen + ' из ' + emps.length + ')</div>' +
+        '<div class="chip-row" style="margin-bottom:8px">' + chip(chosen === emps.length, 'data-people-all="1"', 'Все') + chip(chosen === 0, 'data-people-none="1"', 'Никого') + '</div>' +
+        '<div class="people-pick">' + emps.map(e =>
+          '<label class="check-row"><input type="checkbox" data-person="' + escapeHtml(e.phone) + '"' + (tpl.people[e.phone] ? ' checked' : '') + '><span>' + escapeHtml(e.name) + '</span></label>').join('') + '</div>';
+
+      h += '<div class="tpl-label">Как заполнять</div><div class="chip-row">' +
+        chip(tpl.mode === 'cycle', 'data-mode="cycle"', 'Цикл (2/2, 3/3…)') +
+        chip(tpl.mode === 'weekdays', 'data-mode="weekdays"', 'Дни недели') +
+        chip(tpl.mode === 'copy_week', 'data-mode="copy_week"', 'Копия недели') + '</div>';
+
+      if (tpl.mode === 'cycle') {
+        const presets = [[2, 2], [3, 3], [1, 2], [1, 3], [5, 2], [4, 3]];
+        h += '<div class="tpl-label">Готовые схемы</div><div class="chip-row">' +
+          presets.map(p => chip(tpl.work === p[0] && tpl.off === p[1], 'data-preset="' + p[0] + '/' + p[1] + '"', p[0] + '/' + p[1])).join('') + '</div>' +
+          '<div class="tpl-row"><div><label class="tpl-label">Рабочих дней подряд</label><select id="tplWork" class="tpl-input">' +
+          Array.from({ length: 14 }, (_, i) => '<option value="' + (i + 1) + '"' + (tpl.work === i + 1 ? ' selected' : '') + '>' + (i + 1) + '</option>').join('') + '</select></div>' +
+          '<div><label class="tpl-label">Выходных подряд</label><select id="tplOff" class="tpl-input">' +
+          Array.from({ length: 14 }, (_, i) => '<option value="' + (i + 1) + '"' + (tpl.off === i + 1 ? ' selected' : '') + '>' + (i + 1) + '</option>').join('') + '</select></div></div>' +
+          '<label class="tpl-label" for="tplFirst">Первый рабочий день цикла</label><input type="date" id="tplFirst" class="tpl-input" value="' + tpl.first + '">' +
+          '<label class="check-row" style="margin-top:10px"><input type="checkbox" id="tplAlt"' + (tpl.alternate ? ' checked' : '') + '><span>Чередовать сотрудников<small>Каждый второй начнёт со сдвигом, чтобы команда не уходила на выходные одновременно</small></span></label>';
+      } else if (tpl.mode === 'weekdays') {
+        h += '<div class="tpl-label">Рабочие дни недели</div><div class="chip-row">' +
+          TPL_DAYS.map(d => chip(tpl.days.indexOf(d[0]) !== -1, 'data-day="' + d[0] + '"', d[1])).join('') + '</div>' +
+          '<div class="chip-row" style="margin-top:8px">' + chip(false, 'data-days-set="1,2,3,4,5"', 'Пн–Пт') + chip(false, 'data-days-set="6,7"', 'Сб–Вс') + chip(false, 'data-days-set="1,2,3,4,5,6,7"', 'Каждый день') + '</div>';
+      } else {
+        h += '<label class="tpl-label" for="tplSrc">Неделя-образец начинается с</label><input type="date" id="tplSrc" class="tpl-input" value="' + tpl.src + '">' +
+          '<div class="popup-hint" style="margin-top:6px">Возьмём 7 дней с этой даты у каждого выбранного сотрудника и повторим по кругу на весь период. Выходной в образце — выходной и в копии.</div>';
+      }
+
+      if (tpl.mode !== 'copy_week') {
+        h += '<div class="tpl-label">Время смены (по Москве)</div><div class="shift-rows" id="tplShiftRows">' +
+          tpl.shifts.map(s => shiftRowHtml(s.start, s.end)).join('') + '</div>' +
+          '<button type="button" class="popup-btn outline" id="tplAddShift">+ Добавить ещё смену в день</button>';
+      }
+
+      const now = nowAt(MSK_OFFSET);
+      const cur = monthBoundsIso(now.y, now.m), nxt = monthBoundsIso(now.m === 11 ? now.y + 1 : now.y, (now.m + 1) % 12);
+      h += '<div class="tpl-label">Период</div><div class="chip-row" style="margin-bottom:8px">' +
+        chip(tpl.from === cur[0] && tpl.to === cur[1], 'data-range="' + cur.join('|') + '"', MONTHS_NOM[now.m]) +
+        chip(tpl.from === nxt[0] && tpl.to === nxt[1], 'data-range="' + nxt.join('|') + '"', MONTHS_NOM[(now.m + 1) % 12]) + '</div>' +
+        '<div class="tpl-row"><div><label class="tpl-label" for="tplFrom">С</label><input type="date" id="tplFrom" class="tpl-input" value="' + tpl.from + '"></div>' +
+        '<div><label class="tpl-label" for="tplTo">По</label><input type="date" id="tplTo" class="tpl-input" value="' + tpl.to + '"></div></div>';
+
+      h += '<div class="tpl-label">Если день уже занят</div><div class="chip-row">' +
+        chip(tpl.overwrite === 'empty', 'data-ow="empty"', 'Не трогать занятые') + chip(tpl.overwrite === 'all', 'data-ow="all"', 'Заменить всё') + '</div>' +
+        '<div class="popup-hint" style="margin-top:6px">' + (tpl.overwrite === 'empty'
+          ? 'Заполним только пустые дни. Смены, больничные и отпуска останутся как были.'
+          : 'Все дни периода станут как в шаблоне: старые смены, больничные и отпуска будут заменены, а выходные по шаблону — очищены.') + '</div>' +
+        '<button type="button" class="popup-btn" id="tplApply" style="margin-top:14px">Проверить и применить</button>';
+
+      root.innerHTML = h;
+      root.querySelectorAll('#tplShiftRows .shift-row').forEach(wireShiftRow);
+    }
+
+    function wireTemplates() {
+      const root = document.getElementById('tplForm');
+      root.addEventListener('click', e => {
+        const t = e.target.closest('button'); if (!t) return;
+        const emps = adminData ? adminData.employees : [];
+        if (t.hasAttribute('data-people-all')) { emps.forEach(x => { tpl.people[x.phone] = true; }); tplCollectShifts(); renderTemplates(); }
+        else if (t.hasAttribute('data-people-none')) { tpl.people = {}; tplCollectShifts(); renderTemplates(); }
+        else if (t.dataset.mode) { tplCollectShifts(); tpl.mode = t.dataset.mode; renderTemplates(); }
+        else if (t.dataset.preset) { tplCollectShifts(); const p = t.dataset.preset.split('/'); tpl.work = +p[0]; tpl.off = +p[1]; renderTemplates(); }
+        else if (t.dataset.day) { tplCollectShifts(); const d = +t.dataset.day, i = tpl.days.indexOf(d); if (i === -1) tpl.days.push(d); else tpl.days.splice(i, 1); renderTemplates(); }
+        else if (t.dataset.daysSet) { tplCollectShifts(); tpl.days = t.dataset.daysSet.split(',').map(Number); renderTemplates(); }
+        else if (t.dataset.range) { tplCollectShifts(); const r = t.dataset.range.split('|'); tpl.from = r[0]; tpl.to = r[1]; tpl.first = r[0]; renderTemplates(); }
+        else if (t.dataset.ow) { tplCollectShifts(); tpl.overwrite = t.dataset.ow; renderTemplates(); }
+        else if (t.id === 'tplAddShift') {
+          const rows = document.getElementById('tplShiftRows');
+          if (rows.children.length >= 4) { showToast('Ошибка', 'Не больше 4 смен в день', true); return; }
+          rows.insertAdjacentHTML('beforeend', shiftRowHtml('09:00', '18:00'));
+          wireShiftRow(rows.lastElementChild);
+        }
+        else if (t.id === 'tplApply') tplApply(t);
+      });
+      root.addEventListener('change', e => {
+        const t = e.target;
+        if (t.dataset && t.dataset.person !== undefined) { if (t.checked) tpl.people[t.dataset.person] = true; else delete tpl.people[t.dataset.person]; }
+        else if (t.id === 'tplWork') tpl.work = +t.value;
+        else if (t.id === 'tplOff') tpl.off = +t.value;
+        else if (t.id === 'tplFirst') tpl.first = t.value;
+        else if (t.id === 'tplAlt') tpl.alternate = t.checked;
+        else if (t.id === 'tplSrc') tpl.src = t.value;
+        else if (t.id === 'tplFrom') tpl.from = t.value;
+        else if (t.id === 'tplTo') tpl.to = t.value;
+      });
+    }
+
+    function tplPayload() {
+      tplCollectShifts();
+      const phones = Object.keys(tpl.people);
+      const p = { action: 'apply_template', mode: tpl.mode, phones: phones, from: tpl.from, to: tpl.to, overwrite: tpl.overwrite };
+      if (tpl.mode === 'cycle') Object.assign(p, { work: tpl.work, off: tpl.off, first_work_date: tpl.first || tpl.from, alternate: tpl.alternate, shifts: tpl.shifts });
+      else if (tpl.mode === 'weekdays') Object.assign(p, { days: tpl.days, shifts: tpl.shifts });
+      else Object.assign(p, { src_from: tpl.src });
+      return p;
+    }
+    // Проверка введённого до отправки на сервер (то же проверяет и сервер)
+    function tplValidate(p) {
+      if (!p.phones.length) return 'Выберите хотя бы одного сотрудника';
+      if (!isValidIsoDate(p.from) || !isValidIsoDate(p.to)) return 'Укажите период';
+      if (p.to < p.from) return 'Конец периода раньше начала';
+      let d = 0; for (let x = p.from; x < p.to && d < 70; x = addDays(x, 1)) d++;
+      if (d + 1 > 62) return 'Период — не больше 62 дней';
+      if (p.mode === 'weekdays' && !p.days.length) return 'Выберите дни недели';
+      if (p.mode === 'copy_week' && !isValidIsoDate(p.src_from)) return 'Укажите неделю-образец';
+      if (p.shifts) for (const s of p.shifts) if (!slotDuration(s.start, s.end)) return 'Начало и конец смены совпадают';
+      return '';
+    }
+
+    async function tplApply(btn) {
+      const payload = tplPayload();
+      const bad = tplValidate(payload);
+      if (bad) { showToast('Проверьте данные', bad, true); return; }
+      btn.disabled = true; btn.textContent = 'Считаем…';
+      let resp;
+      try { resp = await postToServer(Object.assign({}, payload, { dryRun: true })); }
+      catch (e) { showToast('Ошибка сети', 'Попробуйте ещё раз', true); btn.disabled = false; btn.textContent = 'Проверить и применить'; return; }
+      btn.disabled = false; btn.textContent = 'Проверить и применить';
+      if (!resp || !resp.ok) { showToast('Ошибка', errText(resp && resp.error), true); return; }
+
+      let info = '<b>' + resp.willWrite + '</b> ' + pluralRu(resp.willWrite, 'день изменится', 'дня изменятся', 'дней изменятся') +
+        ' у <b>' + resp.people + '</b> ' + pluralRu(resp.people, 'сотрудника', 'сотрудников', 'сотрудников') + '.';
+      if (resp.busy) info += '<br>Пропущено занятых дней: ' + resp.busy + '.';
+      if (resp.noSheet) info += '<br>⚠️ Для ' + resp.noSheet + ' ' + pluralRu(resp.noSheet, 'дня', 'дней', 'дней') + ' нет листа-месяца в таблице — они не заполнятся.';
+      const auto = adminData && adminData.autoPublish;
+      info += auto ? '<br><br>Включён режим «Публиковать сразу»: сотрудники получат сообщения об изменениях.'
+                   : '<br><br>Это попадёт в <b>черновик</b>. Сотрудники увидят график после кнопки «Опубликовать».';
+      const overlay = openPopup('<div class="popup-title">Применить шаблон?</div><div class="popup-info">' + info + '</div>' +
+        (resp.willWrite ? '<button class="popup-btn" id="tplGo">Применить</button>' : '') +
+        '<button class="popup-btn secondary" id="tplNo">' + (resp.willWrite ? 'Отмена' : 'Понятно') + '</button>');
+      overlay.querySelector('#tplNo').addEventListener('click', () => overlay.remove());
+      const go = overlay.querySelector('#tplGo');
+      if (!go) return;
+      go.addEventListener('click', async () => {
+        go.disabled = true; go.textContent = 'Применяем…';
+        let r2;
+        try { r2 = await postToServer(payload); } catch (e) { r2 = null; }
+        if (!r2 || !r2.ok) { showToast('Ошибка', errText(r2 && r2.error) || 'Не удалось применить', true); go.disabled = false; go.textContent = 'Применить'; return; }
+        overlay.remove();
+        if (adminData && r2.pending) adminData.pending = r2.pending;
+        showToast('Готово', 'Изменено дней: ' + r2.written + (auto ? '' : ' · в черновике'));
+        await refreshData(true);
+        renderPubBars();
       });
     }
 
@@ -2901,6 +3222,11 @@
       document.getElementById('sharePhone').addEventListener('click', shareContact);
 
       document.getElementById('editScheduleBtn').addEventListener('click', openEditEmployees);
+      document.getElementById('templatesBtn').addEventListener('click', openTemplates);
+      document.getElementById('templatesBackBtn').addEventListener('click', closeTemplates);
+      document.getElementById('autoPubToggle').addEventListener('change', e => setAutoPublish(e.target.checked, e.target));
+      document.addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-pub-open]')) showPublishPopup(); });
+      wireTemplates();
       document.getElementById('employeesAdminBtn').addEventListener('click', openEmployeesAdmin);
       document.getElementById('extraShiftsAdminBtn').addEventListener('click', openExtraShiftsAdmin);
 

@@ -849,6 +849,7 @@
     .splash-inner{align-items:center}
     .splash-wordmark{font-size:64px;font-weight:700;letter-spacing:-.055em;line-height:1;color:var(--ink);margin:0;opacity:0;animation:riseIn .6s cubic-bezier(.22,1,.36,1) .1s forwards}
     .splash-rota{width:168px;margin:26px 0 20px;--rh:9px;--rg:8px;--base:150ms}
+    .splash-team{margin-top:4px!important;animation-delay:.5s!important}
     .splash-sub{font-size:14px;font-weight:500;letter-spacing:-.005em;color:var(--muted);margin:0;opacity:0;animation:riseIn .5s cubic-bezier(.22,1,.36,1) .35s forwards}
     .splash-error{background:var(--card);border:1px solid var(--line);box-shadow:none}
     .splash-error-title{color:var(--danger)}
@@ -904,6 +905,17 @@
     .gate-title{font-size:28px;font-weight:650}
     .gate-mark{font-weight:650}
     .day .night-icon{position:absolute;top:5px;right:5px;width:9px;height:9px;margin:0}
+
+    /* Согласие на обработку данных */
+    .consent-doc{max-height:44vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(100,116,139,.3);border-radius:12px;padding:12px 14px;margin:0 0 14px;font-size:13px;line-height:1.5}
+    .consent-doc h4{font-size:13px;font-weight:700;margin:12px 0 4px}
+    .consent-doc h4:first-child{margin-top:0}
+    .consent-doc p{margin:0 0 6px}
+    .consent-check{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4;margin:0 0 14px;cursor:pointer}
+    .consent-check input{width:22px;height:22px;flex:none;margin:0;accent-color:#0E6B73}
+    .consent-people{font-size:13px;margin:8px 0 14px}
+    .consent-people div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid rgba(100,116,139,.15)}
+    .consent-field{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1px solid rgba(100,116,139,.35);background:transparent;color:inherit;font:inherit;font-size:15px;margin:0 0 8px}
 
     /* ═══════════════════════════════════════════════════════════
        ДИЗАЙН v4 — петроль. Тема берётся из Telegram (атрибут data-theme на <html>).
@@ -1016,7 +1028,146 @@
       .month-header{gap:6px}
       .today-btn{padding:0 8px}
     }
-  </style>
+      html .popup-overlay.consent-overlay{background:var(--bg,var(--tg-theme-bg-color,#fff));align-items:stretch}
+    html .consent-overlay .popup{max-height:none;height:100%;border-radius:0;box-shadow:none;overflow:hidden;display:flex;flex-direction:column;padding-top:max(20px,env(safe-area-inset-top))}
+    html .consent-overlay .consent-doc{max-height:none;flex:1 1 auto;min-height:120px}
+    html .consent-overlay .popup>*:not(.consent-doc){flex:none}
+
+    /* ═══════════════════════════════════════════════════════════
+       ДИЗАЙН v5 — «тёплая бумага». Шрифт лежит на этом же сервере (папка /fonts).
+       Контраст текста не ниже 7:1 (кроме приглушённых прошлых смен и дней чужого месяца).
+       ═══════════════════════════════════════════════════════════ */
+    @font-face{font-family:'Turno Sans';font-weight:400;font-style:normal;font-display:swap;src:url('fonts/Inter-Regular.woff') format('woff')}
+    @font-face{font-family:'Turno Sans';font-weight:500;font-style:normal;font-display:swap;src:url('fonts/Inter-Medium.woff') format('woff')}
+    @font-face{font-family:'Turno Sans';font-weight:600;font-style:normal;font-display:swap;src:url('fonts/Inter-SemiBold.woff') format('woff')}
+    @font-face{font-family:'Turno Sans';font-weight:700;font-style:normal;font-display:swap;src:url('fonts/Inter-Bold.woff') format('woff')}
+    :root{
+      --paper:#F6F4EF;--card:#FFFFFF;--ink:#1F2A28;--muted:#55504A;--line:#E8E2D6;
+      --brand:#0B5E66;--brand-dark:#094F57;--brand-text:#094F57;--brand-light:#094F57;--on-brand:#FFFFFF;
+      --soft:#E3EFED;--soft-strong:#C4E0DA;
+      --shift-bg:#E3EFED;--shift-fg:#083F45;--night-bg:#E3EFED;--night-fg:#083F45;
+      --shift-now-bg:#C4E0DA;--shift-now-fg:#05373D;
+      --band:#EEF5F3;
+      --past-bg:#F0EEE8;--past-fg:#5E584D;--other-fg:#756E60;
+      --today-bg:#0B5E66;--today-fg:#FFFFFF;
+      --sick-bg:#EFE9DF;--sick-fg:#5A4E3C;
+      --vac-bg:#E8E7F8;--vac-fg:#443C96;
+      --avail-bg:#FBEFD2;--avail-fg:#6B4710;
+      --danger:#A32525;
+      --tg-theme-bg-color:#F6F4EF !important;--tg-theme-text-color:#1F2A28 !important;
+      --tg-theme-hint-color:#55504A !important;--tg-theme-link-color:#094F57 !important;
+      --tg-theme-button-color:#0B5E66 !important;--tg-theme-secondary-bg-color:#FFFFFF !important;
+    }
+    :root[data-theme="dark"]{
+      --paper:#141311;--card:#1D1B18;--ink:#F1EDE4;--muted:#BDB6A8;--line:#322E27;
+      --brand:#0F7882;--brand-dark:#0B646D;--brand-text:#8EDAD2;--brand-light:#8EDAD2;--on-brand:#FFFFFF;
+      --soft:#1F3532;--soft-strong:#2A4B46;
+      --shift-bg:#1F3532;--shift-fg:#CBEFE9;--night-bg:#1F3532;--night-fg:#CBEFE9;
+      --shift-now-bg:#2E544E;--shift-now-fg:#E3F8F4;
+      --band:#1A2523;
+      --past-bg:#25221D;--past-fg:#ADA697;--other-fg:#8F8878;
+      --today-bg:#8EDAD2;--today-fg:#0A2A27;
+      --sick-bg:#2D2820;--sick-fg:#DCCFB8;
+      --vac-bg:#26243F;--vac-fg:#C4BEFA;
+      --avail-bg:#33290F;--avail-fg:#F0CF78;
+      --danger:#F08A8A;
+      --tg-theme-bg-color:#141311 !important;--tg-theme-text-color:#F1EDE4 !important;
+      --tg-theme-hint-color:#BDB6A8 !important;--tg-theme-link-color:#8EDAD2 !important;
+      --tg-theme-button-color:#0F7882 !important;--tg-theme-secondary-bg-color:#1D1B18 !important;
+    }
+    html,body{background:var(--paper)}
+    body{font-family:'Turno Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;letter-spacing:.005em}
+    button,input,select,textarea{font-family:inherit}
+
+    /* шапка: приветствие в две строки, круглые кнопки по центру */
+    .header{margin-bottom:16px}
+    .header-row{align-items:center;margin-bottom:8px}
+    .header-row h1{display:flex;flex-direction:column;gap:2px;font-size:30px;font-weight:700;letter-spacing:-.025em;line-height:1.1;min-width:0}
+    .header-row h1 .g-hi{font-size:15px;font-weight:500;letter-spacing:0;color:var(--muted);line-height:1.3}
+    .header-row h1 .g-name{overflow-wrap:anywhere}
+    .header-icon-btn{width:40px;height:40px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+    .header-icon-btn:hover{background:var(--card)}
+    .header-date{font-size:13px;line-height:20px;margin:0 0 14px;gap:10px;color:var(--muted)}
+    .city-chip,.company-chip{font-size:13px;font-weight:600}
+
+    /* карточка «Сегодня» */
+    .header-today,.header-today.shift,.header-today.sick,.header-today.vacation,.header-today.dayoff{padding:16px;border-radius:20px}
+    .ht-label{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .ht-main{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-top:6px}
+    .header-today.dayoff .ht-main{font-size:30px;font-weight:700}
+    .ht-sub{font-size:14px;line-height:20px;margin-top:10px;gap:8px;color:var(--muted)}
+    .ht-sub svg{width:16px;height:16px;color:var(--brand-text)}
+    /* «завтра смена» уже написано в карточке, второй строкой не повторяем */
+    body:has(.header-today.dayoff .ht-sub) #banner{display:none !important}
+
+    /* подсказка */
+    .tip-card{border-radius:20px;padding:14px 12px 14px 16px;gap:14px;margin:12px 0;align-items:center}
+    .tip-emoji{width:48px;height:48px;border-radius:16px;background:var(--soft);color:var(--brand-text)}
+    .tip-emoji .i{width:22px;height:22px}
+    .tip-title{font-size:15px;font-weight:700;margin-bottom:0;letter-spacing:-.005em}
+    .tip-body:has(.tip-action) .tip-text{display:none}
+    .tip-text{color:var(--muted);font-size:13px}
+    .tip-action{margin-top:2px;color:var(--brand-text);font-weight:700;font-size:14px}
+    .tip-close{color:var(--muted)}
+
+    /* месяц: название слева, «Сегодня» и стрелки справа */
+    .month-header{margin:20px 0 10px;gap:8px}
+    .month-title{order:0;text-align:left;font-size:20px;font-weight:700;letter-spacing:-.025em}
+    .today-btn{order:1;height:40px;border-radius:999px;padding:0 16px;background:var(--card);color:var(--ink);font-weight:600;font-size:14px}
+    #prevMonth{order:2}#nextMonth{order:3}
+    .month-nav,.edit-back{width:40px;height:40px;border-radius:999px;background:var(--card);color:var(--ink)}
+
+    /* календарь */
+    .calendar{border-radius:20px;padding:14px 8px 12px;background:var(--card);border:1px solid var(--line)}
+    .weekdays,.days{gap:4px}
+    .weekdays{margin-bottom:6px}
+    .weekday{font-size:12px;font-weight:500;color:var(--muted)}
+    .days .day{aspect-ratio:auto;height:58px;padding:4px 0 0;border-radius:12px;align-items:center;justify-content:flex-start;gap:0;color:var(--ink)}
+    .day-num{width:100%;height:28px;display:flex;align-items:center;justify-content:center;gap:2px;font-size:14px;font-weight:500;line-height:1}
+    .day .dn{display:inline-flex;align-items:center;justify-content:center;min-width:0}
+    .day-time{font-size:10.5px;line-height:12px;font-weight:600;letter-spacing:0;text-align:center}
+    .day-more{font-size:10.5px;line-height:12px}
+    .day-status{font-size:13px;font-weight:700;margin-top:0;line-height:12px}
+    .mo{display:inline-block;width:9px;height:9px;flex:none;color:inherit}
+    .mo svg{display:block;width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+    .mo-sp{visibility:hidden}
+    .day.shift .day-num{font-weight:700}
+    .day.other-month{opacity:1;color:var(--other-fg)}
+    .day.other-month .day-num{font-weight:400}
+    .day.today,.day.today:active{box-shadow:none;background:transparent}
+    .day.today .dn{width:28px;height:28px;border-radius:999px;background:var(--today-bg);color:var(--today-fg);font-weight:700}
+    .day.today .mo-sp{display:none}
+    .day.today .mo{position:absolute;top:3px;right:3px}
+    /* текущая неделя: сплошная полоса позади клеток, смены насыщеннее */
+    .days{position:relative;isolation:isolate}
+    .day.wk::before{content:'';position:absolute;top:0;bottom:0;left:-2px;right:-2px;background:var(--band);z-index:-1}
+    .day.wk-start::before{left:0;border-radius:14px 0 0 14px}
+    .day.wk-end::before{right:0;border-radius:0 14px 14px 0}
+    .day.wk{overflow:visible;background:transparent}
+    .day.shift{background:var(--shift-bg);color:var(--shift-fg)}
+    .day.shift.night{background:var(--night-bg);color:var(--night-fg)}
+    .day.shift.wk,.day.shift.night.wk{background:var(--shift-now-bg);color:var(--shift-now-fg)}
+    .day.shift.past,.day.shift.night.past{background:var(--past-bg);color:var(--past-fg)}
+    .day.sick{background:var(--sick-bg);color:var(--sick-fg)}
+    .day.vacation{background:var(--vac-bg);color:var(--vac-fg)}
+    .day.available,.day.has-people{background:var(--avail-bg);color:var(--avail-fg)}
+    .legend-color.l-shift{background:var(--shift-bg)}
+    .tz-note{color:var(--muted)}
+
+    /* нижняя панель: плашка под значком активной вкладки */
+    .tabs{background:var(--card);border-top:1px solid var(--line)}
+    .tab{padding:8px 2px 6px;font-size:11px;line-height:14px;font-weight:500;color:var(--muted)}
+    .tab-icon{width:56px;height:30px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;border-radius:999px;transition:background .2s ease}
+    .tab-icon svg{width:22px;height:22px}
+    .tab.active{color:var(--brand-text);font-weight:700}
+    .tab.active .tab-icon{background:var(--soft)}
+    .tab.active::before{display:none}
+
+    /* карточка подключения календаря, окна, поля: те же тёплые цвета */
+    .cal-connect,.employee-admin-item,.employee-card-header{background:var(--card)}
+    .popup{background:var(--card)}
+    .popup-overlay{background:rgba(31,26,20,.45)}
+</style>
 </head>
 <body>
   <div id="splash">
@@ -1024,6 +1175,7 @@
       <h1 class="splash-wordmark">Turno</h1>
       <div class="rota splash-rota" aria-hidden="true"><div class="rota-row"><i style="--l:0%;--w:40%;--d:85"></i><i class="s" style="--l:46%;--w:22%;--d:170"></i><i style="--l:74%;--w:26%;--d:255"></i></div><div class="rota-row"><i class="s" style="--l:14%;--w:34%;--d:340"></i><i style="--l:54%;--w:46%;--d:425"></i></div><div class="rota-row"><i style="--l:0%;--w:24%;--d:510"></i><i style="--l:30%;--w:38%;--d:595"></i><i class="s" style="--l:74%;--w:26%;--d:680"></i></div></div>
       <p class="splash-sub">ритм команды</p>
+      <p class="splash-sub splash-team" id="splashTeam"></p>
     </div>
     <div class="splash-error">
       <div class="splash-error-icon">
@@ -1153,6 +1305,10 @@
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
       Перерывы и чистые часы
     </button>
+    <button class="admin-action-btn" id="consentBtn">
+      <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+      Согласие на обработку данных
+    </button>
     <button class="admin-action-btn" id="extraShiftsAdminBtn">
       <span class="admin-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/></svg></span>
       Дополнительные смены
@@ -1279,7 +1435,7 @@
     // ═══════════════════════════════════════════════════════════
     // КОНФИГ — единственная настройка
     // ═══════════════════════════════════════════════════════════
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7EiCKyb20dCJ6iV0T4FHHffRk1evnJwaDDtGfKlybkzhxJhoYLJNn3q3N5Tt30B5Y/exec';   // ← URL Apps Script Web App
+    const WEB_APP_URL = 'заглушка';   // ← URL Apps Script Web App
     const BOT_LINK    = 'https://t.me/miniwfm_bot';
 
     const CONFIG_READY = /^https:\/\/\S+/.test(WEB_APP_URL);
@@ -1287,6 +1443,8 @@
     const CACHE_KEY = 'turno_cache_v3';
     const CACHE_TTL = 7 * 24 * 3600 * 1000;   // показываем сохранённое сразу, а свежее подгружаем в фоне
     const COMPANY_KEY = 'turno_company';
+    const TAGLINE_KEY = 'turno_tagline';
+    try { const t = localStorage.getItem(TAGLINE_KEY); const e = document.getElementById('splashTeam'); if (t && e) e.textContent = t; } catch (e) {}
 
     // Список городов приходит с сервера; здесь — запасной вариант
     let CITIES = {
@@ -1336,6 +1494,7 @@
 
     // Векторные иконки (стиль Lucide): одинаковая толщина линий, цвет — от текста вокруг
     const IC = {
+      shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>',
       star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
       smartphone: '<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',
       calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
@@ -1574,7 +1733,14 @@
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const text = await res.text();
-      try { return JSON.parse(text); } catch (e) { throw new Error('Сервер вернул не JSON'); }
+      let out;
+      try { out = JSON.parse(text); } catch (e) { throw new Error('Сервер вернул не JSON'); }
+      // Согласие отозвано или текст обновили, пока приложение было открыто
+      if (out && out.error === 'need_consent' && !/^consent_/.test(String(payload.action))) {
+        safeLS.del(CACHE_KEY);
+        showConsent(out);
+      }
+      return out;
     }
 
     // Загрузка данных: при сбое сети — одна повторная попытка (только для чтения, не для записи)
@@ -1586,6 +1752,7 @@
       }
     }
 
+    let myConsent = null;   // { status, version, at } — null, если согласие у компании не включено
     function applyData(resp) {
       me = resp.me || null;
       myShifts = resp.shifts || [];
@@ -1594,6 +1761,7 @@
       adminData = resp.admin || null;
       if (resp.cities && typeof resp.cities === 'object') CITIES = resp.cities;
       myCompany = resp.company || null;
+      myConsent = resp.consent || null;
       myCompanies = resp.companies || [];
       breakRules = Array.isArray(resp.breakRules) ? resp.breakRules.slice().sort((a, b) => b.min - a.min) : [];
       if (myCompany && myCompany.id) safeLS.set(COMPANY_KEY, myCompany.id);
@@ -1713,7 +1881,7 @@
     function newDayDiv(cell) {
       const div = document.createElement('div');
       div.className = 'day' + (cell.other ? ' other-month' : '') + (cell.isToday ? ' today' : '');
-      div.innerHTML = '<div class="day-num">' + cell.num + '</div>';
+      div.innerHTML = '<div class="day-num"><span class="dn">' + cell.num + '</span></div>';
       return div;
     }
 
@@ -1723,7 +1891,7 @@
       const status = entries.find(e => e.kind === 'sick' || e.kind === 'vacation');
       if (status) {
         div.classList.add(status.kind);
-        div.innerHTML = '<div class="day-num">' + num + '</div><div class="day-status">' + (status.kind === 'sick' ? 'Б' : 'О') + '</div>';
+        div.innerHTML = '<div class="day-num"><span class="dn">' + num + '</span></div><div class="day-status">' + (status.kind === 'sick' ? 'Б' : 'О') + '</div>';
         return;
       }
       const shifts = entries.filter(e => e.kind === 'shift');
@@ -1732,14 +1900,13 @@
       const night = shifts.some(s => isNightShift(s.start, s.end));
       if (night) div.classList.add('night');
       const first = shifts[0];
-      const icon = night ? '<span class="night-icon">' + ICONS.moon + '</span>' : '';
-      let html = '<div class="day-num">' + num + '</div>';
+      let html = '<div class="day-num">' + (night ? '<i class="mo mo-sp"></i>' : '') + '<span class="dn">' + num + '</span>' + (night ? '<i class="mo">' + ICONS.moon + '</i>' : '') + '</div>';
       if (shifts.some(s => s.extra)) html += '<span class="day-star">' + ic('star', 'i-fill') + '</span>';
       if (shifts.length > 1) {
         // Несколько смен: начало первой и счётчик остальных — помещается в маленькую клетку
-        html += '<div class="day-time">' + escapeHtml(first.start) + icon + '</div><div class="day-more">+' + (shifts.length - 1) + '</div>';
+        html += '<div class="day-time">' + escapeHtml(first.start) + '</div><div class="day-more">+' + (shifts.length - 1) + '</div>';
       } else {
-        html += '<div class="day-time">' + escapeHtml(first.start) + '<br>' + escapeHtml(first.end) + icon + '</div>';
+        html += '<div class="day-time">' + escapeHtml(first.start) + '<br>' + escapeHtml(first.end) + '</div>';
       }
       div.innerHTML = html;
     }
@@ -1765,7 +1932,7 @@
 
       let name = 'друг';
       if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) name = tg.initDataUnsafe.user.first_name || 'друг';
-      document.getElementById('greeting').textContent = greeting + ', ' + name + '!';
+      document.getElementById('greeting').innerHTML = '<span class="g-hi">' + greeting + ',</span><span class="g-name">' + escapeHtml(name) + '!</span>';
 
       const dName = WEEKDAYS[n.wd];
       document.getElementById('headerDate').textContent =
@@ -1851,8 +2018,14 @@
       cont.innerHTML = '';
       const byDate = myEntriesByDate();
       const frag = document.createDocumentFragment();
-      buildMonthCells(y, m, nowAt(myOffset()).iso).forEach(cell => {
+      const todayIso = nowAt(myOffset()).iso;
+      const cellsList = buildMonthCells(y, m, todayIso);
+      const tIdx = cellsList.findIndex(c => c.isToday);
+      const wkRow = tIdx >= 0 ? Math.floor(tIdx / 7) : -1;
+      cellsList.forEach((cell, idx) => {
         const div = newDayDiv(cell);
+        if (wkRow >= 0 && Math.floor(idx / 7) === wkRow) div.classList.add('wk', idx % 7 === 0 ? 'wk-start' : (idx % 7 === 6 ? 'wk-end' : 'wk-mid'));
+        if (cell.date && cell.date < todayIso) div.classList.add('past');
         if (cell.date && byDate[cell.date]) {
           fillDayEntries(div, cell.num, byDate[cell.date]);
           div.setAttribute('role', 'button');
@@ -1893,7 +2066,7 @@
           const a = byDate[cell.date];
           if (a) {
             div.classList.add('available');
-            div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + a.start + '<br>' + a.end + '</div>';
+            div.innerHTML = '<div class="day-num"><span class="dn">' + cell.num + '</span></div><div class="day-time">' + a.start + '<br>' + a.end + '</div>';
           }
           div.addEventListener('click', () => showAvailabilityPopup(cell.date, a || null));
         }
@@ -1917,7 +2090,7 @@
           const n = counts[cell.date] || 0;
           if (n > 0) {
             div.classList.add('has-people');
-            div.innerHTML = '<div class="day-num">' + cell.num + '</div><div class="day-time">' + n + ' чел.</div>';
+            div.innerHTML = '<div class="day-num"><span class="dn">' + cell.num + '</span></div><div class="day-time">' + n + ' чел.</div>';
           }
           div.addEventListener('click', () => showAdminDayPopup(cell.date));
         }
@@ -2444,6 +2617,7 @@
         '<div class="help-hero-text">Здесь собрано всё, что умеет приложение. Нажми на раздел, чтобы раскрыть.</div>' +
         '<button class="popup-btn" data-help="onboarding">' + ic('play') + 'Пройти знакомство заново</button>' +
         '<button class="popup-btn outline" data-help="calendar" style="margin-bottom:0">' + ic('smartphone') + 'Подключить календарь телефона</button>' +
+        (myConsent ? '<button class="popup-btn ghost" data-help="consent" style="margin:8px 0 0">' + ic('shield') + 'Отозвать согласие на обработку данных</button>' : '') +
         (myCompanies.length > 1 ? '<button class="popup-btn ghost" data-help="company" style="margin:8px 0 0">' + ic('building') + 'Сменить компанию · сейчас ' + escapeHtml(myCompany ? myCompany.name : '') + '</button>' : '') +
         '</div>';
 
@@ -2500,7 +2674,7 @@
         html += faq('half', 'Кто может выйти',
           '<p>Во вкладке <b>«Управление»</b> — календарь доступности: число людей, готовых выйти в этот день. Нажми на день, чтобы увидеть имена и часы (по Москве).</p>');
       }
-      html += '<div class="tz-note" style="text-align:center;margin-top:var(--space-5)">Turno · ритм команды</div>';
+      html += '<div class="tz-note" style="text-align:center;margin-top:var(--space-5)">Turno · ритм команды' + (myCompany && myCompany.tagline ? '<br>' + escapeHtml(myCompany.tagline) : '') + '</div>';
       el.innerHTML = html;
 
       el.querySelectorAll('[data-help]').forEach(btn => btn.addEventListener('click', () => {
@@ -2509,6 +2683,7 @@
         else if (a === 'calendar') showCalendarConnect();
         else if (a === 'city') showCityPicker(false);
         else if (a === 'company') showCompanyPicker(myCompanies, false);
+        else if (a === 'consent') withdrawConsent();
       }));
     }
 
@@ -3677,7 +3852,9 @@
         return true;
       }
       const code = resp && resp.error;
-      if (code === 'choose_company') {
+      if (code === 'need_consent') {
+        showConsent(resp);
+      } else if (code === 'choose_company') {
         showCompanyPicker(resp.companies || [], true);
       } else if (code === 'need_contact') {
         showPhoneForm('');
@@ -3689,6 +3866,112 @@
         showFatal(escapeHtml(errText(code)));
       }
       return false;
+    }
+
+
+    // ═══════════════════════════════════════════════════════════
+    // СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ
+    // Отдельное окно: текст, пустой чекбокс, две равные кнопки. Пока согласия нет — дальше не пускаем.
+    // ═══════════════════════════════════════════════════════════
+    function consentDocHtml(doc) {
+      return (doc.sections || []).map(sec =>
+        (sec.h ? '<h4>' + escapeHtml(sec.h) + '</h4>' : '') +
+        (sec.p || []).map(t => '<p>' + escapeHtml(t) + '</p>').join('')
+      ).join('');
+    }
+    function showConsent(resp) {
+      const doc = resp.consent || {};
+      if (resp.company) { myCompany = resp.company; }
+      if (resp.companies) { myCompanies = resp.companies; }
+      const overlay = openPopup(
+        '<div class="popup-title">Согласие на обработку персональных данных</div>' +
+        '<div class="popup-info">' + escapeHtml(doc.operator || 'Ваш работодатель') + ' использует Turno для графика смен. ' +
+          'Прочитайте документ и подтвердите согласие — без этого график недоступен.</div>' +
+        '<div class="consent-doc" id="cDoc" tabindex="0">' + consentDocHtml(doc) + '</div>' +
+        '<label class="consent-check"><input type="checkbox" id="cOk"><span>Я прочитал(а) документ и даю согласие на обработку моих персональных данных</span></label>' +
+        '<div class="popup-actions">' +
+          '<button class="popup-btn" id="cYes" disabled>Даю согласие</button>' +
+          '<button class="popup-btn ghost" id="cNo">Не согласен(на)</button>' +
+        '</div>' +
+        '<div class="popup-hint" style="margin:6px 0 0">Версия ' + escapeHtml(doc.version || '') + ' от ' + escapeHtml(doc.date || '') +
+          '. Согласие можно отозвать в любой момент: «Помощь» → «Отозвать согласие».</div>', { locked: true });
+      overlay.classList.add('consent-overlay');
+      const ok = overlay.querySelector('#cOk'), yes = overlay.querySelector('#cYes'), no = overlay.querySelector('#cNo');
+      ok.addEventListener('change', () => { yes.disabled = !ok.checked; });
+      yes.addEventListener('click', async () => {
+        if (!ok.checked) return;
+        yes.disabled = true; no.disabled = true; yes.textContent = 'Сохраняем…';
+        let r;
+        try { r = await postToServer({ action: 'consent_accept', version: doc.version, hash: doc.hash, ua: (navigator.userAgent || '').slice(0, 120) }); } catch (e) { r = null; }
+        if (r && r.ok) {
+          overlay.remove();
+          handleAuthResponse(r);
+          return;
+        }
+        if (r && r.error === 'need_consent') { overlay.remove(); showConsent(r); return; }
+        showToast('Не удалось сохранить', errText(r && r.error) || 'Нет связи, попробуйте ещё раз', true);
+        yes.disabled = false; no.disabled = false; yes.textContent = 'Даю согласие';
+      });
+      no.addEventListener('click', async () => {
+        no.disabled = true; yes.disabled = true;
+        try { await postToServer({ action: 'consent_decline', ua: (navigator.userAgent || '').slice(0, 120) }); } catch (e) {}
+        showConsentDeclined(overlay, doc);
+      });
+    }
+    function showConsentDeclined(overlay, doc) {
+      overlay.querySelector('.popup').innerHTML =
+        '<div class="popup-title">Без согласия доступ закрыт</div>' +
+        '<div class="popup-info">Мы не сможем показывать вам график и присылать напоминания. Ваш отказ записан. ' +
+        'Если передумаете — вернитесь к документу. Вопросы по графику можно решить напрямую с руководителем.</div>' +
+        '<div class="popup-actions"><button class="popup-btn" id="cBack">Вернуться к документу</button>' +
+        '<button class="popup-btn ghost" id="cClose">Закрыть приложение</button></div>';
+      overlay.querySelector('#cBack').addEventListener('click', () => { overlay.remove(); showConsent({ consent: doc }); });
+      overlay.querySelector('#cClose').addEventListener('click', () => { try { tg.close(); } catch (e) {} });
+    }
+    async function withdrawConsent() {
+      const okAsk = await askConfirm('Отозвать согласие? Доступ к графику и сообщения бота будут отключены сразу, руководитель получит уведомление.');
+      if (!okAsk) return;
+      let r;
+      try { r = await postToServer({ action: 'consent_withdraw', ua: (navigator.userAgent || '').slice(0, 120) }); } catch (e) { r = null; }
+      if (!r || !r.ok) { showToast('Не удалось', errText(r && r.error) || 'Нет связи', true); return; }
+      safeLS.del(CACHE_KEY);
+      showToast('Согласие отозвано', 'Доступ закрыт', false);
+      setTimeout(() => location.reload(), 900);
+    }
+    // Руководитель: реквизиты работодателя и кто дал согласие
+    function showConsentAdmin() {
+      if (!requireAdmin()) return;
+      const c = (adminData && adminData.consent) || { missing: [], requisites: {}, people: [], accepted: 0, total: 0 };
+      const rq = c.requisites || {};
+      const list = (c.people || []).slice().sort((a, b) => (a.status === 'accepted') - (b.status === 'accepted'));
+      const stName = { accepted: 'дал(а)', none: 'не отвечал(а)', outdated: 'нужно заново', declined: 'отказал(а)ся', withdrawn: 'отозвал(а)' };
+      const overlay = openPopup('<div class="popup-title">Согласие на обработку данных</div>' +
+        '<div class="popup-info">' + (c.enabled
+          ? 'Согласие включено: сотрудники видят график после подтверждения. Дали согласие: <b>' + c.accepted + ' из ' + c.total + '</b>.'
+          : 'Пока выключено. Заполните реквизиты работодателя (оператор данных) — после этого каждый сотрудник увидит окно согласия при следующем входе.' +
+            (c.missing && c.missing.length ? ' Не хватает: ' + escapeHtml(c.missing.join(', ')) + '.' : '')) + '</div>' +
+        '<input class="consent-field" id="cqName" placeholder="ИП Иванова И. И. или ООО «Кофейня»" value="' + escapeHtml(rq.name || '') + '">' +
+        '<input class="consent-field" id="cqInn" inputmode="numeric" placeholder="ИНН (10 или 12 цифр)" value="' + escapeHtml(rq.inn || '') + '">' +
+        '<input class="consent-field" id="cqAddr" placeholder="Адрес (юридический или для почты)" value="' + escapeHtml(rq.address || '') + '">' +
+        '<input class="consent-field" id="cqMail" type="email" placeholder="E-mail для отзыва согласия" value="' + escapeHtml(rq.email || '') + '">' +
+        (list.length ? '<div class="consent-people">' + list.map(x => '<div><span>' + escapeHtml(x.name) + '</span><span>' + (stName[x.status] || x.status) + '</span></div>').join('') + '</div>' : '') +
+        '<div class="popup-hint">Текст согласия формируется автоматически по этим данным. Реквизиты владельца Turno задаются в настройках скрипта. Перед запуском покажите текст юристу.</div>' +
+        '<div class="popup-actions"><button class="popup-btn" id="cqSave">Сохранить</button></div>');
+      overlay.querySelector('#cqSave').addEventListener('click', async e => {
+        const btn = e.currentTarget; btn.disabled = true; btn.textContent = 'Сохраняем…';
+        let r;
+        try {
+          r = await postToServer({ action: 'set_consent_requisites', name: overlay.querySelector('#cqName').value, inn: overlay.querySelector('#cqInn').value,
+            address: overlay.querySelector('#cqAddr').value, email: overlay.querySelector('#cqMail').value });
+        } catch (err) { r = null; }
+        if (!r || !r.ok) {
+          showToast('Не сохранилось', r && r.error === 'bad_inn' ? 'ИНН: 10 или 12 цифр' : r && r.error === 'bad_email' ? 'Проверьте e-mail' : (errText(r && r.error) || 'Сервер недоступен'), true);
+          btn.disabled = false; btn.textContent = 'Сохранить'; return;
+        }
+        if (adminData) adminData.consent = r.consentAdmin;
+        overlay.remove();
+        showToast('Сохранено', r.consentAdmin && r.consentAdmin.enabled ? 'Согласие включено' : 'Заполните оставшиеся поля', false);
+      });
     }
 
     function showApp() {
@@ -3848,6 +4131,7 @@
       document.getElementById('employeesAdminBtn').addEventListener('click', openEmployeesAdmin);
       document.getElementById('extraShiftsAdminBtn').addEventListener('click', openExtraShiftsAdmin);
       document.getElementById('breaksBtn').addEventListener('click', showBreakRulesPopup);
+      document.getElementById('consentBtn').addEventListener('click', showConsentAdmin);
 
       document.getElementById('editBackBtn').addEventListener('click', closeEditEmployees);
       document.getElementById('editCalendarBackBtn').addEventListener('click', closeEmployeeCalendar);
